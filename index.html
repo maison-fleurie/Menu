@@ -108,51 +108,14 @@
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 0.8rem;
+      gap: 0.5rem;
       padding: 0.95rem 0 0.7rem 0;
       border-bottom: 1px solid #e0e3e7;
       transition: background 0.2s;
     }
     .menu-item:last-child { border-bottom: none; }
-    
-    /* Gestion des images */
-    .item-image {
-      width: 70px;
-      height: 70px;
-      border-radius: 8px;
-      object-fit: cover;
-      flex-shrink: 0;
-      border: 1px solid #e0e3e7;
-      background: #f5f5f5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      color: #999;
-    }
-    .item-image.loading {
-      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-      background-size: 200% 100%;
-      animation: loading 1.5s infinite;
-    }
-    @keyframes loading {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-    .item-image.error {
-      background: #f8f8f8;
-      color: #ccc;
-    }
-    
-    .item-content {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.8rem;
-      flex: 1;
-      min-width: 0;
-    }
     .item-info {
-      flex: 1;
+      flex: 1 1 0;
       min-width: 0;
       display: flex;
       flex-direction: column;
@@ -184,11 +147,10 @@
       font-weight: bold;
       white-space: nowrap;
       padding-left: 0.5rem;
-      min-width: 70px;
+      min-width: 60px; /* Augmenté de 48px à 60px */
       text-align: right;
       font-family: Arial, sans-serif;
-      flex-shrink: 0;
-      align-self: flex-start;
+      flex-shrink: 0; /* Empêche le rétrécissement */
     }
     .section-title {
       font-family: 'Viaoda Libre', serif;
@@ -215,90 +177,39 @@
       font-size: 2.6rem;
       margin-bottom: 0.4rem;
     }
-    
-    /* Configuration des images */
-    .config-panel {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      background: white;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      padding: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      z-index: 1000;
-      display: none;
-    }
-    .config-toggle {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      background: #2c5530;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      cursor: pointer;
-      z-index: 1001;
-    }
-    
     @media (max-width: 620px) {
       .container { max-width: 100vw; border-radius: 0; box-shadow: none; }
-      .config-toggle { top: 5px; right: 5px; width: 35px; height: 35px; }
     }
-    @media (max-width: 480px) {
-      .menu-item {
-        flex-direction: column;
+    @media (max-width: 420px) {
+      .section-title { font-size: 1.08rem; }
+      .now-title { font-size: 1.03rem; }
+      .menu-item { 
+        font-size: 0.97rem; 
+        flex-direction: column; /* Passe en colonne sur très petit écran */
         align-items: stretch;
-        gap: 0.6rem;
       }
-      .item-content {
-        flex-direction: row;
-        align-items: flex-start;
-      }
-      .item-image {
-        width: 60px;
-        height: 60px;
-      }
+      .item-name { font-size: 1.04rem; }
       .item-price {
-        text-align: left;
+        text-align: left; /* Aligné à gauche sur mobile */
         padding-left: 0;
         margin-top: 0.3rem;
         font-size: 1.1rem;
         min-width: auto;
-        align-self: stretch;
       }
     }
     @media (max-width: 380px) {
-      .item-image {
-        width: 50px;
-        height: 50px;
+      .menu-item {
+        gap: 0.3rem;
       }
       .item-price {
         font-size: 0.95rem;
-        white-space: normal;
+        white-space: normal; /* Permet le retour à la ligne si nécessaire */
         word-break: break-word;
       }
     }
   </style>
 </head>
 <body>
-  <button class="config-toggle" onclick="toggleConfig()">⚙️</button>
-  <div class="config-panel" id="configPanel">
-    <h4>Configuration Images</h4>
-    <label>
-      <input type="checkbox" id="showImages" checked onchange="toggleImages()"> Afficher images
-    </label><br>
-    <label>
-      Dossier images: <input type="text" id="imageFolderPath" value="images/" style="width: 100px;">
-    </label><br>
-    <label>
-      Drive ID: <input type="text" id="driveId" placeholder="ID du dossier Drive" style="width: 120px;">
-    </label><br>
-    <button onclick="reloadImages()">Recharger</button>
-  </div>
-
   <div class="header">
     <h1>MAISON FLEURIE</h1>
     <p>Table des Mets • Cocktails • Vins</p>
@@ -337,109 +248,6 @@
     let currentTab = 'now';
     let isSearching = false;
     let searchTimeout;
-    let imageConfig = {
-      showImages: true,
-      imageFolderPath: 'images/',
-      driveId: '',
-      useGoogleDrive: false
-    };
-
-    // Configuration des images
-    function toggleConfig() {
-      const panel = document.getElementById('configPanel');
-      panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-    }
-
-    function toggleImages() {
-      imageConfig.showImages = document.getElementById('showImages').checked;
-      renderAllTabs();
-    }
-
-    function reloadImages() {
-      const folderPath = document.getElementById('imageFolderPath').value;
-      const driveId = document.getElementById('driveId').value;
-      
-      imageConfig.imageFolderPath = folderPath;
-      imageConfig.driveId = driveId;
-      imageConfig.useGoogleDrive = driveId.length > 0;
-      
-      renderAllTabs();
-    }
-
-    // Fonctions de gestion des images
-    function getImageUrl(item) {
-      if (!imageConfig.showImages) return null;
-      
-      // Priorité 1: URL directe dans le CSV
-      if (item.Image && item.Image.trim()) {
-        return item.Image.trim();
-      }
-      
-      // Priorité 2: Google Drive avec ID
-      if (imageConfig.useGoogleDrive && imageConfig.driveId) {
-        const fileName = getImageFileName(item);
-        return `https://drive.google.com/uc?export=view&id=${imageConfig.driveId}/${fileName}`;
-      }
-      
-      // Priorité 3: Dossier local
-      if (imageConfig.imageFolderPath) {
-        const fileName = getImageFileName(item);
-        return `${imageConfig.imageFolderPath}${fileName}`;
-      }
-      
-      return null;
-    }
-
-    function getImageFileName(item) {
-      // Essaie plusieurs formats de nom de fichier
-      const baseName = item.ID || item.Index || item.Nom || '';
-      const cleanName = baseName.toString().toLowerCase()
-        .replace(/[^a-z0-9]/g, '_')
-        .replace(/_+/g, '_')
-        .replace(/^_|_$/g, '');
-      
-      // Retourne le nom avec extension
-      return `${cleanName}.jpg`;
-    }
-
-    function createImageElement(item) {
-      if (!imageConfig.showImages) return '';
-      
-      const imageUrl = getImageUrl(item);
-      if (!imageUrl) return '';
-      
-      const itemId = item.ID || item.Index || Math.random().toString(36).substr(2, 9);
-      
-      return `
-        <div class="item-image loading" id="img-${itemId}">
-          📷
-          <img src="${imageUrl}" 
-               alt="${item.Nom || 'Image du plat'}" 
-               style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: none;"
-               onload="onImageLoad('${itemId}')"
-               onerror="onImageError('${itemId}')">
-        </div>
-      `;
-    }
-
-    function onImageLoad(itemId) {
-      const container = document.getElementById(`img-${itemId}`);
-      if (container) {
-        const img = container.querySelector('img');
-        container.className = 'item-image';
-        container.innerHTML = '';
-        container.appendChild(img);
-        img.style.display = 'block';
-      }
-    }
-
-    function onImageError(itemId) {
-      const container = document.getElementById(`img-${itemId}`);
-      if (container) {
-        container.className = 'item-image error';
-        container.innerHTML = '🍽️';
-      }
-    }
 
     function showTab(tabName) {
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -453,17 +261,12 @@
     function createMenuItemHTML(item) {
       let name = (item.Nom || '').trim();
       let prix = (item.Prix || '').trim();
-      const imageElement = createImageElement(item);
-      
       return `
         <div class="menu-item">
-          <div class="item-content">
-            ${imageElement}
-            <div class="item-info">
-              <div class="item-name">${name}</div>
-              ${item.Section && currentTab !== 'now' ? `<div class="item-section">${item.Section}</div>` : ''}
-              ${item.Description ? `<div class="item-description">${item.Description}</div>` : ''}
-            </div>
+          <div class="item-info">
+            <div class="item-name">${name}</div>
+            ${item.Section && currentTab !== 'now' ? `<div class="item-section">${item.Section}</div>` : ''}
+            ${item.Description ? `<div class="item-description">${item.Description}</div>` : ''}
           </div>
           <div class="item-price">${prix}</div>
         </div>
