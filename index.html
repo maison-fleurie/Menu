@@ -887,11 +887,136 @@
     }
 
     function renderNowTab() {
-      const nowTab = document.getElementById('now');
-      if (!nowTab) return;
+  const nowTab = document.getElementById('now');
+  if (!nowTab) return;
 
-      let html = '<div class="now-title">À l\'affiche en ce moment</div>';
+  let html = '<div class="now-title">À l\'affiche en ce moment</div>';
 
-      const nowItems = allMenuData.filter(item => {
-        if (!item) return false;
-        const
+  const nowItems = allMenuData.filter(item => {
+    if (!item) return false;
+    const enCeMoment = (item['En ce moment'] || '').toString().trim().toLowerCase();
+    return enCeMoment === "oui";
+  });
+
+  if (nowItems.length === 0) {
+    html += `
+      <div class="empty-state">
+        <div class="empty-state-icon">✨</div>
+        <h3>Aucune nouveauté</h3>
+        <p>Aucun plat ou boisson n'est mis en avant actuellement.</p>
+      </div>
+    `;
+  } else {
+    let currentSection = '';
+    nowItems.forEach(item => {
+      if (item.Section !== currentSection) {
+        currentSection = item.Section || 'Autres';
+        html += `<h2 class="section-title">${currentSection}</h2>`;
+      }
+      html += createMenuItemHTML(item);
+    });
+  }
+  nowTab.innerHTML = html;
+}
+
+function renderMenuForTab(tabName) {
+  if (tabName === 'now') {
+    renderNowTab();
+    return;
+  }
+  const tab = document.getElementById(tabName);
+  if (!tab) return;
+  const tabItems = allMenuData.filter(item =>
+    normalizeOnglet(item.Onglet) === tabName
+  );
+  if (tabItems.length === 0) {
+    tab.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">🍽️</div>
+        <h3>Section vide</h3>
+        <p>Aucun élément dans cette catégorie pour le moment.</p>
+      </div>
+    `;
+    return;
+  }
+  // Group by section
+  const sections = {};
+  tabItems.forEach(item => {
+    const section = item.Section || 'Autres';
+    if (!sections[section]) sections[section] = [];
+    sections[section].push(item);
+  });
+  let html = '';
+  Object.keys(sections).forEach(sectionName => {
+    html += `<h2 class="section-title">${sectionName}</h2>`;
+    sections[sectionName].forEach(item => {
+      html += createMenuItemHTML(item);
+    });
+  });
+  tab.innerHTML = html;
+}
+
+// PWA FUNCTIONALITY
+function initPWA() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('SW registered'))
+      .catch(err => console.log('SW registration failed'));
+  }
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('installBtn').classList.add('show');
+  });
+  document.getElementById('installBtn').addEventListener('click', () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((result) => {
+        if (result.outcome === 'accepted') {
+          document.getElementById('installBtn').classList.remove('show');
+        }
+        deferredPrompt = null;
+      });
+    }
+  });
+}
+
+// CSV FETCHING
+function fetchCSVAndRender() {
+  Papa.parse('https://docs.google.com/spreadsheets/d/1lgd-rGS2kLCn0yPtGMc7RyMDue-YERmKOjNT3QKgJ3Y/gviz/tq?tqx=out:csv&gid=0', {
+    download: true,
+    header: true,
+    complete: function(results) {
+      if (results.errors && results.errors.length > 0) {
+        showError();
+      } else {
+        renderCSVMenu(results.data);
+      }
+    },
+    error: function(err) {
+      showError();
+    }
+  });
+}
+
+// INITIALIZATION
+function init() {
+  initSearch();
+  initPWA();
+  // Navigation mobile adaptative
+  initMobileNavigation();
+  // Tab navigation pour desktop + mobile
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      showTab(btn.dataset.tab);
+    });
+  });
+  // Fetch menu data
+  fetchCSVAndRender();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
