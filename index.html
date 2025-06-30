@@ -16,8 +16,496 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Viaoda+Libre&display=swap" rel="stylesheet">
   <style>
-    /* ... (tout le CSS inchangé par rapport à la version précédente) ... */
-    /* Ton CSS du projet reste identique, pas besoin de toucher pour supprimer le swipe */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #2c5530 0%, #4a7c59 100%);
+      color: white;
+      text-align: center;
+      padding: 2rem 1rem;
+      box-shadow: 0 4px 20px rgba(44, 85, 48, 0.3);
+    }
+
+    .header h1 {
+      font-family: 'Viaoda Libre', cursive;
+      font-size: 2.5rem;
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      letter-spacing: 1px;
+    }
+
+    .search-container {
+      padding: 1rem;
+      background: white;
+      border-bottom: 1px solid #e9ecef;
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e9ecef;
+      border-radius: 25px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      background: #f8f9fa;
+    }
+
+    .search-box:focus {
+      outline: none;
+      border-color: #2c5530;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(44, 85, 48, 0.1);
+    }
+
+    .search-results-info {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      background: #e3f2fd;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: #1976d2;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      min-height: calc(100vh - 200px);
+    }
+
+    /* NAVIGATION MOBILE OPTIMISÉE */
+    .tab-nav {
+      background: white;
+      border-bottom: 2px solid #f1f3f4;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    /* Menu dropdown pour mobile */
+    .mobile-tab-selector {
+      display: none;
+      width: 100%;
+      padding: 12px 16px;
+      border: none;
+      background: #2c5530;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      text-align: left;
+      position: relative;
+    }
+
+    .mobile-tab-selector::after {
+      content: '▼';
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: transform 0.3s ease;
+    }
+
+    .mobile-tab-selector.open::after {
+      transform: translateY(-50%) rotate(180deg);
+    }
+
+    .mobile-dropdown {
+      display: none;
+      background: white;
+      border-top: 1px solid #e9ecef;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .mobile-dropdown.show {
+      display: block;
+    }
+
+    .mobile-dropdown .tab-btn {
+      display: block;
+      width: 100%;
+      padding: 12px 16px;
+      border: none;
+      background: white;
+      color: #333;
+      text-align: left;
+      cursor: pointer;
+      border-bottom: 1px solid #f1f3f4;
+      transition: background-color 0.2s ease;
+    }
+
+    .mobile-dropdown .tab-btn:hover,
+    .mobile-dropdown .tab-btn.active {
+      background: #f8f9fa;
+      color: #2c5530;
+      font-weight: 500;
+    }
+
+    /* Desktop navigation */
+    .desktop-tabs {
+      display: flex;
+      overflow-x: hidden;
+    }
+
+    .tab-btn {
+      flex: 1;
+      min-width: 0;
+      padding: 12px 8px;
+      border: none;
+      background: transparent;
+      color: #666;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tab-btn:hover {
+      color: #2c5530;
+      background: rgba(44, 85, 48, 0.05);
+    }
+
+    .tab-btn.active {
+      color: #2c5530;
+      border-bottom-color: #2c5530;
+      background: rgba(44, 85, 48, 0.1);
+    }
+
+    /* Media queries pour la navigation */
+    @media (max-width: 768px) {
+      .desktop-tabs {
+        display: none;
+      }
+      
+      .mobile-tab-selector {
+        display: block;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .mobile-tab-selector,
+      .mobile-dropdown {
+        display: none !important;
+      }
+    }
+
+    /* Contenu des onglets */
+    .tab-content {
+      display: none;
+      padding: 1.5rem;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .now-title {
+      font-family: 'Viaoda Libre', cursive;
+      font-size: 1.8rem;
+      color: #2c5530;
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background: linear-gradient(135deg, rgba(44, 85, 48, 0.1), rgba(74, 124, 89, 0.1));
+      border-radius: 12px;
+      border-left: 4px solid #2c5530;
+    }
+
+    .section-title {
+      font-family: 'Viaoda Libre', cursive;
+      font-size: 1.5rem;
+      color: #2c5530;
+      margin: 2rem 0 1rem 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #e9ecef;
+      text-align: center;
+    }
+
+    .menu-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border: 1px solid #f1f3f4;
+      transition: all 0.3s ease;
+    }
+
+    .menu-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      border-color: #2c5530;
+    }
+
+    .item-info {
+      display: flex;
+      align-items: flex-start;
+      flex: 1;
+      gap: 1rem;
+    }
+
+    .item-image {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+
+    .item-image.loading {
+      background: linear-gradient(45deg, #f1f3f4 25%, transparent 25%), 
+                  linear-gradient(-45deg, #f1f3f4 25%, transparent 25%);
+      background-size: 20px 20px;
+      animation: loading 1s infinite linear;
+    }
+
+    .item-image.error {
+      background: #f8f9fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ccc;
+      font-size: 20px;
+    }
+
+    .item-image.error::before {
+      content: '🖼️';
+    }
+
+    @keyframes loading {
+      0% { background-position: 0 0, 10px 10px; }
+      100% { background-position: 20px 20px, 30px 30px; }
+    }
+
+    .item-texts {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .item-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #2c5530;
+      margin-bottom: 0.25rem;
+      line-height: 1.3;
+    }
+
+    .item-name mark {
+      background: rgba(255, 235, 59, 0.6);
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+
+    .item-section {
+      font-size: 0.85rem;
+      color: #666;
+      font-style: italic;
+      margin-bottom: 0.25rem;
+    }
+
+    .item-description {
+      font-size: 0.9rem;
+      color: #666;
+      line-height: 1.4;
+    }
+
+    .item-price {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #2c5530;
+      text-align: right;
+      flex-shrink: 0;
+      margin-left: 1rem;
+      white-space: nowrap;
+      min-width: fit-content;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #666;
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    .empty-state p {
+      font-size: 1rem;
+      opacity: 0.8;
+    }
+
+    /* Loader */
+    .loader-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      transition: opacity 0.3s ease;
+    }
+
+    .loader-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #f1f3f4;
+      border-top: 4px solid #2c5530;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loader-text {
+      color: #2c5530;
+      font-weight: 500;
+    }
+
+    /* Error container */
+    .error-container {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #666;
+    }
+
+    .error-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .retry-btn {
+      background: #2c5530;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1rem;
+      transition: background-color 0.3s ease;
+    }
+
+    .retry-btn:hover {
+      background: #1e3a21;
+    }
+
+    /* Install button */
+    .install-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #2c5530;
+      color: white;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(44, 85, 48, 0.3);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 100;
+    }
+
+    .install-btn.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .install-btn:hover {
+      background: #1e3a21;
+      transform: translateY(-2px) scale(1.05);
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .header p {
+        font-size: 1rem;
+      }
+      
+      .tab-content {
+        padding: 1rem;
+      }
+      
+      .menu-item {
+        padding: 0.75rem;
+      }
+      
+      .item-info {
+        gap: 0.75rem;
+      }
+      
+      .item-image {
+        width: 50px;
+        height: 50px;
+      }
+      
+      .item-name {
+        font-size: 1rem;
+      }
+      
+      .item-price {
+        font-size: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -26,27 +514,48 @@
     <div class="spinner"></div>
     <div class="loader-text">Chargement du menu...</div>
   </div>
+
   <!-- HEADER -->
   <div class="header">
     <h1>MAISON FLEURIE</h1>
     <p>Table des Mets • Cocktails • Vins</p>
   </div>
+
   <!-- SEARCH -->
   <div class="search-container">
     <input type="text" id="searchBox" class="search-box" placeholder="🔍 Rechercher un plat, cocktail, vin...">
     <div id="searchInfo" class="search-results-info" style="display: none;"></div>
   </div>
+
   <div class="container">
-    <!-- TAB NAVIGATION -->
+    <!-- NAVIGATION ADAPTATIVE -->
     <div class="tab-nav" id="tabNav">
-      <button class="tab-btn active" data-tab="now">✨ En ce moment</button>
-      <button class="tab-btn" data-tab="deguster">🍽️ Déguster</button>
-      <button class="tab-btn" data-tab="cocktails">🍸 Cocktails</button>
-      <button class="tab-btn" data-tab="chaudes">☕ Chaudes</button>
-      <button class="tab-btn" data-tab="bieres">🍺 Bières</button>
-      <button class="tab-btn" data-tab="softs">🥤 Softs</button>
-      <button class="tab-btn" data-tab="vins">🍷 Vins</button>
+      <!-- Mobile dropdown -->
+      <button class="mobile-tab-selector" id="mobileTabSelector">
+        <span id="selectedTabText">✨ En ce moment</span>
+      </button>
+      <div class="mobile-dropdown" id="mobileDropdown">
+        <button class="tab-btn active" data-tab="now">✨ En ce moment</button>
+        <button class="tab-btn" data-tab="deguster">🍽️ Déguster</button>
+        <button class="tab-btn" data-tab="cocktails">🍸 Cocktails</button>
+        <button class="tab-btn" data-tab="chaudes">☕ Chaudes</button>
+        <button class="tab-btn" data-tab="bieres">🍺 Bières</button>
+        <button class="tab-btn" data-tab="softs">🥤 Softs</button>
+        <button class="tab-btn" data-tab="vins">🍷 Vins</button>
+      </div>
+
+      <!-- Desktop tabs -->
+      <div class="desktop-tabs">
+        <button class="tab-btn active" data-tab="now">✨ En ce moment</button>
+        <button class="tab-btn" data-tab="deguster">🍽️ Déguster</button>
+        <button class="tab-btn" data-tab="cocktails">🍸 Cocktails</button>
+        <button class="tab-btn" data-tab="chaudes">☕ Chaudes</button>
+        <button class="tab-btn" data-tab="bieres">🍺 Bières</button>
+        <button class="tab-btn" data-tab="softs">🥤 Softs</button>
+        <button class="tab-btn" data-tab="vins">🍷 Vins</button>
+      </div>
     </div>
+
     <!-- TAB CONTENTS -->
     <div id="now" class="tab-content active"></div>
     <div id="deguster" class="tab-content"></div>
@@ -55,6 +564,7 @@
     <div id="bieres" class="tab-content"></div>
     <div id="softs" class="tab-content"></div>
     <div id="vins" class="tab-content"></div>
+
     <!-- ERROR CONTAINER -->
     <div id="errorContainer" class="error-container" style="display: none;">
       <div class="error-icon">⚠️</div>
@@ -63,8 +573,10 @@
       <button class="retry-btn" onclick="retryLoad()">🔄 Réessayer</button>
     </div>
   </div>
+
   <!-- INSTALL BUTTON -->
   <button id="installBtn" class="install-btn" title="Installer l'application">📱</button>
+
   <!-- SCRIPTS -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script>
@@ -74,29 +586,16 @@
     let isSearching = false;
     let searchTimeout;
     let deferredPrompt;
-    // CACHE MANAGEMENT
-    const CACHE_KEY = 'maisonFleurie_menu';
-    const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+    // CACHE MANAGEMENT - Supprimé localStorage pour compatibilité Claude.ai
     function getCachedData() {
-      try {
-        const cached = localStorage.getItem(CACHE_KEY);
-        if (cached) {
-          const data = JSON.parse(cached);
-          if (Date.now() - data.timestamp < CACHE_DURATION) {
-            return data.content;
-          }
-        }
-      } catch (e) { }
-      return null;
+      return null; // Pas de cache pour cette version
     }
+
     function setCachedData(data) {
-      try {
-        localStorage.setItem(CACHE_KEY, JSON.stringify({
-          content: data,
-          timestamp: Date.now()
-        }));
-      } catch (e) { }
+      // Pas de cache pour cette version
     }
+
     // LOADER MANAGEMENT
     function showLoader(text = 'Chargement du menu...') {
       const loader = document.getElementById('loader');
@@ -104,27 +603,32 @@
       loaderText.textContent = text;
       loader.classList.remove('hidden');
     }
+
     function hideLoader() {
       setTimeout(() => {
         document.getElementById('loader').classList.add('hidden');
       }, 500);
     }
+
     // ERROR HANDLING
     function showError() {
       document.getElementById('errorContainer').style.display = 'block';
       hideLoader();
     }
+
     function hideError() {
       document.getElementById('errorContainer').style.display = 'none';
     }
+
     function retryLoad() {
       hideError();
       showLoader('Nouvelle tentative...');
       fetchCSVAndRender();
     }
+
     // IMAGE LAZY LOADING & FALLBACK
     function createImageElement(src, alt) {
-      if (!src) return '';
+      if (!src || src.trim() === '') return '';
       return `<img 
         data-src="${src}" 
         class="item-image loading" 
@@ -133,14 +637,16 @@
         onload="handleImageLoad(this)"
       >`;
     }
+
     function handleImageError(img) {
       img.classList.add('error');
       img.classList.remove('loading');
-      img.style.background = 'linear-gradient(45deg, #f8f9fa 25%, transparent 25%), linear-gradient(-45deg, #f8f9fa 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #f8f9fa 75%), linear-gradient(-45deg, transparent 75%, #f8f9fa 75%)';
     }
+
     function handleImageLoad(img) {
       img.classList.remove('loading');
     }
+
     function lazyLoadImages() {
       const images = document.querySelectorAll('img[data-src]');
       const imageObserver = new IntersectionObserver((entries) => {
@@ -155,62 +661,112 @@
       });
       images.forEach(img => imageObserver.observe(img));
     }
+
+    // MOBILE NAVIGATION
+    function initMobileNavigation() {
+      const mobileSelector = document.getElementById('mobileTabSelector');
+      const mobileDropdown = document.getElementById('mobileDropdown');
+      const selectedTabText = document.getElementById('selectedTabText');
+
+      mobileSelector.addEventListener('click', (e) => {
+        e.stopPropagation();
+        mobileDropdown.classList.toggle('show');
+        mobileSelector.classList.toggle('open');
+      });
+
+      // Fermer le dropdown si on clique ailleurs
+      document.addEventListener('click', () => {
+        mobileDropdown.classList.remove('show');
+        mobileSelector.classList.remove('open');
+      });
+
+      // Empêcher la fermeture si on clique dans le dropdown
+      mobileDropdown.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+    }
+
     // TAB MANAGEMENT
     function showTab(tabName) {
-      // Update active states
+      // Update active states pour desktop
+      document.querySelectorAll('.desktop-tabs .tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.querySelectorAll('.mobile-dropdown .tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
       document.querySelectorAll('.tab-content').forEach(content => {
         content.classList.remove('active');
       });
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
+
+      // Activer les bons éléments
       document.getElementById(tabName).classList.add('active');
-      document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+      document.querySelector(`.desktop-tabs [data-tab="${tabName}"]`).classList.add('active');
+      document.querySelector(`.mobile-dropdown [data-tab="${tabName}"]`).classList.add('active');
+
+      // Mettre à jour le texte du sélecteur mobile
+      const selectedBtn = document.querySelector(`[data-tab="${tabName}"]`);
+      document.getElementById('selectedTabText').textContent = selectedBtn.textContent;
+
+      // Fermer le dropdown mobile
+      document.getElementById('mobileDropdown').classList.remove('show');
+      document.getElementById('mobileTabSelector').classList.remove('open');
+
       currentTab = tabName;
+
       // Clear search when changing tabs
       if (isSearching) {
         clearSearch();
       }
+
       // Lazy load images in the new tab
       setTimeout(lazyLoadImages, 100);
     }
+
     // SEARCH FUNCTIONALITY
     function initSearch() {
       const searchBox = document.getElementById('searchBox');
       const searchInfo = document.getElementById('searchInfo');
+
       searchBox.addEventListener('input', (e) => {
         clearTimeout(searchTimeout);
         const query = e.target.value.trim();
+        
         if (query.length === 0) {
           clearSearch();
           return;
         }
+
         searchTimeout = setTimeout(() => {
           performSearch(query);
         }, 300);
       });
     }
+
     function performSearch(query) {
       isSearching = true;
       const results = searchInMenu(query);
       displaySearchResults(results, query);
+      
       const searchInfo = document.getElementById('searchInfo');
       searchInfo.style.display = 'block';
       searchInfo.textContent = `${results.length} résultat(s) pour "${query}"`;
     }
+
     function searchInMenu(query) {
       const searchTerm = query.toLowerCase();
       return allMenuData.filter(item => {
         return (
-          (item.Nom && item.Nom.toLowerCase().includes(searchTerm)) ||
-          (item.Description && item.Description.toLowerCase().includes(searchTerm)) ||
-          (item.Section && item.Section.toLowerCase().includes(searchTerm))
+          (item.Nom && item.Nom.toString().toLowerCase().includes(searchTerm)) ||
+          (item.Description && item.Description.toString().toLowerCase().includes(searchTerm)) ||
+          (item.Section && item.Section.toString().toLowerCase().includes(searchTerm))
         );
       });
     }
+
     function displaySearchResults(results, query) {
-      // Hide all tabs and show results in current tab
       const currentTabContent = document.getElementById(currentTab);
+      
       if (results.length === 0) {
         currentTabContent.innerHTML = `
           <div class="empty-state">
@@ -221,194 +777,121 @@
         `;
         return;
       }
+
       let html = '';
       let currentSection = '';
+      
       results.forEach(item => {
         if (item.Section !== currentSection) {
-          currentSection = item.Section;
+          currentSection = item.Section || 'Autres';
           html += `<h2 class="section-title">${currentSection}</h2>`;
         }
         html += createMenuItemHTML(item, query);
       });
+
       currentTabContent.innerHTML = html;
       lazyLoadImages();
     }
+
+    // PARSING SÉCURISÉ DES PRIX
+    function formatPrice(priceValue) {
+      if (!priceValue) return '';
+      
+      // Convertir en string et nettoyer
+      let price = priceValue.toString().trim();
+      
+      // Si vide après trim, retourner vide
+      if (price === '' || price === 'undefined' || price === 'null') {
+        return '';
+      }
+      
+      // Retourner tel quel - le CSS s'occupera de l'affichage
+      return price;
+    }
+
     function createMenuItemHTML(item, highlightTerm = '') {
+      // Sécurisation de tous les champs
       let name = (item.Nom || '').toString().trim();
-      let prix = (item.Prix || '').toString().trim(); // <--- prix traité comme texte
+      let description = (item.Description || '').toString().trim();
+      let section = (item.Section || '').toString().trim();
+      let prix = formatPrice(item.Prix);
+
+      // Highlight du terme recherché
       if (highlightTerm && name.toLowerCase().includes(highlightTerm.toLowerCase())) {
         const regex = new RegExp(`(${highlightTerm})`, 'gi');
         name = name.replace(regex, '<mark>$1</mark>');
       }
+
       return `
         <div class="menu-item">
           <div class="item-info">
-            ${item.Image ? createImageElement(item.Image, `Image de ${item.Nom}`) : ''}
+            ${item.Image ? createImageElement(item.Image, `Image de ${item.Nom || 'plat'}`) : ''}
             <div class="item-texts">
               <div class="item-name ${highlightTerm ? 'highlight' : ''}">${name}</div>
-              ${item.Section && currentTab !== 'now' ? `<div class="item-section">${item.Section}</div>` : ''}
-              ${item.Description ? `<div class="item-description">${item.Description}</div>` : ''}
+              ${section && currentTab !== 'now' ? `<div class="item-section">${section}</div>` : ''}
+              ${description ? `<div class="item-description">${description}</div>` : ''}
             </div>
           </div>
-          <div class="item-price">${prix}</div>
+          ${prix ? `<div class="item-price">${prix}</div>` : ''}
         </div>
       `;
     }
+
     function clearSearch() {
       isSearching = false;
       document.getElementById('searchBox').value = '';
       document.getElementById('searchInfo').style.display = 'none';
       renderMenuForTab(currentTab);
     }
-    // MENU RENDERING
+
+    // MENU RENDERING SÉCURISÉ
     function normalizeOnglet(s) {
       return (s || "")
+        .toString()
         .toLowerCase()
         .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
         .replace(/\s+/g, "");
     }
+
     function renderCSVMenu(csvRows) {
-      allMenuData = csvRows.filter(item =>
-        item.Actif && item.Actif.toString().trim().toLowerCase() === "oui"
-      );
+      // Filtrage sécurisé
+      allMenuData = csvRows.filter(item => {
+        if (!item || typeof item !== 'object') return false;
+        const actif = (item.Actif || '').toString().trim().toLowerCase();
+        return actif === "oui";
+      });
+
+      console.log('Données filtrées:', allMenuData.length, 'items');
       renderAllTabs();
       hideLoader();
     }
+
     function renderAllTabs() {
       const tabs = ['now', 'deguster', 'cocktails', 'chaudes', 'bieres', 'softs', 'vins'];
+      
+      // Vider tous les onglets
       tabs.forEach(tab => {
-        document.getElementById(tab).innerHTML = '';
+        const tabElement = document.getElementById(tab);
+        if (tabElement) {
+          tabElement.innerHTML = '';
+        }
       });
+
+      // Rendre chaque onglet
       renderNowTab();
       tabs.slice(1).forEach(tab => {
         renderMenuForTab(tab);
       });
+
       setTimeout(lazyLoadImages, 100);
     }
+
     function renderNowTab() {
       const nowTab = document.getElementById('now');
+      if (!nowTab) return;
+
       let html = '<div class="now-title">À l\'affiche en ce moment</div>';
-      const nowItems = allMenuData.filter(item =>
-        item['En ce moment'] && item['En ce moment'].toString().trim().toLowerCase() === "oui"
-      );
-      if (nowItems.length === 0) {
-        html += `
-          <div class="empty-state">
-            <div class="empty-state-icon">✨</div>
-            <h3>Aucune nouveauté</h3>
-            <p>Aucun plat ou boisson n'est mis en avant actuellement.</p>
-          </div>
-        `;
-      } else {
-        nowItems.forEach(item => {
-          html += createMenuItemHTML(item);
-        });
-      }
-      nowTab.innerHTML = html;
-    }
-    function renderMenuForTab(tabName) {
-      if (tabName === 'now') {
-        renderNowTab();
-        return;
-      }
-      const tab = document.getElementById(tabName);
-      const tabItems = allMenuData.filter(item =>
-        normalizeOnglet(item.Onglet) === tabName
-      );
-      if (tabItems.length === 0) {
-        tab.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-state-icon">🍽️</div>
-            <h3>Section vide</h3>
-            <p>Aucun élément dans cette catégorie pour le moment.</p>
-          </div>
-        `;
-        return;
-      }
-      // Group by section
-      const sections = {};
-      tabItems.forEach(item => {
-        const section = item.Section || 'Autres';
-        if (!sections[section]) sections[section] = [];
-        sections[section].push(item);
-      });
-      let html = '';
-      Object.keys(sections).forEach(sectionName => {
-        html += `<h2 class="section-title">${sectionName}</h2>`;
-        sections[sectionName].forEach(item => {
-          html += createMenuItemHTML(item);
-        });
-      });
-      tab.innerHTML = html;
-    }
-    // PWA FUNCTIONALITY
-    function initPWA() {
-      // Register service worker
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('SW registered'))
-          .catch(err => console.log('SW registration failed'));
-      }
-      // Install prompt
-      window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        document.getElementById('installBtn').classList.add('show');
-      });
-      document.getElementById('installBtn').addEventListener('click', () => {
-        if (deferredPrompt) {
-          deferredPrompt.prompt();
-          deferredPrompt.userChoice.then((result) => {
-            if (result.outcome === 'accepted') {
-              document.getElementById('installBtn').classList.remove('show');
-            }
-            deferredPrompt = null;
-          });
-        }
-      });
-    }
-    // CSV FETCHING
-    function fetchCSVAndRender() {
-      // Try cache first
-      const cachedData = getCachedData();
-      if (cachedData) {
-        renderCSVMenu(cachedData);
-        return;
-      }
-      Papa.parse('https://docs.google.com/spreadsheets/d/1lgd-rGS2kLCn0yPtGMc7RyMDue-YERmKOjNT3QKgJ3Y/gviz/tq?tqx=out:csv&gid=0', {
-        download: true,
-        header: true,
-        complete: function(results) {
-          if (results.errors && results.errors.length > 0) {
-            showError();
-          } else {
-            setCachedData(results.data);
-            renderCSVMenu(results.data);
-          }
-        },
-        error: function(err) {
-          showError();
-        }
-      });
-    }
-    // INITIALIZATION
-    function init() {
-      // Initialize event listeners
-      initSearch();
-      // Pas de initSwipe : swipe supprimé !
-      initPWA();
-      // Tab navigation
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.preventDefault();
-          showTab(btn.dataset.tab);
-        });
-      });
-      // Fetch menu data
-      fetchCSVAndRender();
-    }
-    // Start the app when DOM is loaded
-    document.addEventListener('DOMContentLoaded', init);
-  </script>
-</body>
-</html>
+
+      const nowItems = allMenuData.filter(item => {
+        if (!item) return false;
+        const
