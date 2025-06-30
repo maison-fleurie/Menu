@@ -375,11 +375,11 @@
     }
     function performSearch(query) {
       isSearching = true;
-      const searchTerm = query.toLowerCase();
+      const searchTerm = normalize(query);
       const results = allMenuData.filter(item =>
-        (item.Nom && item.Nom.toLowerCase().includes(searchTerm)) ||
-        (item.Description && item.Description.toLowerCase().includes(searchTerm)) ||
-        (item.Section && item.Section.toLowerCase().includes(searchTerm))
+        (item.Nom && normalize(item.Nom).includes(searchTerm)) ||
+        (item.Description && normalize(item.Description).includes(searchTerm)) ||
+        (item.Section && normalize(item.Section).includes(searchTerm))
       );
       displaySearchResults(results, query);
       const searchInfo = document.getElementById('searchInfo');
