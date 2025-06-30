@@ -7,7 +7,7 @@
   
   <!-- PWA Meta Tags -->
   <meta name="description" content="Menu digital de Maison Fleurie - Table des Mets, Cocktails, Vins">
-  <metaname="theme-color" content="#2c5530">
+  <meta name="theme-color" content="#2c5530">
   <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -390,8 +390,6 @@
     let currentTab = 'now';
     let isSearching = false;
     let searchTimeout;
-    let touchStartX = 0;
-    let touchEndX = 0;
     let deferredPrompt;
     
     // CACHE MANAGEMENT
@@ -590,10 +588,16 @@
     }
     
     function createMenuItemHTML(item, highlightTerm = '') {
-      let name = item.Nom || '';
+      // Sécuriser et nettoyer le nom
+      let name = (item.Nom || '').toString().trim();
+      
+      // Nettoyer le prix - traiter comme du texte
+      let prix = (item.Prix || '').toString().trim();
+      
+      // Surligner le terme de recherche dans le nom
       if (highlightTerm && name.toLowerCase().includes(highlightTerm.toLowerCase())) {
-        name = name.replace(new RegExp(highlightTerm, 'gi'), `<mark>    .tab-btn.active {
-      color: #2c5530; border-bottom: 3px solid #2</mark>`);
+        const regex = new RegExp(`(${highlightTerm})`, 'gi');
+        name = name.replace(regex, '<mark>$1</mark>');
       }
       
       return `
@@ -606,7 +610,7 @@
               ${item.Description ? `<div class="item-description">${item.Description}</div>` : ''}
             </div>
           </div>
-          <div class="item-price">${item.Prix || ''}</div>
+          <div class="item-price">${prix}</div>
         </div>
       `;
     }
@@ -628,7 +632,7 @@
     
     function renderCSVMenu(csvRows) {
       allMenuData = csvRows.filter(item => 
-        item.Actif && item.Actif.trim().toLowerCase() === "oui"
+        item.Actif && item.Actif.toString().trim().toLowerCase() === "oui"
       );
       
       // Render all tabs
@@ -660,7 +664,7 @@
       let html = '<div class="now-title">À l\'affiche en ce moment</div>';
       
       const nowItems = allMenuData.filter(item => 
-        item['En ce moment'] && item['En ce moment'].trim().toLowerCase() === "oui"
+        item['En ce moment'] && item['En ce moment'].toString().trim().toLowerCase() === "oui"
       );
       
       if (nowItems.length === 0) {
@@ -719,43 +723,6 @@
       });
       
       tab.innerHTML = html;
-    }
-    
-    // SWIPE FUNCTIONALITY
-    function initSwipe() {
-      const tabNav = document.getElementById('tabNav');
-      const tabs = ['now', 'deguster', 'cocktails', 'chaudes', 'bieres', 'softs', 'vins'];
-      
-      tabNav.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-      });
-      
-      tabNav.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe(tabs);
-      });
-    }
-    
-    function handleSwipe(tabs) {
-      const swipeThreshold = 50;
-      const diff = touchStartX - touchEndX;
-      
-      if (Math.abs(diff) > swipeThreshold) {
-        const currentIndex = tabs.indexOf(currentTab);
-        let nextIndex;
-        
-        if (diff > 0 && currentIndex < tabs.length - 1) {
-          // Swipe left - next tab
-          nextIndex = currentIndex + 1;
-        } else if (diff < 0 && currentIndex > 0) {
-          // Swipe right - previous tab
-          nextIndex = currentIndex - 1;
-        }
-        
-        if (nextIndex !== undefined) {
-          showTab(tabs[nextIndex]);
-        }
-      }
     }
     
     // PWA FUNCTIONALITY
@@ -820,7 +787,7 @@
     function init() {
       // Initialize event listeners
       initSearch();
-      initSwipe();
+      // initSwipe(); // SUPPRIMÉ - plus de swipe horizontal
       initPWA();
       
       // Tab navigation
