@@ -318,8 +318,8 @@
       let html = '';
       Object.keys(sections).forEach(sectionName => {
         html += `<h2 class="section-title">${sectionName}</h2>`;
-        sections[sectionName].forEach(item => {
-          html += createMenuItemHTML(item);
+        sections[sectionName].sort((a, b) => {
+          return (a.Nom || '').localeCompare(b.Nom || '');
         });
       });
       tab.innerHTML = html;
