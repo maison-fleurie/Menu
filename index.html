@@ -147,10 +147,10 @@
       font-weight: 400;
       white-space: nowrap;
       padding-left: 0.5rem;
-      min-width: 60px; /* Augmenté de 48px à 60px */
+      min-width: 60px;
       text-align: right;
       font-family: Arial, sans-serif;
-      flex-shrink: 0; /* Empêche le rétrécissement */
+      flex-shrink: 0;
     }
     .section-title {
       font-family: 'Viaoda Libre', serif;
@@ -185,12 +185,12 @@
       .now-title { font-size: 1.03rem; }
       .menu-item { 
         font-size: 0.97rem; 
-        flex-direction: column; /* Passe en colonne sur très petit écran */
+        flex-direction: column;
         align-items: stretch;
       }
       .item-name { font-size: 1.04rem; }
       .item-price {
-        text-align: left; /* Aligné à gauche sur mobile */
+        text-align: left;
         padding-left: 0;
         margin-top: 0.3rem;
         font-size: 1.1rem;
@@ -203,7 +203,7 @@
       }
       .item-price {
         font-size: 0.95rem;
-        white-space: normal; /* Permet le retour à la ligne si nécessaire */
+        white-space: normal;
         word-break: break-word;
       }
     }
@@ -276,52 +276,93 @@
     function renderNowTab() {
       const nowTab = document.getElementById('now');
       if (!nowTab) return;
+      
       let html = '<div class="now-title">À l\'affiche en ce moment</div>';
-      const nowItems = allMenuData.filter(item => (item['En ce moment'] || '').trim().toLowerCase() === "oui");
+      const nowItems = allMenuData.filter(item => 
+        (item['En ce moment'] || '').trim().toLowerCase() === "oui"
+      );
+      
       if (nowItems.length === 0) {
-        html += `<div class="empty-state"><div class="empty-state-icon">✨</div>
-        <h3>Aucune nouveauté</h3>
-        <p>Aucun plat ou boisson n'est mis en avant actuellement.</p></div>`;
+        html += `<div class="empty-state">
+          <div class="empty-state-icon">✨</div>
+          <h3>Aucune nouveauté</h3>
+          <p>Aucun plat ou boisson n'est mis en avant actuellement.</p>
+        </div>`;
       } else {
-        let currentSection = '';
+        // Grouper par section
+        const sections = {};
         nowItems.forEach(item => {
-          if (item.Section !== currentSection) {
-            currentSection = item.Section || 'Autres';
-            html += `<h2 class="section-title">${currentSection}</h2>`;
-          }
-          html += createMenuItemHTML(item);
+          const section = item.Section || 'Autres';
+          if (!sections[section]) sections[section] = [];
+          sections[section].push(item);
+        });
+        
+        // Pour chaque section
+        Object.keys(sections).sort().forEach(sectionName => {
+          html += `<h2 class="section-title">${sectionName}</h2>`;
+          
+          // Trier alphabétiquement par nom
+          sections[sectionName].sort((a, b) => {
+            return (a.Nom || '').localeCompare(b.Nom || '');
+          });
+          
+          // Ajouter les items triés
+          sections[sectionName].forEach(item => {
+            html += createMenuItemHTML(item);
+          });
         });
       }
+      
       nowTab.innerHTML = html;
     }
 
     function renderMenuForTab(tabName) {
-      if (tabName === 'now') { renderNowTab(); return; }
+      if (tabName === 'now') { 
+        renderNowTab(); 
+        return; 
+      }
+      
       const tab = document.getElementById(tabName);
       if (!tab) return;
+      
       const tabItems = allMenuData.filter(item =>
         (item.Onglet || '').toLowerCase().replace(/\s/g, '') === tabName
       );
+      
       if (tabItems.length === 0) {
-        tab.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🍽️</div>
+        tab.innerHTML = `<div class="empty-state">
+          <div class="empty-state-icon">🍽️</div>
           <h3>Section vide</h3>
           <p>Aucun élément dans cette catégorie pour le moment.</p>
         </div>`;
         return;
       }
+      
+      // Grouper par section
       const sections = {};
       tabItems.forEach(item => {
         const section = item.Section || 'Autres';
         if (!sections[section]) sections[section] = [];
         sections[section].push(item);
       });
+      
       let html = '';
-      Object.keys(sections).forEach(sectionName => {
+      
+      // Trier les sections alphabétiquement et pour chaque section
+      Object.keys(sections).sort().forEach(sectionName => {
         html += `<h2 class="section-title">${sectionName}</h2>`;
+        
+        // Trier alphabétiquement par nom dans chaque section
         sections[sectionName].sort((a, b) => {
           return (a.Nom || '').localeCompare(b.Nom || '');
         });
+        
+        // Ajouter les items triés
+        sections[sectionName].forEach(item => {
+          html += createMenuItemHTML(item);
+        });
       });
+      
       tab.innerHTML = html;
     }
 
@@ -373,6 +414,7 @@
         searchTimeout = setTimeout(() => { performSearch(query); }, 200);
       });
     }
+    
     function performSearch(query) {
       isSearching = true;
       const searchTerm = query.toLowerCase();
@@ -381,29 +423,46 @@
         (item.Description && item.Description.toLowerCase().includes(searchTerm)) ||
         (item.Section && item.Section.toLowerCase().includes(searchTerm))
       );
+      
+      // Trier les résultats alphabétiquement
+      results.sort((a, b) => (a.Nom || '').localeCompare(b.Nom || ''));
+      
       displaySearchResults(results, query);
       const searchInfo = document.getElementById('searchInfo');
       searchInfo.style.display = 'block';
       searchInfo.textContent = `${results.length} résultat(s) pour "${query}"`;
     }
+    
     function displaySearchResults(results, query) {
       const currentTabContent = document.getElementById(currentTab);
       if (results.length === 0) {
-        currentTabContent.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🔍</div>
+        currentTabContent.innerHTML = `<div class="empty-state">
+          <div class="empty-state-icon">🔍</div>
           <h3>Aucun résultat</h3>
-          <p>Aucun plat ou boisson ne correspond à "${query}"</p></div>`;
+          <p>Aucun plat ou boisson ne correspond à "${query}"</p>
+        </div>`;
         return;
       }
-      let html = '', currentSection = '';
+      
+      // Grouper par section et trier
+      const sections = {};
       results.forEach(item => {
-        if (item.Section !== currentSection) {
-          currentSection = item.Section;
-          html += `<h2 class="section-title">${currentSection}</h2>`;
-        }
-        html += createMenuItemHTML(item);
+        const section = item.Section || 'Autres';
+        if (!sections[section]) sections[section] = [];
+        sections[section].push(item);
       });
+      
+      let html = '';
+      Object.keys(sections).sort().forEach(sectionName => {
+        html += `<h2 class="section-title">${sectionName}</h2>`;
+        sections[sectionName].forEach(item => {
+          html += createMenuItemHTML(item);
+        });
+      });
+      
       currentTabContent.innerHTML = html;
     }
+    
     function clearSearch() {
       isSearching = false;
       document.getElementById('searchBox').value = '';
