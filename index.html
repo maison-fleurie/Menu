@@ -147,10 +147,10 @@
       font-weight: 400;
       white-space: nowrap;
       padding-left: 0.5rem;
-      min-width: 60px; /* Augmenté de 48px à 60px */
+      min-width: 60px;
       text-align: right;
       font-family: Arial, sans-serif;
-      flex-shrink: 0; /* Empêche le rétrécissement */
+      flex-shrink: 0;
     }
     .section-title {
       font-family: 'Viaoda Libre', serif;
@@ -158,6 +158,10 @@
       color: #2c5530;
       margin: 1.7rem 0 0.3rem 0;
       letter-spacing: 0.5px;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      text-decoration-thickness: 2px;
+      padding-bottom: 1.5rem;
     }
     .now-title {
       font-size: 1.17rem;
@@ -185,12 +189,12 @@
       .now-title { font-size: 1.03rem; }
       .menu-item { 
         font-size: 0.97rem; 
-        flex-direction: column; /* Passe en colonne sur très petit écran */
+        flex-direction: column;
         align-items: stretch;
       }
       .item-name { font-size: 1.04rem; }
       .item-price {
-        text-align: left; /* Aligné à gauche sur mobile */
+        text-align: left;
         padding-left: 0;
         margin-top: 0.3rem;
         font-size: 1.1rem;
@@ -203,7 +207,7 @@
       }
       .item-price {
         font-size: 0.95rem;
-        white-space: normal; /* Permet le retour à la ligne si nécessaire */
+        white-space: normal;
         word-break: break-word;
       }
     }
@@ -283,13 +287,31 @@
         <h3>Aucune nouveauté</h3>
         <p>Aucun plat ou boisson n'est mis en avant actuellement.</p></div>`;
       } else {
-        let currentSection = '';
+        const sections = {};
         nowItems.forEach(item => {
-          if (item.Section !== currentSection) {
-            currentSection = item.Section || 'Autres';
-            html += `<h2 class="section-title">${currentSection}</h2>`;
+          const sectionName = item.Section || 'Autres';
+          if (!sections[sectionName]) sections[sectionName] = [];
+          sections[sectionName].push(item);
+        });
+        
+        // Garde l'ordre original des sections mais trie les items alphabétiquement
+        const sectionsOrder = [];
+        nowItems.forEach(item => {
+          const sectionName = item.Section || 'Autres';
+          if (!sectionsOrder.includes(sectionName)) {
+            sectionsOrder.push(sectionName);
           }
-          html += createMenuItemHTML(item);
+        });
+        
+        sectionsOrder.forEach(sectionName => {
+          html += `<h2 class="section-title">${sectionName}</h2>`;
+          // Trie les items alphabétiquement dans la section
+          sections[sectionName].sort((a, b) => {
+            return (a.Nom || '').localeCompare(b.Nom || '');
+          });
+          sections[sectionName].forEach(item => {
+            html += createMenuItemHTML(item);
+          });
         });
       }
       nowTab.innerHTML = html;
@@ -309,19 +331,35 @@
         </div>`;
         return;
       }
+      
       const sections = {};
       tabItems.forEach(item => {
-        const section = item.Section || 'Autres';
-        if (!sections[section]) sections[section] = [];
-        sections[section].push(item);
+        const sectionName = item.Section || 'Autres';
+        if (!sections[sectionName]) sections[sectionName] = [];
+        sections[sectionName].push(item);
       });
+      
+      // Garde l'ordre original des sections mais trie les items alphabétiquement
+      const sectionsOrder = [];
+      tabItems.forEach(item => {
+        const sectionName = item.Section || 'Autres';
+        if (!sectionsOrder.includes(sectionName)) {
+          sectionsOrder.push(sectionName);
+        }
+      });
+      
       let html = '';
-      Object.keys(sections).forEach(sectionName => {
+      sectionsOrder.forEach(sectionName => {
         html += `<h2 class="section-title">${sectionName}</h2>`;
+        // Trie les items alphabétiquement dans la section
+        sections[sectionName].sort((a, b) => {
+          return (a.Nom || '').localeCompare(b.Nom || '');
+        });
         sections[sectionName].forEach(item => {
           html += createMenuItemHTML(item);
         });
       });
+      
       tab.innerHTML = html;
     }
 
@@ -394,14 +432,35 @@
           <p>Aucun plat ou boisson ne correspond à "${query}"</p></div>`;
         return;
       }
-      let html = '', currentSection = '';
+      
+      const sections = {};
       results.forEach(item => {
-        if (item.Section !== currentSection) {
-          currentSection = item.Section;
-          html += `<h2 class="section-title">${currentSection}</h2>`;
-        }
-        html += createMenuItemHTML(item);
+        const sectionName = item.Section || 'Autres';
+        if (!sections[sectionName]) sections[sectionName] = [];
+        sections[sectionName].push(item);
       });
+      
+      // Garde l'ordre original des sections mais trie les items alphabétiquement
+      const sectionsOrder = [];
+      results.forEach(item => {
+        const sectionName = item.Section || 'Autres';
+        if (!sectionsOrder.includes(sectionName)) {
+          sectionsOrder.push(sectionName);
+        }
+      });
+      
+      let html = '';
+      sectionsOrder.forEach(sectionName => {
+        html += `<h2 class="section-title">${sectionName}</h2>`;
+        // Trie les items alphabétiquement dans la section
+        sections[sectionName].sort((a, b) => {
+          return (a.Nom || '').localeCompare(b.Nom || '');
+        });
+        sections[sectionName].forEach(item => {
+          html += createMenuItemHTML(item);
+        });
+      });
+      
       currentTabContent.innerHTML = html;
     }
     function clearSearch() {
