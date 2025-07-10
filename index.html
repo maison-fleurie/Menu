@@ -528,21 +528,23 @@
     }
 
     @media (max-width: 480px) {
-      .menu-item {
-        flex-direction: column;
-        align-items: stretch;
-        padding: 1.5rem 1rem;
-      }
+  .menu-item {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1.5rem 1rem;
+  }
 
-      .item-name {
-        font-size: 1.2rem;
-      }
+  .item-name {
+    font-size: 1.2rem;
+  }
 
-      .item-price {
-        margin-top: 1rem;
-        text-align: center;
-        min-width: auto;
-      }
+  .item-price {
+    margin-top: 1rem;
+    text-align: center;
+    min-width: auto;
+    font-size: 1.1rem;  /* Réduire de 1.3rem à 1.1rem */
+    padding: 0.6rem 1rem;  /* Réduire de 0.8rem 1.2rem à 0.6rem 1rem */
+  }
 
       .section-title {
         font-size: 1.6rem;
@@ -758,9 +760,9 @@
         sectionsOrder.forEach(sectionName => {
           html += `<h2 class="section-title">${sectionName}</h2>`;
           
-          // Trier alphabétiquement
+          // Trier par prix croissant
           sections[sectionName].sort((a, b) => 
-            (a.Nom || '').localeCompare(b.Nom || '')
+            extractPriceForSort(a.Prix) - extractPriceForSort(b.Prix)
           );
           
           sections[sectionName].forEach(item => {
@@ -770,6 +772,23 @@
       }
       
       nowTab.innerHTML = html;
+    }
+
+    /**
+     * Extrait et convertit le prix en nombre pour le tri
+     * @param {string} prixString - String du prix (ex: "12€" ou "4,50€ / 7€")
+     * @returns {number} - Premier prix en nombre
+     */
+    function extractPriceForSort(prixString) {
+      if (!prixString) return 0;
+      
+      // Extraire le premier prix (avant le / s'il y en a un)
+      const firstPrice = prixString.split('/')[0].trim();
+      
+      // Extraire les nombres et virgules, remplacer virgule par point
+      const numStr = firstPrice.replace(/[^\d,]/g, '').replace(',', '.');
+      
+      return parseFloat(numStr) || 0;
     }
 
     // ===== RENDU DES AUTRES ONGLETS =====
@@ -821,7 +840,7 @@
         html += `<h2 class="section-title">${sectionName}</h2>`;
         
         sections[sectionName].sort((a, b) => 
-          (a.Nom || '').localeCompare(b.Nom || '')
+          extractPriceForSort(a.Prix) - extractPriceForSort(b.Prix)
         );
         
         sections[sectionName].forEach(item => {
@@ -988,7 +1007,7 @@
         html += `<h2 class="section-title">${sectionName}</h2>`;
         
         sections[sectionName].sort((a, b) => 
-          (a.Nom || '').localeCompare(b.Nom || '')
+         extractPriceForSort(a.Prix) - extractPriceForSort(b.Prix)
         );
         
         sections[sectionName].forEach(item => {
