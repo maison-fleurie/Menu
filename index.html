@@ -299,7 +299,7 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 1.5rem;
-      padding: 2rem 1.5rem;
+      padding: 1.8rem 1.5rem;
       border-bottom: 1px solid rgba(13,31,19,0.05);
       background: linear-gradient(135deg, rgba(248,246,240,0.4) 0%, rgba(255,255,255,0.8) 100%);
       margin-bottom: 0.8rem;
@@ -364,19 +364,21 @@
       line-height: 1.5;
     }
 
+    /* AMÉLIORATION : Prix plus discret */
     .item-price {
-      font-size: 1.3rem;
+      font-size: 1.1rem;
       color: var(--vert-fond);
-      font-weight: 700;
-      background: var(--gradient-warm);
+      font-weight: 600;
+      background: linear-gradient(135deg, rgba(171,169,119,0.15) 0%, rgba(212,196,138,0.15) 100%);
       border-radius: var(--border-radius-soft);
-      padding: 0.8rem 1.2rem;
-      min-width: 90px;
+      padding: 0.6rem 1rem;
+      min-width: 70px;
       text-align: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
       position: relative;
       overflow: hidden;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(171,169,119,0.2);
     }
 
     .item-price::before {
@@ -386,13 +388,14 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
       transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .menu-item:hover .item-price {
-      transform: scale(1.05);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      background: linear-gradient(135deg, rgba(171,169,119,0.25) 0%, rgba(212,196,138,0.25) 100%);
     }
 
     .menu-item:hover .item-price::before {
@@ -524,6 +527,14 @@
 
       .menu-item {
         padding: 1.5rem 1rem;
+        gap: 1rem;
+      }
+
+      /* AMÉLIORATION : Prix encore plus discret sur mobile */
+      .item-price {
+        font-size: 1rem;
+        padding: 0.5rem 0.8rem;
+        min-width: 60px;
       }
     }
 
@@ -535,13 +546,15 @@
       }
 
       .item-name {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
       }
 
       .item-price {
         margin-top: 1rem;
         text-align: center;
         min-width: auto;
+        align-self: flex-end;
+        max-width: 120px;
       }
 
       .section-title {
@@ -562,51 +575,6 @@
         padding: 2rem 1rem;
       }
     }
-
-    /* ===== ANIMATIONS ET EFFETS OPTIONNELS (Commentés par défaut) ===== */
-    
-    /* Mode sombre optionnel */
-    /*
-    .dark-mode {
-      --vert-fond: #1a2e1a;
-      --beige-logo: #e8d5a3;
-      --blanc: #2a2a2a;
-      --beige-clair: #3a3a3a;
-      --vert-accent: #4a6a4a;
-      --gris-texte: #b0b0b0;
-      --gradient-warm: linear-gradient(135deg, #3a3a3a 0%, #4a4a4a 100%);
-      --gradient-cool: linear-gradient(135deg, #1a2e1a 0%, #2a4a32 100%);
-    }
-    */
-
-    /* Effet de particules optionnel */
-    /*
-    .particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    .particle {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      background: var(--beige-logo);
-      border-radius: 50%;
-      animation: float 6s linear infinite;
-    }
-
-    @keyframes float {
-      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
-    }
-    */
   </style>
 </head>
 <body>
@@ -667,6 +635,23 @@
     let isSearching = false;     // État de la recherche
     let searchTimeout;           // Timeout pour la recherche (évite les appels trop fréquents)
 
+    // ===== FONCTION POUR EXTRAIRE LA VALEUR NUMÉRIQUE DU PRIX =====
+    /**
+     * Extrait la première valeur numérique d'un prix pour le tri
+     * @param {string} price - Prix au format texte (ex: "12€" ou "12€/45€")
+     * @returns {number} - Valeur numérique pour le tri
+     */
+    function extractPriceValue(price) {
+      if (!price || typeof price !== 'string') return 0;
+      
+      // Nettoyer le prix et extraire les nombres
+      const cleanPrice = price.replace(/[^\d.,\/]/g, '');
+      const numbers = cleanPrice.split(/[\/,]/).map(n => parseFloat(n.replace(',', '.')));
+      
+      // Retourner la première valeur numérique valide
+      return numbers.find(n => !isNaN(n)) || 0;
+    }
+
     // ===== FONCTION PRINCIPALE - NAVIGATION ENTRE ONGLETS =====
     /**
      * Affiche l'onglet sélectionné et met à jour l'interface
@@ -717,353 +702,229 @@
       `;
     }
 
-    // ===== RENDU DE L'ONGLET "EN CE MOMENT" =====
+    // ===== FONCTION DE TRI PAR PRIX =====
     /**
-     * Affiche les éléments mis en avant actuellement
+     * Trie un tableau d'éléments par prix croissant
+     * @param {Array} items - Tableau d'éléments à trier
+     * @returns {Array} - Tableau trié par prix
      */
-    function renderNowTab() {
-      const nowTab = document.getElementById('now');
-      if (!nowTab) return;
-      
-      let html = '<div class="now-title">À l\'affiche en ce moment</div>';
-      
-      // Filtrer les éléments marqués comme "En ce moment"
-      const nowItems = allMenuData.filter(item => 
-        (item['En ce moment'] || '').trim().toLowerCase() === "oui"
-      );
-      
-      if (nowItems.length === 0) {
-        html += `
-          <div class="empty-state">
-            <div class="empty-state-icon">✨</div>
-            <h3>Aucune nouveauté</h3>
-            <p>Aucun plat ou boisson n'est mis en avant actuellement.</p>
-          </div>
-        `;
-      } else {
-        // Grouper par sections
-        const sections = {};
-        const sectionsOrder = [];
+    function sortByPrice(items) {
+      return items.sort((a, b) => {
+        const priceA = extractPriceValue(a.Prix);
+        const priceB = extractPriceValue(b.Prix);
         
-        nowItems.forEach(item => {
-          const sectionName = item.Section || 'Autres';
-          if (!sections[sectionName]) {
-            sections[sectionName] = [];
-            sectionsOrder.push(sectionName);
-          }
-          sections[sectionName].push(item);
-        });
+        // Tri par prix croissant
+        if (priceA !== priceB) {
+          return priceA - priceB;
+        }
         
-        // Générer le HTML pour chaque section
-        sectionsOrder.forEach(sectionName => {
-          html += `<h2 class="section-title">${sectionName}</h2>`;
-          
-          // Trier alphabétiquement
-          sections[sectionName].sort((a, b) => 
-            (a.Nom || '').localeCompare(b.Nom || '')
-          );
-          
-          sections[sectionName].forEach(item => {
-            html += createMenuItemHTML(item);
-          });
-        });
-      }
-      
-      nowTab.innerHTML = html;
+        // En cas d'égalité de prix, tri alphabétique
+        return (a.Nom || '').localeCompare(b.Nom || '');
+      });
     }
 
-    // ===== RENDU DES AUTRES ONGLETS =====
+    // ===== RENDU DES ÉLÉMENTS DANS UN ONGLET =====
     /**
-     * Affiche le contenu d'un onglet spécifique
-     * @param {string} tabName - Nom de l'onglet à rendre
+     * Affiche les éléments du menu dans l'onglet spécifié
+     * @param {string} tabName - Nom de l'onglet
+     * @param {Array} items - Éléments à afficher
      */
-    function renderMenuForTab(tabName) {
-      if (tabName === 'now') {
-        renderNowTab();
-        return;
-      }
+    function renderMenuItems(tabName, items) {
+      const container = document.getElementById(tabName);
       
-      const tab = document.getElementById(tabName);
-      if (!tab) return;
-      
-      // Filtrer les éléments selon l'onglet
-      const tabItems = allMenuData.filter(item =>
-        (item.Onglet || '').toLowerCase().replace(/\s/g, '') === tabName
-      );
-      
-      if (tabItems.length === 0) {
-        tab.innerHTML = `
+      if (!items || items.length === 0) {
+        container.innerHTML = `
           <div class="empty-state">
             <div class="empty-state-icon">🍽️</div>
-            <h3>Section vide</h3>
-            <p>Aucun élément dans cette catégorie pour le moment.</p>
+            <h3>Aucun élément trouvé</h3>
+            <p>Il n'y a pas d'éléments dans cette catégorie pour le moment.</p>
           </div>
         `;
         return;
       }
-      
-      // Grouper par sections
-      const sections = {};
-      const sectionsOrder = [];
-      
-      tabItems.forEach(item => {
-        const sectionName = item.Section || 'Autres';
-        if (!sections[sectionName]) {
-          sections[sectionName] = [];
-          sectionsOrder.push(sectionName);
-        }
-        sections[sectionName].push(item);
-      });
-      
-      // Générer le HTML
-      let html = '';
-      sectionsOrder.forEach(sectionName => {
-        html += `<h2 class="section-title">${sectionName}</h2>`;
+
+      if (tabName === 'now') {
+        // Pour l'onglet "En ce moment", affichage simple trié par prix
+        const sortedItems = sortByPrice(items);
+        container.innerHTML = sortedItems.map(item => createMenuItemHTML(item)).join('');
+      } else {
+        // Pour les autres onglets, groupement par section puis tri par prix
+        const sections = {};
         
-        sections[sectionName].sort((a, b) => 
-          (a.Nom || '').localeCompare(b.Nom || '')
-        );
-        
-        sections[sectionName].forEach(item => {
-          html += createMenuItemHTML(item);
+        // Grouper les éléments par section
+        items.forEach(item => {
+          const section = item.Section || 'Autres';
+          if (!sections[section]) {
+            sections[section] = [];
+          }
+          sections[section].push(item);
         });
+        
+        // Construire le HTML avec sections triées
+        let html = '';
+        Object.keys(sections).sort().forEach(sectionName => {
+          const sectionItems = sortByPrice(sections[sectionName]);
+          
+          html += `<h2 class="section-title">${sectionName}</h2>`;
+          html += sectionItems.map(item => createMenuItemHTML(item)).join('');
+        });
+        
+        container.innerHTML = html;
+      }
+    }
+
+    // ===== FONCTION DE RECHERCHE =====
+    /**
+     * Filtre les éléments du menu selon les termes de recherche
+     * @param {string} searchTerm - Terme de recherche
+     */
+    function performSearch(searchTerm) {
+      if (!searchTerm.trim()) {
+        clearSearch();
+        return;
+      }
+      
+      isSearching = true;
+      const searchLower = searchTerm.toLowerCase();
+      
+      // Filtrer tous les éléments qui correspondent à la recherche
+      const filteredItems = allMenuData.filter(item => {
+        const name = (item.Nom || '').toLowerCase();
+        const description = (item.Description || '').toLowerCase();
+        const section = (item.Section || '').toLowerCase();
+        
+        return name.includes(searchLower) || 
+               description.includes(searchLower) || 
+               section.includes(searchLower);
       });
       
-      tab.innerHTML = html;
+      // Afficher les résultats de recherche
+      renderMenuItems(currentTab, filteredItems);
+      
+      // Mettre à jour les informations de recherche
+      const searchInfo = document.getElementById('searchInfo');
+      searchInfo.style.display = 'block';
+      searchInfo.textContent = `${filteredItems.length} résultat${filteredItems.length !== 1 ? 's' : ''} trouvé${filteredItems.length !== 1 ? 's' : ''} pour "${searchTerm}"`;
     }
 
-    // ===== RENDU COMPLET DE TOUS LES ONGLETS =====
-    /**
-     * Regenere le contenu de tous les onglets
-     */
-    function renderAllTabs() {
-      const allTabs = ['now', 'deguster', 'cocktails', 'chaudes', 'bieres', 'softs', 'vins'];
+    // ===== FONCTION POUR EFFACER LA RECHERCHE =====
+    function clearSearch() {
+      isSearching = false;
+      document.getElementById('searchBox').value = '';
+      document.getElementById('searchInfo').style.display = 'none';
       
-      // Vider tous les onglets
-      allTabs.forEach(tab => {
-        const element = document.getElementById(tab);
-        if (element) element.innerHTML = '';
+      // Réafficher les éléments de l'onglet actuel
+      const tabItems = getItemsForTab(currentTab);
+      renderMenuItems(currentTab, tabItems);
+    }
+
+    // ===== FONCTION POUR OBTENIR LES ÉLÉMENTS D'UN ONGLET =====
+    /**
+     * Filtre les éléments selon l'onglet sélectionné
+     * @param {string} tabName - Nom de l'onglet
+     * @returns {Array} - Éléments filtrés pour cet onglet
+     */
+    function getItemsForTab(tabName) {
+      const tabMapping = {
+        'now': 'En ce moment',
+        'deguster': 'Déguster',
+        'cocktails': 'Cocktails',
+        'chaudes': 'Chaudes',
+        'bieres': 'Bières',
+        'softs': 'Softs',
+        'vins': 'Vins'
+      };
+      
+      const categoryName = tabMapping[tabName] || tabName;
+      
+      return allMenuData.filter(item => {
+        const category = item.Catégorie || '';
+        return category === categoryName;
       });
-      
-      // Rendre chaque onglet
-      allTabs.forEach(tab => renderMenuForTab(tab));
     }
 
-    // ===== TRAITEMENT DES DONNÉES CSV =====
-    /**
-     * Traite les données CSV et lance le rendu
-     * @param {Array} csvRows - Tableau des données CSV
-     */
-    function renderCSVMenu(csvRows) {
-      // Filtrer seulement les éléments actifs
-      allMenuData = csvRows.filter(item =>
-        (item.Actif || '').trim().toLowerCase() === "oui"
-      );
-      
-      renderAllTabs();
+    // ===== FONCTION POUR RÉESSAYER LE CHARGEMENT =====
+    function retryLoad() {
+      document.getElementById('errorContainer').style.display = 'none';
+      loadMenuData();
     }
 
-    // ===== RÉCUPÉRATION DES DONNÉES =====
+    // ===== CHARGEMENT DES DONNÉES DU MENU =====
     /**
-     * Récupère le fichier CSV depuis Google Sheets et lance le traitement
+     * Charge les données du menu depuis le fichier CSV
      */
-    function fetchCSVAndRender() {
-      const csvUrl = 'https://docs.google.com/spreadsheets/d/1lgd-rGS2kLCn0yPtGMc7RyMDue-YERmKOjNT3QKgJ3Y/export?format=csv&gid=0';
+    function loadMenuData() {
+      const csvUrl = 'https://raw.githubusercontent.com/maison-fleurie/Menu/main/menu.csv';
       
       Papa.parse(csvUrl, {
         download: true,
         header: true,
+        skipEmptyLines: true,
         complete: function(results) {
-          if (results.errors && results.errors.length > 0) {
-            console.error('Erreurs CSV:', results.errors);
-            showError();
+          if (results.data && results.data.length > 0) {
+            allMenuData = results.data;
+            
+            // Initialiser l'affichage avec l'onglet "En ce moment"
+            const nowItems = getItemsForTab('now');
+            renderMenuItems('now', nowItems);
+            
+            console.log('Menu chargé avec succès:', allMenuData.length, 'éléments');
           } else {
-            hideError();
-            renderCSVMenu(results.data);
+            showError();
           }
         },
-        error: function(err) {
-          console.error('Erreur de chargement:', err);
+        error: function(error) {
+          console.error('Erreur lors du chargement:', error);
           showError();
         }
       });
     }
 
-    // ===== GESTION DES ERREURS =====
+    // ===== AFFICHAGE DES ERREURS =====
     function showError() {
       document.getElementById('errorContainer').style.display = 'block';
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.innerHTML = '';
+      });
     }
 
-    function hideError() {
-      document.getElementById('errorContainer').style.display = 'none';
-    }
-
-    function retryLoad() {
-      hideError();
-      fetchCSVAndRender();
-    }
-
-    // ===== SYSTÈME DE RECHERCHE =====
-    /**
-     * Initialise la fonctionnalité de recherche
-     */
-    function initSearch() {
-      const searchBox = document.getElementById('searchBox');
-      const searchInfo = document.getElementById('searchInfo');
+    // ===== INITIALISATION AU CHARGEMENT DE LA PAGE =====
+    document.addEventListener('DOMContentLoaded', function() {
+      // Chargement des données du menu
+      loadMenuData();
       
-      searchBox.addEventListener('input', (e) => {
-        clearTimeout(searchTimeout);
-        const query = e.target.value.trim();
-        
-        if (!query) {
-          clearSearch();
-          return;
+      // Gestion des clics sur les onglets
+      document.getElementById('tabNav').addEventListener('click', function(e) {
+        if (e.target.classList.contains('tab-btn')) {
+          const tabName = e.target.getAttribute('data-tab');
+          showTab(tabName);
+          
+          // Charger les éléments de l'onglet sélectionné
+          if (!isSearching) {
+            const tabItems = getItemsForTab(tabName);
+            renderMenuItems(tabName, tabItems);
+          }
         }
+      });
+      
+      // Gestion de la recherche
+      document.getElementById('searchBox').addEventListener('input', function(e) {
+        const searchTerm = e.target.value;
         
-        // Délai pour éviter trop d'appels
+        // Utiliser un timeout pour éviter trop d'appels
+        clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => {
-          performSearch(query);
+          performSearch(searchTerm);
         }, 300);
       });
-    }
-
-    /**
-     * Effectue la recherche dans le menu
-     * @param {string} query - Terme de recherche
-     */
-    function performSearch(query) {
-      isSearching = true;
-      const searchTerm = query.toLowerCase();
       
-      // Recherche dans nom, description et section
-      const results = allMenuData.filter(item =>
-        (item.Nom && item.Nom.toLowerCase().includes(searchTerm)) ||
-        (item.Description && item.Description.toLowerCase().includes(searchTerm)) ||
-        (item.Section && item.Section.toLowerCase().includes(searchTerm))
-      );
-      
-      displaySearchResults(results, query);
-      
-      // Afficher les infos de recherche
-      const searchInfo = document.getElementById('searchInfo');
-      searchInfo.style.display = 'block';
-      searchInfo.textContent = `${results.length} résultat(s) pour "${query}"`;
-    }
-
-    /**
-     * Affiche les résultats de recherche
-     * @param {Array} results - Résultats de la recherche
-     * @param {string} query - Terme recherché
-     */
-    function displaySearchResults(results, query) {
-      const currentTabContent = document.getElementById(currentTab);
-      
-      if (results.length === 0) {
-        currentTabContent.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-state-icon">🔍</div>
-            <h3>Aucun résultat</h3>
-            <p>Aucun plat ou boisson ne correspond à "${query}"</p>
-          </div>
-        `;
-        return;
-      }
-      
-      // Grouper les résultats par section
-      const sections = {};
-      const sectionsOrder = [];
-      
-      results.forEach(item => {
-        const sectionName = item.Section || 'Autres';
-        if (!sections[sectionName]) {
-          sections[sectionName] = [];
-          sectionsOrder.push(sectionName);
+      // Effacer la recherche avec Escape
+      document.getElementById('searchBox').addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          clearSearch();
         }
-        sections[sectionName].push(item);
       });
-      
-      // Générer le HTML
-      let html = '';
-      sectionsOrder.forEach(sectionName => {
-        html += `<h2 class="section-title">${sectionName}</h2>`;
-        
-        sections[sectionName].sort((a, b) => 
-          (a.Nom || '').localeCompare(b.Nom || '')
-        );
-        
-        sections[sectionName].forEach(item => {
-          html += createMenuItemHTML(item);
-        });
-      });
-      
-      currentTabContent.innerHTML = html;
-    }
-
-    /**
-     * Efface la recherche et restaure le contenu normal
-     */
-    function clearSearch() {
-      isSearching = false;
-      document.getElementById('searchBox').value = '';
-      document.getElementById('searchInfo').style.display = 'none';
-      renderMenuForTab(currentTab);
-    }
-
-    // ===== INITIALISATION =====
-    /**
-     * Initialise l'application
-     */
-    function init() {
-      // Initialiser la recherche
-      initSearch();
-      
-      // Ajouter les événements aux boutons d'onglets
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.preventDefault();
-          showTab(btn.dataset.tab);
-        });
-      });
-      
-      // Charger les données du menu
-      fetchCSVAndRender();
-    }
-
-    // ===== LANCEMENT DE L'APPLICATION =====
-    document.addEventListener('DOMContentLoaded', init);
-
-    // ===== FONCTIONNALITÉS OPTIONNELLES  =====
-    
-
-    // PARTAGE
-    function shareMenu() {
-      if (navigator.share) {
-        navigator.share({
-          title: 'Menu - Maison Fleurie',
-          text: 'Découvrez notre menu',
-          url: window.location.href
-        });
-      }
-    }
-
-    // ANIMATION DES PARTICULES
-    function createParticles() {
-      const particlesContainer = document.createElement('div');
-      particlesContainer.className = 'particles';
-      document.body.appendChild(particlesContainer);
-      
-      setInterval(() => {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.animationDelay = Math.random() * 2 + 's';
-        particlesContainer.appendChild(particle);
-        
-        setTimeout(() => {
-          particle.remove();
-        }, 6000);
-      }, 300);
-    }
+    });
   </script>
 </body>
 </html>
