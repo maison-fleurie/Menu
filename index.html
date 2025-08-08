@@ -22,7 +22,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Viaoda+Libre:wght@400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
   <!-- PapaParse (SRI + defer) -->
-  <script defer src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" integrity="sha384-0w3bXk9oV5cQ9Q2mKUmWJd6hJqJgW2d1r3h5k6Jf1oYxqgqf7iQ3bqJd0JzQb2mD" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
   <style>
     :root{
@@ -42,4 +42,495 @@
     a,button{outline-offset:3px}
 
     /* Header */
-    header.header{position:relative;text-align:center;background:var(--gradient-cool);color:var(--beige-logo);padding:3rem 1rem 2rem;box-shadow:
+    header.header{position:relative;text-align:center;background:var(--gradient-cool);color:var(--beige-logo);padding:3rem 1rem 2rem;box-shadow:var(--shadow-elevated);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.1)}
+
+    @media (prefers-reduced-motion:no-preference){
+      .header-title{animation:titleGlow 4s ease-in-out infinite alternate}
+      @keyframes titleGlow{0%{text-shadow:0 4px 8px rgba(0,0,0,.3)}100%{text-shadow:0 4px 8px rgba(0,0,0,.3),0 0 20px rgba(171,169,119,.4)}}
+    }
+
+    .header-title{font-family:'Viaoda Libre',serif;display:flex;align-items:center;justify-content:center;gap:2rem;margin:0;font-size:2.8rem;font-weight:400;letter-spacing:4px;line-height:1.2}
+    .header-logo{height:3.5rem;width:3.5rem;object-fit:contain;filter:drop-shadow(0 6px 12px rgba(0,0,0,.4))}
+    .header-subtitle{margin:1rem 0 0;font-size:1.2rem;font-weight:300;letter-spacing:1.5px;color:var(--or-accent)}
+
+    /* Share icon */
+    .share-btn{position:absolute;right:16px;top:16px;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:var(--beige-logo);cursor:pointer;backdrop-filter:blur(6px)}
+    .share-btn:hover{background:rgba(255,255,255,.15)}
+
+    /* Search */
+    .search-container{margin:1.5rem auto 1rem;max-width:700px;padding:0 1rem}
+    .search-row{display:flex;gap:.5rem}
+    .search-box{flex:1;padding:1.1rem 1.2rem;font-size:1rem;border-radius:var(--radius-lg);border:2px solid transparent;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);box-shadow:var(--shadow-modern);color:var(--vert-fond)}
+    .search-box:focus{border-color:var(--vert-fond);box-shadow:var(--shadow-elevated),0 0 0 4px rgba(13,31,19,.1);background:#fff}
+    .clear-btn{border:2px solid var(--beige-logo);background:#fff;border-radius:var(--radius-lg);padding:.9rem 1rem;cursor:pointer}
+    .search-results-info{font-size:1rem;color:var(--vert-fond);margin:1rem 0;font-weight:500;text-align:center;padding:.8rem 1.5rem;background:rgba(255,255,255,.9);border-radius:var(--radius-md);backdrop-filter:blur(15px);box-shadow:var(--shadow-modern)}
+
+    /* Main container */
+    main.container{max-width:900px;margin:1rem auto 3rem;background:rgba(255,255,255,.98);border-radius:var(--radius-lg);box-shadow:var(--shadow-elevated);overflow:hidden;border:1px solid rgba(13,31,19,.1);backdrop-filter:blur(20px)}
+
+    /* Icon styles */
+    .tab-btn{display:inline-flex;align-items:center;gap:.5rem}
+    .tab-btn .ico{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px}
+    .tab-btn .ico svg{width:18px;height:18px;display:block}
+    .header-logo{height:3rem;width:3rem;object-fit:contain;filter:drop-shadow(0 6px 12px rgba(0,0,0,.4))}
+
+    /* Tabs */
+    nav.tab-nav{display:flex;flex-wrap:wrap;justify-content:center;background:linear-gradient(135deg,var(--beige-clair) 0%,rgba(255,255,255,.95) 100%);border-bottom:2px solid var(--vert-fond);gap:.6rem;padding:1rem;position:sticky;top:0;z-index:10;backdrop-filter:blur(15px)}
+    .tab-btn{background:#fff;border:2px solid var(--beige-logo);padding:.9rem 1.2rem;font-size:1rem;cursor:pointer;font-weight:500;color:var(--vert-fond);border-radius:var(--radius-lg);position:relative;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+    .tab-btn[aria-selected="true"]{background:var(--gradient-cool);color:var(--beige-logo);border-color:var(--or-accent);box-shadow:0 8px 24px rgba(13,31,19,.2)}
+
+    .tab-content{display:none;padding:2rem 1.5rem;background:#fff;min-height:420px}
+    .tab-content.active{display:block}
+
+    /* Items */
+    .menu-item{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;padding:1.1rem 1rem;border-bottom:1px solid rgba(13,31,19,.06);background:linear-gradient(135deg,rgba(248,246,240,.4) 0%,rgba(255,255,255,.8) 100%);border-radius:var(--radius-md)}
+    .menu-item + .menu-item{margin-top:.7rem}
+    .item-info{flex:1;min-width:0}
+    .item-name{font-size:1.15rem;font-weight:600;color:var(--vert-fond);letter-spacing:.3px;line-height:1.3}
+    .item-section{font-size:.8rem;color:var(--gris-texte);margin:.3rem 0 .5rem;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;opacity:.85}
+    .item-description{font-size:.98rem;color:var(--gris-texte);font-style:italic;margin-top:.2rem}
+    .item-price{font-size:1.05rem;color:var(--vert-fond);font-weight:700;background:var(--gradient-warm);border-radius:12px;padding:.5rem .75rem;min-width:84px;text-align:center}
+
+    .section-title{font-family:'Viaoda Libre',serif;font-size:1.6rem;color:var(--vert-fond);margin:1.8rem 0 1rem;text-align:center;letter-spacing:1.5px;position:relative}
+    .section-title::after{content:'';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:80px;height:4px;background:var(--gradient-warm);border-radius:2px}
+    .now-title{font-size:1.3rem;font-family:'Viaoda Libre',serif;color:var(--vert-accent);margin:1rem 0 1rem;text-align:center}
+
+    /* Empty & skeleton */
+    .empty-state{text-align:center;color:var(--gris-texte);margin:2.2rem 0;padding:2rem 1.4rem;background:linear-gradient(135deg,rgba(248,246,240,.3) 0%,rgba(255,255,255,.5) 100%);border-radius:var(--radius-lg);border:1px solid rgba(13,31,19,.06)}
+    .skeleton{display:block;height:16px;background:linear-gradient(90deg,#eee,#f7f7f7,#eee);border-radius:8px;animation:sheen 1.6s infinite}
+    .skeleton.big{height:22px}
+    @keyframes sheen{0%{background-position:-200px 0}100%{background-position:calc(200px + 100%) 0}}
+
+    /* Responsive */
+    @media (max-width:768px){
+      .header-title{font-size:2.2rem;gap:1.2rem}
+      .header-logo{height:3rem;width:3rem}
+      .menu-item{flex-direction:column}
+      .item-price{align-self:flex-end}
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" role="banner">
+    <h1 class="header-title"><span>MAISON</span>
+      <img src="https://raw.githubusercontent.com/maison-fleurie/Menu/main/logo.png" alt="Logo Maison Fleurie" class="header-logo" />
+      <span>FLEURIE</span></h1>
+    <button id="btnShare" class="share-btn" aria-label="Partager" title="Partager" tabindex="0" aria-controls="main">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.02-4.11A2.99 2.99 0 0 0 18 7.91c1.66 0 3-1.34 3-3S19.66 2 18 2s-3 1.34-3 3c0 .24.04.47.09.7l-7.02 4.11A2.99 2.99 0 0 0 6 9.91c-1.66 0-3 1.34-3 3s1.34 3 3 3c.82 0 1.56-.33 2.09-.87l7.02 4.11c-.05.21-.08.43-.08.66 0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-3-3-3Z"/></svg>
+    </button>
+    <p class="header-subtitle">Table des Mets • Cocktails • Vins</p>
+  </header>
+
+  <noscript>
+    <style>.nojs{max-width:900px;margin:1rem auto;background:#fff;border:1px solid #c00;color:#111;padding:1rem;border-radius:12px}</style>
+    <div class="nojs">
+      ⚠️ JavaScript est désactivé. Activez‑le pour voir le menu interactif.
+    </div>
+  </noscript>
+
+  <!-- Search -->
+  <div class="search-container">
+    <div class="search-row">
+      <input id="searchBox" class="search-box" type="search" inputmode="search" placeholder="Rechercher… (ex: Vin, Bière, Karaage poulet)" autocomplete="off" />
+      <button id="clearSearch" class="clear-btn" aria-label="Effacer la recherche">✖</button>
+    </div>
+    <div id="searchInfo" class="search-results-info" aria-live="polite" style="display:none"></div>
+  </div>
+
+  <!-- Main -->
+  <main id="main" class="container" role="main">
+    <!-- Tabs -->
+    <nav class="tab-nav" role="tablist" aria-label="Catégories du menu">
+      <button id="tab-now" class="tab-btn" role="tab" aria-selected="true" aria-controls="panel-now" data-tab="now"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></svg></span><span>En ce moment</span></button>
+      <button id="tab-deguster" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-deguster" data-tab="deguster"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v10M11 3v10M5 7h8M16 4h3v9a3 3 0 0 1-3 3h-3"/></svg></span><span>Déguster</span></button>
+      <button id="tab-cocktails" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-cocktails" data-tab="cocktails"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18l-7 7v7h-4v-7z"/><path d="M8 4l4 4 4-4"/></svg></span><span>Cocktails</span></button>
+      <button id="tab-chaudes" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-chaudes" data-tab="chaudes"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h12a4 4 0 0 1 0 8H4z"/><path d="M16 10h1a3 3 0 0 1 0 6h-1"/><path d="M7 4c0 2 2 2 2 4s-2 2-2 4"/></svg></span><span>Chaudes</span></button>
+      <button id="tab-bieres" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-bieres" data-tab="bieres"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8h8v12H7z"/><path d="M15 10h2a3 3 0 0 1 0 6h-2"/><path d="M7 8V7a3 3 0 0 1 3-3h3a3 3 0 0 1 3 3v1"/></svg></span><span>Bières</span></button>
+      <button id="tab-softs" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-softs" data-tab="softs"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10l-2 13H9z"/><path d="M10 4l6 3"/><path d="M9 11h8"/></svg></span><span>Softs</span></button>
+      <button id="tab-vins" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-vins" data-tab="vins"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10l-1 6a6 6 0 1 1-8 0z"/><path d="M12 15v6"/></svg></span><span>Vins</span></button>
+    </nav>
+
+    <!-- Panels -->
+    <section id="panel-now" class="tab-content active" role="tabpanel" tabindex="0" aria-labelledby="tab-now"></section>
+    <section id="panel-deguster" class="tab-content" role="tabpanel" tabindex="0" aria-labelledby="tab-deguster"></section>
+    <section id="panel-cocktails" class="tab-content" role="tabpanel" tabindex="0" aria-labelledby="tab-cocktails"></section>
+    <section id="panel-chaudes" class="tab-content" role="tabpanel" tabindex="0" aria-labelledby="tab-chaudes"></section>
+    <section id="panel-bieres" class="tab-content" role="tabpanel" tabindex="0" aria-labelledby="tab-bieres"></section>
+    <section id="panel-softs" class="tab-content" role="tabpanel" tabindex="0" aria-labelledby="tab-softs"></section>
+    <section id="panel-vins" class="tab-content" role="tabpanel" tabindex="0" aria-labelledby="tab-vins"></section>
+
+    <!-- Error -->
+    <div id="errorContainer" class="empty-state" style="display:none">
+      <h3>Oups ! Impossible de charger le menu</h3>
+      <p>Vérifiez votre connexion et réessayez.</p>
+      <button id="retryBtn">🔄 Réessayer</button>
+    </div>
+  </main>
+
+  <script>
+    // ====== Safety shim to avoid ReferenceError from external callers ======
+    if (typeof window !== 'undefined' && typeof window.invoke === 'undefined') {
+      window.invoke = function(){ console.warn('[shim] window.invoke() appelé mais non défini dans cette page – no‑op.'); };
+    }
+
+    // ====== Config ======
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/1lgd-rGS2kLCn0yPtGMc7RyMDue-YERmKOjNT3QKgJ3Y/export?format=csv&gid=0';
+    const CACHE_KEY = 'maison-fleurie-menu-cache-v1';
+    const CACHE_AT = 'maison-fleurie-menu-cache-at';
+    const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes
+
+    // ====== State ======
+    let allMenuData = [];
+    let currentTab = 'now';
+    let isSearching = false;
+    let searchTimeout;
+
+    // ====== Utils ======
+    const normalize = (s='') => s.toString().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+    const tabIdFromOnglet = (s='') => normalize(s).replace(/\s/g,'');
+
+    const formatPrice = (raw='') => {
+      const str = String(raw).trim();
+      if (!str) return '';
+      // already contains currency
+      if (/€|eur/i.test(str)) return str.replace('EUR','€');
+      // number-like
+      const num = Number(String(str).replace(',', '.'));
+      if (!Number.isNaN(num)) {
+        try { return new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(num); }
+        catch { /* ignore */ }
+      }
+      return str; // fallback as-is
+    };
+
+    const byNameFR = (a,b) => (a?.Nom||'').localeCompare(b?.Nom||'', 'fr', {sensitivity:'base'});
+
+    const qs = sel => document.querySelector(sel);
+    const qsa = sel => Array.from(document.querySelectorAll(sel));
+
+    // ====== Rendering ======
+    const panels = {
+      now: qs('#panel-now'), deguster: qs('#panel-deguster'), cocktails: qs('#panel-cocktails'),
+      chaudes: qs('#panel-chaudes'), bieres: qs('#panel-bieres'), softs: qs('#panel-softs'), vins: qs('#panel-vins')
+    };
+
+    const showSkeleton = (el) => {
+      el.innerHTML = `
+        <div class="now-title">Chargement…</div>
+        <div class="menu-item"><span class="skeleton big" style="width:60%"></span><span class="skeleton" style="width:90px"></span></div>
+        <div class="menu-item"><span class="skeleton big" style="width:40%"></span><span class="skeleton" style="width:90px"></span></div>
+        <div class="menu-item"><span class="skeleton big" style="width:50%"></span><span class="skeleton" style="width:90px"></span></div>`;
+    };
+
+    const createItemHTML = (item, {showSection=false}={}) => {
+      const section = item.Section && showSection ? `<div class="item-section">${item.Section}</div>` : '';
+      const desc = item.Description ? `<div class="item-description">${item.Description}</div>` : '';
+      return `
+        <div class="menu-item">
+          <div class="item-info">
+            <div class="item-name">${item.Nom || ''}</div>
+            ${section}
+            ${desc}
+          </div>
+          <div class="item-price">${formatPrice(item.Prix || '')}</div>
+        </div>`;
+    };
+
+    const renderNow = () => {
+      const el = panels.now; if (!el) return;
+      let html = `<div class="now-title">À l'affiche en ce moment</div>`;
+      const nowItems = allMenuData.filter(i => normalize(i['En ce moment']) === 'oui');
+      if (!nowItems.length){
+        el.innerHTML = `<div class="empty-state"><h3>Aucune nouveauté</h3><p>Aucun plat ou boisson n'est mis en avant pour l'instant.</p></div>`;
+        return;
+      }
+      // group by Section
+      const groups = new Map();
+      for (const it of nowItems){
+        const key = it.Section || 'Autres';
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(it);
+      }
+      for (const [section, items] of groups){
+        html += `<h2 class="section-title">${section}</h2>`;
+        items.sort(byNameFR).forEach(it => { html += createItemHTML(it); });
+      }
+      el.innerHTML = html;
+
+      // Update search hints with "En ce moment"
+      updateDynamicHints(nowItems.map(i => i.Nom).filter(Boolean));
+    };
+
+    const renderTab = (tabName) => {
+      if (tabName === 'now') return renderNow();
+      const el = panels[tabName]; if (!el) return;
+      const tabItems = allMenuData.filter(i => tabIdFromOnglet(i.Onglet) === tabName);
+      if (!tabItems.length){
+        el.innerHTML = `<div class="empty-state"><h3>Section vide</h3><p>Aucun élément dans cette catégorie pour le moment.</p></div>`;
+        return;
+      }
+      // group by Section
+      const groups = new Map();
+      for (const it of tabItems){
+        const key = it.Section || 'Autres';
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(it);
+      }
+      let html = '';
+      for (const [section, items] of groups){
+        html += `<h2 class="section-title">${section}</h2>`;
+        items.sort(byNameFR).forEach(it => { html += createItemHTML(it); });
+      }
+      el.innerHTML = html;
+    };
+
+    const renderAll = () => {
+      Object.values(panels).forEach(p => p && (p.innerHTML = ''));
+      for (const key of Object.keys(panels)) renderTab(key);
+    };
+
+    // ====== Tabs interaction (A11y) ======
+    const setActiveTab = (tabName) => {
+      currentTab = tabName;
+      qsa('.tab-btn').forEach(btn => {
+        const active = btn.dataset.tab === tabName;
+        btn.setAttribute('aria-selected', active ? 'true' : 'false');
+        btn.tabIndex = active ? 0 : -1;
+      });
+      qsa('.tab-content').forEach(p => p.classList.remove('active'));
+      qs(`#panel-${tabName}`)?.classList.add('active');
+      if (isSearching) { displaySearchResults(lastSearchResults, lastQuery); } else { renderTab(tabName); }
+    };
+
+    // keyboard nav
+    const focusNextTab = (dir) => {
+      const tabs = qsa('.tab-btn');
+      const idx = tabs.findIndex(t => t.getAttribute('aria-selected') === 'true');
+      const next = (idx + dir + tabs.length) % tabs.length;
+      tabs[next].focus();
+      setActiveTab(tabs[next].dataset.tab);
+    };
+
+    // Utility: ensure PapaParse is loaded even if CDN with SRI/CSP fails
+    function ensurePapa(){
+      return new Promise((resolve, reject) => {
+        if (window.Papa && typeof window.Papa.parse === 'function') return resolve();
+        const s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js';
+        s.onload = () => (window.Papa ? resolve() : reject(new Error('PapaParse loaded but missing')));
+        s.onerror = () => reject(new Error('PapaParse failed to load'));
+        document.head.appendChild(s);
+        // safety timeout
+        setTimeout(() => { if (!(window.Papa && window.Papa.parse)) reject(new Error('PapaParse timeout')); }, 5000);
+      });
+    }
+
+    // ====== Data ======
+    const parseAndSet = (rows=[]) => {
+      const sanitize = (r) => { const o={}; for (const k in r){ const nk=(k||'').trim(); let v=r[k]; if (typeof v==='string') v=v.trim(); o[nk]=v; } return o; };
+      const cleaned = rows.map(sanitize);
+      allMenuData = cleaned.filter(i => normalize(i.Actif) === 'oui' || normalize(i['Actif '])==='oui');
+      renderAll();
+    };
+
+    const loadFromCacheIfFresh = () => {
+      try{
+        const at = Number(localStorage.getItem(CACHE_AT)||0);
+        if (Date.now() - at < CACHE_TTL_MS){
+          const cached = JSON.parse(localStorage.getItem(CACHE_KEY)||'[]');
+          if (Array.isArray(cached) && cached.length){ parseAndSet(cached); return true; }
+        }
+      }catch{}
+      return false;
+    };
+
+    const saveCache = (rows) => {
+      try{
+        localStorage.setItem(CACHE_KEY, JSON.stringify(rows));
+        localStorage.setItem(CACHE_AT, String(Date.now()));
+      }catch{}
+    };
+
+    const showError = () => { qs('#errorContainer').style.display = 'block'; };
+    const hideError = () => { qs('#errorContainer').style.display = 'none'; };
+
+    const fetchCSVAndRender = async () => {
+      // skeletons while loading
+      Object.values(panels).forEach(p => p && showSkeleton(p));
+
+      if (loadFromCacheIfFresh()) return;
+
+      let attempt = 0; const maxAttempts = 3;
+      const backoff = (n) => new Promise(r => setTimeout(r, 400 * Math.pow(2, n)));
+
+      while (attempt < maxAttempts){
+        try{
+          await new Promise((resolve, reject) => {
+            Papa.parse(CSV_URL, {
+              download: true,
+              header: true,
+              complete: (res) => {
+                if (res.errors && res.errors.length){ reject(res.errors); return; }
+                hideError();
+                saveCache(res.data);
+                parseAndSet(res.data);
+                resolve();
+              },
+              error: (err) => reject(err)
+            });
+          });
+          return; // success
+        }catch(e){
+          attempt++;
+          if (attempt >= maxAttempts){ showError(); break; }
+          await backoff(attempt);
+        }
+      }
+    };
+
+    // ====== Search ======
+    let lastQuery = '';
+    let lastSearchResults = [];
+
+    const performSearch = (query) => {
+      isSearching = true; lastQuery = query;
+      const q = normalize(query);
+      const results = allMenuData.filter(i =>
+        normalize(i.Nom).includes(q) || normalize(i.Description).includes(q) || normalize(i.Section).includes(q)
+      );
+      lastSearchResults = results;
+      displaySearchResults(results, query);
+      const info = qs('#searchInfo');
+      info.style.display = 'block';
+      info.textContent = `${results.length} résultat(s) pour "${query}"`;
+    };
+
+    const displaySearchResults = (results, query) => {
+      const container = qs(`#panel-${currentTab}`);
+      if (!results.length){
+        container.innerHTML = `<div class="empty-state"><h3>Aucun résultat</h3><p>Aucun plat ou boisson ne correspond à "${query}".</p></div>`;
+        return;
+      }
+      // Group by Onglet -> Section so users see where the item lives
+      const byTab = new Map();
+      for (const it of results){
+        const tab = tabIdFromOnglet(it.Onglet) || 'autres';
+        if (!byTab.has(tab)) byTab.set(tab, new Map());
+        const bySec = byTab.get(tab);
+        const sec = it.Section || 'Autres';
+        if (!bySec.has(sec)) bySec.set(sec, []);
+        bySec.get(sec).push(it);
+      }
+      let html = '';
+      for (const [tab, secMap] of byTab){
+        html += `<h2 class="section-title">${tab === 'now' ? 'En ce moment' : tab.charAt(0).toUpperCase()+tab.slice(1)}</h2>`;
+        for (const [sec, items] of secMap){
+          html += `<div class="now-title">${sec}</div>`;
+          items.sort(byNameFR).forEach(it => { html += createItemHTML(it, {showSection:false}); });
+        }
+      }
+      container.innerHTML = html;
+    };
+
+    const clearSearch = () => {
+      isSearching = false; lastQuery=''; lastSearchResults=[];
+      qs('#searchBox').value = '';
+      const info = qs('#searchInfo'); info.style.display = 'none'; info.textContent = '';
+      renderTab(currentTab);
+      qs('#searchBox').focus();
+    };
+
+    // ====== Placeholder rotation (Vin, Bière, Karaage + nouveautés) ======
+    const BASE_HINTS = ['Vin', 'Karaage poulet', 'Bière']; // Bière en dernier
+    let HINTS = [...BASE_HINTS];
+    let hintIndex = 0;
+
+    const updateDynamicHints = (nowTitles=[]) => {
+      // Nettoie et fusionne avec BASE_HINTS, garde "Bière" en dernier
+      const cleaned = nowTitles.map(t => String(t).trim()).filter(Boolean);
+      const set = new Set([ ...BASE_HINTS.filter(h=>h!=='Bière'), ...cleaned ]);
+      const withoutBeer = Array.from(set);
+      HINTS = [...withoutBeer, 'Bière'];
+    };
+
+    const startPlaceholderRotation = () => {
+      const input = qs('#searchBox'); if (!input) return;
+      const tick = () => {
+        if (document.activeElement !== input && !input.value){
+          input.placeholder = `Rechercher… (ex: ${HINTS[hintIndex]})`;
+        }
+        hintIndex = (hintIndex + 1) % HINTS.length;
+      };
+      tick();
+      setInterval(tick, 3000);
+    };
+
+    // ====== Init ======
+    const init = () => {
+      // tabs click
+      qsa('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          setActiveTab(btn.dataset.tab);
+        });
+        // keyboard
+        btn.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowRight') { e.preventDefault(); focusNextTab(+1); }
+          if (e.key === 'ArrowLeft')  { e.preventDefault(); focusNextTab(-1); }
+          if (e.key === 'Home')       { e.preventDefault(); setActiveTab(qsa('.tab-btn')[0].dataset.tab); qsa('.tab-btn')[0].focus(); }
+          if (e.key === 'End')        { const tabs=qsa('.tab-btn'); e.preventDefault(); setActiveTab(tabs[tabs.length-1].dataset.tab); tabs[tabs.length-1].focus(); }
+        });
+      });
+
+      // search
+      const searchBox = qs('#searchBox');
+      const clearBtn = qs('#clearSearch');
+      searchBox.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        const query = e.target.value.trim();
+        if (!query){ clearSearch(); return; }
+        searchTimeout = setTimeout(() => performSearch(query), 250);
+      });
+      clearBtn.addEventListener('click', clearSearch);
+
+      // retry
+      qs('#retryBtn').addEventListener('click', () => ensurePapa().then(fetchCSVAndRender).catch(()=>showError()));
+
+      // share icon
+      const share = document.getElementById('btnShare');
+      if (share){
+        share.addEventListener('click', async () => {
+          const url = location.href;
+          if (navigator.share){ try{ await navigator.share({title:document.title,url}); }catch(e){} }
+          else { try{ await navigator.clipboard.writeText(url); share.setAttribute('title','Lien copié'); }catch(e){} }
+        });
+      }
+
+      startPlaceholderRotation();
+
+      // initial load
+      ensurePapa().then(fetchCSVAndRender).catch((e)=>{ console.error(e); showError(); const box=qs('#errorContainer'); if(box) box.insertAdjacentHTML('beforeend','<p>Le chargeur CSV (PapaParse) n\'a pas pu être chargé.</p>'); });
+
+      // ====== Self-tests (console) ======
+      runSelfTests();
+    };
+
+    // ====== Minimal self-tests ======
+    function runSelfTests(){
+      const tests = [];
+      const assert = (name, cond) => tests.push({name, pass: !!cond});
+      assert('normalize accents', normalize('Bière') === 'biere');
+      assert('tabIdFromOnglet', tabIdFromOnglet('  Déguster ') === 'deguster');
+      assert('formatPrice number', /€/.test(formatPrice('12')));
+      assert('formatPrice passthrough euro', formatPrice('12 €').includes('€'));
+      assert('invoke shim', typeof window.invoke === 'function');
+      console.groupCollapsed('%cMaison Fleurie – self-tests','color:#2A4A32;font-weight:bold');
+      tests.forEach(t => console[t.pass?'log':'error']((t.pass?'✅':'❌')+' '+t.name));
+      console.groupEnd();
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
