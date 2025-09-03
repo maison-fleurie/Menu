@@ -57,10 +57,6 @@
     .share-btn{position:absolute;right:16px;top:16px;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:var(--beige-logo);cursor:pointer;backdrop-filter:blur(6px)}
     .share-btn:hover{background:rgba(255,255,255,.15)}
 
-    /* Language toggle */
-    .lang-btn{position:absolute;left:16px;top:16px;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:var(--beige-logo);cursor:pointer;backdrop-filter:blur(6px);font-size:20px}
-    .lang-btn:hover{background:rgba(255,255,255,.15)}
-
     /* Search */
     .search-container{margin:1.5rem auto 1rem;max-width:700px;padding:0 1rem}
     .search-row{display:flex;gap:.5rem}
@@ -76,7 +72,6 @@
     .tab-btn{display:inline-flex;align-items:center;gap:.5rem}
     .tab-btn .ico{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px}
     .tab-btn .ico svg{width:18px;height:18px;display:block}
-    .header-logo{height:3rem;width:3rem;object-fit:contain;filter:drop-shadow(0 6px 12px rgba(0,0,0,.4))}
 
     /* Tabs */
     nav.tab-nav{display:flex;flex-wrap:wrap;justify-content:center;background:linear-gradient(135deg,var(--beige-clair) 0%,rgba(255,255,255,.95) 100%);border-bottom:2px solid var(--vert-fond);gap:.6rem;padding:1rem;position:sticky;top:0;z-index:10;backdrop-filter:blur(15px)}
@@ -121,15 +116,10 @@
       <img src="https://raw.githubusercontent.com/maison-fleurie/Menu/main/logo.png" alt="Logo Maison Fleurie" class="header-logo" />
       <span>FLEURIE</span></h1>
     
-    <!-- Language toggle -->
-    <button id="langToggle" class="lang-btn" aria-label="Switch language" title="Switch language">
-      🇬🇧
-    </button>
-    
     <button id="btnShare" class="share-btn" aria-label="Partager" title="Partager" tabindex="0" aria-controls="main">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.02-4.11A2.99 2.99 0 0 0 18 7.91c1.66 0 3-1.34 3-3S19.66 2 18 2s-3 1.34-3 3c0 .24.04.47.09.7l-7.02 4.11A2.99 2.99 0 0 0 6 9.91c-1.66 0-3 1.34-3 3s1.34 3 3 3c.82 0 1.56-.33 2.09-.87l7.02 4.11c-.05.21-.08.43-.08.66 0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-3-3-3Z"/></svg>
     </button>
-    <p class="header-subtitle" data-translate="Table des Mets • Cocktails • Vins">Table des Mets • Cocktails • Vins</p>
+    <p class="header-subtitle">Table des Mets • Cocktails • Vins</p>
   </header>
 
   <noscript>
@@ -152,13 +142,13 @@
   <main id="main" class="container" role="main">
     <!-- Tabs -->
     <nav class="tab-nav" role="tablist" aria-label="Catégories du menu">
-      <button id="tab-now" class="tab-btn" role="tab" aria-selected="true" aria-controls="panel-now" data-tab="now"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></svg></span><span data-translate="En ce moment">En ce moment</span></button>
-      <button id="tab-deguster" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-deguster" data-tab="deguster"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v10M11 3v10M5 7h8M16 4h3v9a3 3 0 0 1-3 3h-3"/></svg></span><span data-translate="Déguster">Déguster</span></button>
-      <button id="tab-cocktails" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-cocktails" data-tab="cocktails"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18l-7 7v7h-4v-7z"/><path d="M8 4l4 4 4-4"/></svg></span><span data-translate="Cocktails">Cocktails</span></button>
-      <button id="tab-chaudes" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-chaudes" data-tab="chaudes"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h12a4 4 0 0 1 0 8H4z"/><path d="M16 10h1a3 3 0 0 1 0 6h-1"/><path d="M7 4c0 2 2 2 2 4s-2 2-2 4"/></svg></span><span data-translate="Chaudes">Chaudes</span></button>
-      <button id="tab-bieres" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-bieres" data-tab="bieres"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8h8v12H7z"/><path d="M15 10h2a3 3 0 0 1 0 6h-2"/><path d="M7 8V7a3 3 0 0 1 3-3h3a3 3 0 0 1 3 3v1"/></svg></span><span data-translate="Bières">Bières</span></button>
-      <button id="tab-softs" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-softs" data-tab="softs"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10l-2 13H9z"/><path d="M10 4l6 3"/><path d="M9 11h8"/></svg></span><span data-translate="Softs">Softs</span></button>
-      <button id="tab-vins" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-vins" data-tab="vins"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10l-1 6a6 6 0 1 1-8 0z"/><path d="M12 15v6"/></svg></span><span data-translate="Vins">Vins</span></button>
+      <button id="tab-now" class="tab-btn" role="tab" aria-selected="true" aria-controls="panel-now" data-tab="now"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></svg></span><span>En ce moment</span></button>
+      <button id="tab-deguster" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-deguster" data-tab="deguster"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v10M11 3v10M5 7h8M16 4h3v9a3 3 0 0 1-3 3h-3"/></svg></span><span>Déguster</span></button>
+      <button id="tab-cocktails" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-cocktails" data-tab="cocktails"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18l-7 7v7h-4v-7z"/><path d="M8 4l4 4 4-4"/></svg></span><span>Cocktails</span></button>
+      <button id="tab-chaudes" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-chaudes" data-tab="chaudes"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h12a4 4 0 0 1 0 8H4z"/><path d="M16 10h1a3 3 0 0 1 0 6h-1"/><path d="M7 4c0 2 2 2 2 4s-2 2-2 4"/></svg></span><span>Chaudes</span></button>
+      <button id="tab-bieres" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-bieres" data-tab="bieres"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8h8v12H7z"/><path d="M15 10h2a3 3 0 0 1 0 6h-2"/><path d="M7 8V7a3 3 0 0 1 3-3h3a3 3 0 0 1 3 3v1"/></svg></span><span>Bières</span></button>
+      <button id="tab-softs" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-softs" data-tab="softs"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10l-2 13H9z"/><path d="M10 4l6 3"/><path d="M9 11h8"/></svg></span><span>Softs</span></button>
+      <button id="tab-vins" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-vins" data-tab="vins"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10l-1 6a6 6 0 1 1-8 0z"/><path d="M12 15v6"/></svg></span><span>Vins</span></button>
     </nav>
 
     <!-- Panels -->
@@ -181,7 +171,7 @@
   <script>
     // ====== Safety shim to avoid ReferenceError from external callers ======
     if (typeof window !== 'undefined' && typeof window.invoke === 'undefined') {
-      window.invoke = function(){ console.warn('[shim] window.invoke() appelé mais non défini dans cette page — no‑op.'); };
+      window.invoke = function(){ console.warn('[shim] window.invoke() appelé mais non défini dans cette page – no‑op.'); };
     }
 
     // ====== Config ======
@@ -189,83 +179,6 @@
     const CACHE_KEY = 'maison-fleurie-menu-cache-v1';
     const CACHE_AT = 'maison-fleurie-menu-cache-at';
     const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes
-
-    // ====== Translation System ======
-    const TRANSLATIONS = {
-      // Interface
-      'En ce moment': 'Right now',
-      'Déguster': 'Food',
-      'Cocktails': 'Cocktails',
-      'Chaudes': 'Hot drinks',
-      'Bières': 'Beers',
-      'Softs': 'Soft drinks',
-      'Vins': 'Wines',
-      'Rechercher': 'Search',
-      'Effacer la recherche': 'Clear search',
-      'Partager': 'Share',
-      'Table des Mets • Cocktails • Vins': 'Food • Cocktails • Wines',
-      
-      // Sections communes
-      'Fromages': 'Cheeses',
-      'Terre': 'Land',
-      'Mer': 'Sea', 
-      'Veggie': 'Veggie',
-      'Desserts': 'Desserts',
-      'Signatures': 'Signature cocktails',
-      
-      // Ingrédients et termes récurrents
-      'citron': 'lemon',
-      'vanille': 'vanilla',
-      'chocolat': 'chocolate',
-      'fromage': 'cheese',
-      'salade': 'salad',
-      'huile': 'oil',
-      'herbes': 'herbs',
-      'poulet': 'chicken',
-      'boeuf': 'beef',
-      'poisson': 'fish',
-      'légumes': 'vegetables',
-      'fruits': 'fruits',
-      'épices': 'spices',
-      'miel': 'honey',
-      'noix': 'nuts',
-      'amande': 'almond',
-      'tomate': 'tomato',
-      'olive': 'olive',
-      'basilic': 'basil',
-      'persil': 'parsley',
-      'thym': 'thyme',
-      'romarin': 'rosemary',
-      'ail': 'garlic',
-      'oignon': 'onion',
-      'carotte': 'carrot',
-      'pomme': 'apple',
-      'poire': 'pear',
-      'fraise': 'strawberry',
-      'cerise': 'cherry',
-      'orange': 'orange',
-      'pêche': 'peach',
-      'abricot': 'apricot'
-    };
-
-    let currentLanguage = 'fr';
-
-    function smartTranslate(text) {
-      if (!text || currentLanguage === 'fr') return text;
-      
-      // Traduction exacte
-      if (TRANSLATIONS[text]) return TRANSLATIONS[text];
-      
-      // Traduction partielle (mots-clés)
-      let translated = text;
-      for (const [fr, en] of Object.entries(TRANSLATIONS)) {
-        if (text.toLowerCase().includes(fr.toLowerCase())) {
-          translated = translated.replace(new RegExp(fr, 'gi'), en);
-        }
-      }
-      
-      return translated;
-    }
 
     // ====== State ======
     let allMenuData = [];
@@ -277,7 +190,7 @@
     const normalize = (s='') => s.toString().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
     const tabIdFromOnglet = (s='') => normalize(s).replace(/\s/g,'');
 
-    // ====== FIXED PRICE FORMATTING ======
+    // ====== Price formatting ======
     const formatPrice = (raw='') => {
       const str = String(raw).trim();
       if (!str) return '';
@@ -296,7 +209,6 @@
     };
 
     const byNameFR = (a,b) => (a?.Nom||'').localeCompare(b?.Nom||'', 'fr', {sensitivity:'base'});
-
     const qs = sel => document.querySelector(sel);
     const qsa = sel => Array.from(document.querySelectorAll(sel));
 
@@ -314,16 +226,15 @@
         <div class="menu-item"><span class="skeleton big" style="width:50%"></span><span class="skeleton" style="width:90px"></span></div>`;
     };
 
-    // ====== UPDATED ITEM HTML WITH TRANSLATION ======
     const createItemHTML = (item, {showSection=false}={}) => {
-      const sectionText = item.Section && showSection ? smartTranslate(item.Section) : '';
+      const sectionText = item.Section && showSection ? item.Section : '';
       const section = sectionText ? `<div class="item-section">${sectionText}</div>` : '';
-      const desc = item.Description ? `<div class="item-description">${smartTranslate(item.Description)}</div>` : '';
+      const desc = item.Description ? `<div class="item-description">${item.Description}</div>` : '';
       
       return `
         <div class="menu-item">
           <div class="item-info">
-            <div class="item-name">${smartTranslate(item.Nom || '')}</div>
+            <div class="item-name">${item.Nom || ''}</div>
             ${section}
             ${desc}
           </div>
@@ -333,10 +244,10 @@
 
     const renderNow = () => {
       const el = panels.now; if (!el) return;
-      let html = `<div class="now-title">${smartTranslate('À l\'affiche en ce moment')}</div>`;
+      let html = `<div class="now-title">À l'affiche en ce moment</div>`;
       const nowItems = allMenuData.filter(i => normalize(i['En ce moment']) === 'oui');
       if (!nowItems.length){
-        el.innerHTML = `<div class="empty-state"><h3>${smartTranslate('Aucune nouveauté')}</h3><p>${smartTranslate('Aucun plat ou boisson n\'est mis en avant pour l\'instant.')}</p></div>`;
+        el.innerHTML = `<div class="empty-state"><h3>Aucune nouveauté</h3><p>Aucun plat ou boisson n'est mis en avant pour l'instant.</p></div>`;
         return;
       }
       // group by Section
@@ -347,7 +258,7 @@
         groups.get(key).push(it);
       }
       for (const [section, items] of groups){
-        html += `<h2 class="section-title">${smartTranslate(section)}</h2>`;
+        html += `<h2 class="section-title">${section}</h2>`;
         items.sort(byNameFR).forEach(it => { html += createItemHTML(it); });
       }
       el.innerHTML = html;
@@ -361,7 +272,7 @@
       const el = panels[tabName]; if (!el) return;
       const tabItems = allMenuData.filter(i => tabIdFromOnglet(i.Onglet) === tabName);
       if (!tabItems.length){
-        el.innerHTML = `<div class="empty-state"><h3>${smartTranslate('Section vide')}</h3><p>${smartTranslate('Aucun élément dans cette catégorie pour le moment.')}</p></div>`;
+        el.innerHTML = `<div class="empty-state"><h3>Section vide</h3><p>Aucun élément dans cette catégorie pour le moment.</p></div>`;
         return;
       }
       // group by Section
@@ -373,7 +284,7 @@
       }
       let html = '';
       for (const [section, items] of groups){
-        html += `<h2 class="section-title">${smartTranslate(section)}</h2>`;
+        html += `<h2 class="section-title">${section}</h2>`;
         items.sort(byNameFR).forEach(it => { html += createItemHTML(it); });
       }
       el.innerHTML = html;
@@ -382,53 +293,6 @@
     const renderAll = () => {
       Object.values(panels).forEach(p => p && (p.innerHTML = ''));
       for (const key of Object.keys(panels)) renderTab(key);
-    };
-
-    // ====== Language Update Function ======
-    const updateLanguage = () => {
-      // Traduire l'interface
-      document.querySelectorAll('[data-translate]').forEach(el => {
-        const originalText = el.getAttribute('data-translate');
-        el.textContent = smartTranslate(originalText);
-      });
-      
-      // Update button labels
-      const clearBtn = qs('#clearSearch');
-      if (clearBtn) {
-        clearBtn.setAttribute('aria-label', smartTranslate('Effacer la recherche'));
-      }
-      
-      const shareBtn = qs('#btnShare');
-      if (shareBtn) {
-        shareBtn.setAttribute('aria-label', smartTranslate('Partager'));
-        shareBtn.setAttribute('title', smartTranslate('Partager'));
-      }
-      
-      // Re-render le contenu actuel
-      if (isSearching) {
-        displaySearchResults(lastSearchResults, lastQuery);
-      } else {
-        renderTab(currentTab);
-      }
-      
-      // Placeholder de recherche
-      const searchBox = qs('#searchBox');
-      if (searchBox) {
-        const hints = currentLanguage === 'fr' ? HINTS : ['Wine', 'Beer', 'Chicken Karaage'];
-        const currentHint = hints[hintIndex % hints.length];
-        searchBox.placeholder = currentLanguage === 'fr' ? 
-          `Rechercher… (ex: ${currentHint})` : 
-          `Search… (ex: ${currentHint})`;
-      }
-      
-      // Update search info if visible
-      const searchInfo = qs('#searchInfo');
-      if (searchInfo && searchInfo.style.display !== 'none') {
-        const resultCount = lastSearchResults.length;
-        searchInfo.textContent = currentLanguage === 'fr' ?
-          `${resultCount} résultat(s) pour "${lastQuery}"` :
-          `${resultCount} result(s) for "${lastQuery}"`;
-      }
     };
 
     // ====== Tabs interaction (A11y) ======
@@ -544,19 +408,13 @@
       displaySearchResults(results, query);
       const info = qs('#searchInfo');
       info.style.display = 'block';
-      const resultCount = results.length;
-      info.textContent = currentLanguage === 'fr' ?
-        `${resultCount} résultat(s) pour "${query}"` :
-        `${resultCount} result(s) for "${query}"`;
+      info.textContent = `${results.length} résultat(s) pour "${query}"`;
     };
 
     const displaySearchResults = (results, query) => {
       const container = qs(`#panel-${currentTab}`);
       if (!results.length){
-        const noResultText = currentLanguage === 'fr' ?
-          `<div class="empty-state"><h3>Aucun résultat</h3><p>Aucun plat ou boisson ne correspond à "${query}".</p></div>` :
-          `<div class="empty-state"><h3>No results</h3><p>No food or drink matches "${query}".</p></div>`;
-        container.innerHTML = noResultText;
+        container.innerHTML = `<div class="empty-state"><h3>Aucun résultat</h3><p>Aucun plat ou boisson ne correspond à "${query}".</p></div>`;
         return;
       }
       // Group by Onglet -> Section so users see where the item lives
@@ -571,10 +429,10 @@
       }
       let html = '';
       for (const [tab, secMap] of byTab){
-        const tabTitle = tab === 'now' ? smartTranslate('En ce moment') : smartTranslate(tab.charAt(0).toUpperCase()+tab.slice(1));
+        const tabTitle = tab === 'now' ? 'En ce moment' : tab.charAt(0).toUpperCase()+tab.slice(1);
         html += `<h2 class="section-title">${tabTitle}</h2>`;
         for (const [sec, items] of secMap){
-          html += `<div class="now-title">${smartTranslate(sec)}</div>`;
+          html += `<div class="now-title">${sec}</div>`;
           items.sort(byNameFR).forEach(it => { html += createItemHTML(it, {showSection:false}); });
         }
       }
@@ -589,13 +447,12 @@
       qs('#searchBox').focus();
     };
 
-    // ====== Placeholder rotation (Vin, Bière, Karaage + nouveautés) ======
-    const BASE_HINTS = ['Vin', 'Karaage poulet', 'Bière']; // Bière en dernier
+    // ====== Placeholder rotation ======
+    const BASE_HINTS = ['Vin', 'Karaage poulet', 'Bière'];
     let HINTS = [...BASE_HINTS];
     let hintIndex = 0;
 
     const updateDynamicHints = (nowTitles=[]) => {
-      // Nettoie et fusionne avec BASE_HINTS, garde "Bière" en dernier
       const cleaned = nowTitles.map(t => String(t).trim()).filter(Boolean);
       const set = new Set([ ...BASE_HINTS.filter(h=>h!=='Bière'), ...cleaned ]);
       const withoutBeer = Array.from(set);
@@ -606,11 +463,8 @@
       const input = qs('#searchBox'); if (!input) return;
       const tick = () => {
         if (document.activeElement !== input && !input.value){
-          const hints = currentLanguage === 'fr' ? HINTS : ['Wine', 'Beer', 'Chicken Karaage'];
-          const currentHint = hints[hintIndex % hints.length];
-          input.placeholder = currentLanguage === 'fr' ?
-            `Rechercher… (ex: ${currentHint})` :
-            `Search… (ex: ${currentHint})`;
+          const currentHint = HINTS[hintIndex % HINTS.length];
+          input.placeholder = `Rechercher… (ex: ${currentHint})`;
         }
         hintIndex = (hintIndex + 1) % HINTS.length;
       };
@@ -620,17 +474,6 @@
 
     // ====== Init ======
     const init = () => {
-      // Language toggle
-      const langToggle = qs('#langToggle');
-      if (langToggle) {
-        langToggle.addEventListener('click', () => {
-          currentLanguage = currentLanguage === 'fr' ? 'en' : 'fr';
-          langToggle.innerHTML = currentLanguage === 'fr' ? '🇬🇧' : '🇫🇷';
-          langToggle.title = currentLanguage === 'fr' ? 'Switch to English' : 'Passer au français';
-          updateLanguage();
-        });
-      }
-
       // tabs click
       qsa('.tab-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -673,13 +516,12 @@
       startPlaceholderRotation();
 
       // initial load
-      ensurePapa().then(fetchCSVAndRender).catch((e)=>{ console.error(e); showError(); const box=qs('#errorContainer'); if(box) box.insertAdjacentHTML('beforeend','<p>Le chargeur CSV (PapaParse) n\'a pas pu être chargé.</p>'); });
+      ensurePapa().then(fetchCSVAndRender).catch((e)=>{ console.error(e); showError(); });
 
-      // ====== Self-tests (console) ======
+      // ====== Self-tests ======
       runSelfTests();
     };
 
-    // ====== Minimal self-tests ======
     function runSelfTests(){
       const tests = [];
       const assert = (name, cond) => tests.push({name, pass: !!cond});
@@ -689,8 +531,7 @@
       assert('formatPrice slash passthrough', formatPrice('12€/18€') === '12€/18€');
       assert('formatPrice euro passthrough', formatPrice('12€') === '12€');
       assert('invoke shim', typeof window.invoke === 'function');
-      assert('translation system', smartTranslate('Fromages') === (currentLanguage === 'fr' ? 'Fromages' : 'Cheeses'));
-      console.groupCollapsed('%cMaison Fleurie — self-tests','color:#2A4A32;font-weight:bold');
+      console.groupCollapsed('%cMaison Fleurie – self-tests','color:#2A4A32;font-weight:bold');
       tests.forEach(t => console[t.pass?'log':'error']((t.pass?'✅':'❌')+' '+t.name));
       console.groupEnd();
     }
