@@ -57,16 +57,6 @@
     .share-btn{position:absolute;right:16px;top:16px;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:var(--beige-logo);cursor:pointer;backdrop-filter:blur(6px)}
     .share-btn:hover{background:rgba(255,255,255,.15)}
 
-    /* Language toggle */
-    .lang-btn{position:absolute;left:16px;top:16px;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:var(--beige-logo);cursor:pointer;backdrop-filter:blur(6px);font-size:20px}
-    .lang-btn:hover{background:rgba(255,255,255,.15)}
-    .lang-btn:disabled{opacity:0.5;cursor:not-allowed}
-    .lang-btn.loading{animation:spin 1s linear infinite}
-    @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-
-    /* Translation status */
-    .translation-status{position:absolute;left:60px;top:20px;font-size:12px;color:var(--beige-logo);opacity:0.8}
-
     /* Search */
     .search-container{margin:1.5rem auto 1rem;max-width:700px;padding:0 1rem}
     .search-row{display:flex;gap:.5rem}
@@ -116,7 +106,6 @@
       .header-logo{height:3rem;width:3rem}
       .menu-item{flex-direction:column}
       .item-price{align-self:flex-end}
-      .translation-status{left:16px;top:60px}
     }
   </style>
 </head>
@@ -126,12 +115,6 @@
     <h1 class="header-title"><span>MAISON</span>
       <img src="https://raw.githubusercontent.com/maison-fleurie/Menu/main/logo.png" alt="Logo Maison Fleurie" class="header-logo" />
       <span>FLEURIE</span></h1>
-    
-    <!-- Language toggle -->
-    <button id="langToggle" class="lang-btn" aria-label="Switch language" title="Switch language">
-      🇬🇧
-    </button>
-    <div id="translationStatus" class="translation-status" style="display:none"></div>
     
     <button id="btnShare" class="share-btn" aria-label="Partager" title="Partager" tabindex="0" aria-controls="main">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.02-4.11A2.99 2.99 0 0 0 18 7.91c1.66 0 3-1.34 3-3S19.66 2 18 2s-3 1.34-3 3c0 .24.04.47.09.7l-7.02 4.11A2.99 2.99 0 0 0 6 9.91c-1.66 0-3 1.34-3 3s1.34 3 3 3c.82 0 1.56-.33 2.09-.87l7.02 4.11c-.05.21-.08.43-.08.66 0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-3-3-3Z"/></svg>
@@ -159,13 +142,13 @@
   <main id="main" class="container" role="main">
     <!-- Tabs -->
     <nav class="tab-nav" role="tablist" aria-label="Catégories du menu">
-      <button id="tab-now" class="tab-btn" role="tab" aria-selected="true" aria-controls="panel-now" data-tab="now"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></svg></span><span data-original="En ce moment">En ce moment</span></button>
-      <button id="tab-deguster" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-deguster" data-tab="deguster"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v10M11 3v10M5 7h8M16 4h3v9a3 3 0 0 1-3 3h-3"/></svg></span><span data-original="Déguster">Déguster</span></button>
-      <button id="tab-cocktails" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-cocktails" data-tab="cocktails"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18l-7 7v7h-4v-7z"/><path d="M8 4l4 4 4-4"/></svg></span><span data-original="Cocktails">Cocktails</span></button>
-      <button id="tab-chaudes" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-chaudes" data-tab="chaudes"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h12a4 4 0 0 1 0 8H4z"/><path d="M16 10h1a3 3 0 0 1 0 6h-1"/><path d="M7 4c0 2 2 2 2 4s-2 2-2 4"/></svg></span><span data-original="Chaudes">Chaudes</span></button>
-      <button id="tab-bieres" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-bieres" data-tab="bieres"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8h8v12H7z"/><path d="M15 10h2a3 3 0 0 1 0 6h-2"/><path d="M7 8V7a3 3 0 0 1 3-3h3a3 3 0 0 1 3 3v1"/></svg></span><span data-original="Bières">Bières</span></button>
-      <button id="tab-softs" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-softs" data-tab="softs"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10l-2 13H9z"/><path d="M10 4l6 3"/><path d="M9 11h8"/></svg></span><span data-original="Softs">Softs</span></button>
-      <button id="tab-vins" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-vins" data-tab="vins"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10l-1 6a6 6 0 1 1-8 0z"/><path d="M12 15v6"/></svg></span><span data-original="Vins">Vins</span></button>
+      <button id="tab-now" class="tab-btn" role="tab" aria-selected="true" aria-controls="panel-now" data-tab="now"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></svg></span><span>En ce moment</span></button>
+      <button id="tab-deguster" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-deguster" data-tab="deguster"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v10M11 3v10M5 7h8M16 4h3v9a3 3 0 0 1-3 3h-3"/></svg></span><span>Déguster</span></button>
+      <button id="tab-cocktails" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-cocktails" data-tab="cocktails"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18l-7 7v7h-4v-7z"/><path d="M8 4l4 4 4-4"/></svg></span><span>Cocktails</span></button>
+      <button id="tab-chaudes" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-chaudes" data-tab="chaudes"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h12a4 4 0 0 1 0 8H4z"/><path d="M16 10h1a3 3 0 0 1 0 6h-1"/><path d="M7 4c0 2 2 2 2 4s-2 2-2 4"/></svg></span><span>Chaudes</span></button>
+      <button id="tab-bieres" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-bieres" data-tab="bieres"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8h8v12H7z"/><path d="M15 10h2a3 3 0 0 1 0 6h-2"/><path d="M7 8V7a3 3 0 0 1 3-3h3a3 3 0 0 1 3 3v1"/></svg></span><span>Bières</span></button>
+      <button id="tab-softs" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-softs" data-tab="softs"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10l-2 13H9z"/><path d="M10 4l6 3"/><path d="M9 11h8"/></svg></span><span>Softs</span></button>
+      <button id="tab-vins" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-vins" data-tab="vins"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10l-1 6a6 6 0 1 1-8 0z"/><path d="M12 15v6"/></svg></span><span>Vins</span></button>
     </nav>
 
     <!-- Panels -->
@@ -186,7 +169,7 @@
   </main>
 
   <script>
-    // ====== Safety shim ======
+    // ====== Safety shim to avoid ReferenceError from external callers ======
     if (typeof window !== 'undefined' && typeof window.invoke === 'undefined') {
       window.invoke = function(){ console.warn('[shim] window.invoke() appelé mais non défini dans cette page – no‑op.'); };
     }
@@ -196,238 +179,32 @@
     const CACHE_KEY = 'maison-fleurie-menu-cache-v1';
     const CACHE_AT = 'maison-fleurie-menu-cache-at';
     const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes
-    
-    // LibreTranslate configuration
-    const LIBRE_TRANSLATE_URL = 'https://libretranslate.de/translate';
-    const TRANSLATION_CACHE_KEY = 'maison-fleurie-translations-cache';
-    const TRANSLATION_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 heures
-
-    // ====== Translation System ======
-    let currentLanguage = 'fr';
-    let translationCache = {};
-    let isTranslating = false;
-    const translationPromises = new Map(); // Pour éviter les requêtes dupliquées
-
-    // Charger le cache de traductions
-    const loadTranslationCache = () => {
-      try {
-        const cached = localStorage.getItem(TRANSLATION_CACHE_KEY);
-        if (cached) {
-          const { data, timestamp } = JSON.parse(cached);
-          if (Date.now() - timestamp < TRANSLATION_CACHE_TTL) {
-            translationCache = data;
-          }
-        }
-      } catch (e) {
-        console.warn('Erreur lors du chargement du cache de traductions:', e);
-      }
-    };
-
-    // Sauvegarder le cache de traductions
-    const saveTranslationCache = () => {
-      try {
-        localStorage.setItem(TRANSLATION_CACHE_KEY, JSON.stringify({
-          data: translationCache,
-          timestamp: Date.now()
-        }));
-      } catch (e) {
-        console.warn('Erreur lors de la sauvegarde du cache de traductions:', e);
-      }
-    };
-
-    // Traduire un texte via LibreTranslate
-    const translateText = async (text, fromLang = 'fr', toLang = 'en') => {
-      if (!text || !text.trim()) return text;
-      
-      const cacheKey = `${fromLang}-${toLang}-${text}`;
-      
-      // Vérifier le cache
-      if (translationCache[cacheKey]) {
-        return translationCache[cacheKey];
-      }
-      
-      // Éviter les requêtes dupliquées
-      if (translationPromises.has(cacheKey)) {
-        return translationPromises.get(cacheKey);
-      }
-
-      const promise = (async () => {
-        try {
-          const response = await fetch(LIBRE_TRANSLATE_URL, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              q: text,
-              source: fromLang,
-              target: toLang,
-              format: 'text'
-            })
-          });
-
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-          }
-
-          const data = await response.json();
-          const translated = data.translatedText || text;
-          
-          // Mettre en cache
-          translationCache[cacheKey] = translated;
-          saveTranslationCache();
-          
-          return translated;
-        } catch (error) {
-          console.warn('Erreur de traduction pour:', text, error);
-          return text; // Retourner le texte original en cas d'erreur
-        } finally {
-          translationPromises.delete(cacheKey);
-        }
-      })();
-
-      translationPromises.set(cacheKey, promise);
-      return promise;
-    };
-
-    // Traduire plusieurs textes en lot avec limitation de débit
-    const translateBatch = async (texts, fromLang = 'fr', toLang = 'en') => {
-      const uniqueTexts = [...new Set(texts.filter(t => t && t.trim()))];
-      const results = {};
-      const BATCH_SIZE = 5; // Limiter à 5 requêtes simultanées
-      
-      for (let i = 0; i < uniqueTexts.length; i += BATCH_SIZE) {
-        const batch = uniqueTexts.slice(i, i + BATCH_SIZE);
-        const promises = batch.map(async text => {
-          const translated = await translateText(text, fromLang, toLang);
-          results[text] = translated;
-        });
-        
-        await Promise.all(promises);
-        
-        // Petite pause entre les lots pour éviter de surcharger l'API
-        if (i + BATCH_SIZE < uniqueTexts.length) {
-          await new Promise(resolve => setTimeout(resolve, 200));
-        }
-      }
-      
-      return results;
-    };
-
-    // Appliquer les traductions aux éléments avec data-original
-    const applyTranslations = async (translations) => {
-      document.querySelectorAll('[data-original]').forEach(el => {
-        const original = el.getAttribute('data-original');
-        if (translations[original]) {
-          el.textContent = translations[original];
-        }
-      });
-    };
-
-    // Mettre à jour la langue et traduire
-    const updateLanguage = async () => {
-      const langToggle = document.getElementById('langToggle');
-      const statusEl = document.getElementById('translationStatus');
-      
-      if (currentLanguage === 'fr') {
-        // Revenir au français - pas besoin de traduction
-        document.querySelectorAll('[data-original]').forEach(el => {
-          const original = el.getAttribute('data-original');
-          el.textContent = original;
-        });
-        
-        // Mise à jour des placeholders et autres textes
-        const searchBox = document.getElementById('searchBox');
-        if (searchBox) {
-          searchBox.placeholder = 'Rechercher… (ex: Vin, Bière, Karaage poulet)';
-        }
-        
-        statusEl.style.display = 'none';
-        return;
-      }
-
-      // Traduire en anglais
-      if (isTranslating) return; // Éviter les traductions multiples
-      
-      isTranslating = true;
-      langToggle.disabled = true;
-      langToggle.classList.add('loading');
-      statusEl.style.display = 'block';
-      statusEl.textContent = 'Translating...';
-
-      try {
-        // Collecter tous les textes à traduire
-        const textsToTranslate = [];
-        
-        // Interface
-        document.querySelectorAll('[data-original]').forEach(el => {
-          const original = el.getAttribute('data-original');
-          if (original) textsToTranslate.push(original);
-        });
-        
-        // Contenu du menu actuel
-        const menuTexts = [];
-        allMenuData.forEach(item => {
-          if (item.Nom) menuTexts.push(item.Nom);
-          if (item.Description) menuTexts.push(item.Description);
-          if (item.Section) menuTexts.push(item.Section);
-        });
-        
-        textsToTranslate.push(...menuTexts);
-        
-        // Traduire en lots
-        const translations = await translateBatch(textsToTranslate, 'fr', 'en');
-        
-        // Appliquer les traductions à l'interface
-        await applyTranslations(translations);
-        
-        // Re-rendre le contenu actuel avec traductions
-        if (isSearching) {
-          displaySearchResults(lastSearchResults, lastQuery, translations);
-        } else {
-          renderTab(currentTab, translations);
-        }
-        
-        // Mise à jour des autres éléments
-        const searchBox = document.getElementById('searchBox');
-        if (searchBox) {
-          searchBox.placeholder = 'Search… (ex: Wine, Beer, Chicken Karaage)';
-        }
-        
-        statusEl.textContent = 'Translated';
-        setTimeout(() => statusEl.style.display = 'none', 2000);
-        
-      } catch (error) {
-        console.error('Erreur de traduction:', error);
-        statusEl.textContent = 'Translation failed';
-        setTimeout(() => statusEl.style.display = 'none', 3000);
-      } finally {
-        isTranslating = false;
-        langToggle.disabled = false;
-        langToggle.classList.remove('loading');
-      }
-    };
 
     // ====== State ======
     let allMenuData = [];
     let currentTab = 'now';
     let isSearching = false;
     let searchTimeout;
-    let lastQuery = '';
-    let lastSearchResults = [];
 
     // ====== Utils ======
     const normalize = (s='') => s.toString().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
     const tabIdFromOnglet = (s='') => normalize(s).replace(/\s/g,'');
 
+    // ====== Price formatting ======
     const formatPrice = (raw='') => {
       const str = String(raw).trim();
       if (!str) return '';
+      
+      // Si c'est déjà formaté avec € ou contient un slash (verre/bouteille), on garde tel quel
       if (/€|\//.test(str)) return str;
+      
+      // Si c'est juste un nombre, on ajoute juste €  
       const num = Number(String(str).replace(',', '.'));
       if (!Number.isNaN(num) && Number.isInteger(num)) {
-        return `${num}€`;
+        return `${num}€`; // Format simple sans virgules
       }
+      
+      // Sinon on retourne tel quel (texte libre)
       return str;
     };
 
@@ -435,7 +212,7 @@
     const qs = sel => document.querySelector(sel);
     const qsa = sel => Array.from(document.querySelectorAll(sel));
 
-    // ====== Rendering avec support traduction ======
+    // ====== Rendering ======
     const panels = {
       now: qs('#panel-now'), deguster: qs('#panel-deguster'), cocktails: qs('#panel-cocktails'),
       chaudes: qs('#panel-chaudes'), bieres: qs('#panel-bieres'), softs: qs('#panel-softs'), vins: qs('#panel-vins')
@@ -449,19 +226,15 @@
         <div class="menu-item"><span class="skeleton big" style="width:50%"></span><span class="skeleton" style="width:90px"></span></div>`;
     };
 
-    const createItemHTML = (item, {showSection=false, translations={}}={}) => {
-      const getName = (name) => translations[name] || name;
-      const getDesc = (desc) => translations[desc] || desc;
-      const getSection = (section) => translations[section] || section;
-      
-      const sectionText = item.Section && showSection ? getSection(item.Section) : '';
+    const createItemHTML = (item, {showSection=false}={}) => {
+      const sectionText = item.Section && showSection ? item.Section : '';
       const section = sectionText ? `<div class="item-section">${sectionText}</div>` : '';
-      const desc = item.Description ? `<div class="item-description">${getDesc(item.Description)}</div>` : '';
+      const desc = item.Description ? `<div class="item-description">${item.Description}</div>` : '';
       
       return `
         <div class="menu-item">
           <div class="item-info">
-            <div class="item-name">${getName(item.Nom || '')}</div>
+            <div class="item-name">${item.Nom || ''}</div>
             ${section}
             ${desc}
           </div>
@@ -469,17 +242,15 @@
         </div>`;
     };
 
-    const renderNow = (translations = {}) => {
+    const renderNow = () => {
       const el = panels.now; if (!el) return;
-      const getTranslation = (text) => translations[text] || text;
-      
-      let html = `<div class="now-title">${getTranslation('À l\'affiche en ce moment')}</div>`;
+      let html = `<div class="now-title">À l'affiche en ce moment</div>`;
       const nowItems = allMenuData.filter(i => normalize(i['En ce moment']) === 'oui');
       if (!nowItems.length){
-        el.innerHTML = `<div class="empty-state"><h3>${getTranslation('Aucune nouveauté')}</h3><p>${getTranslation('Aucun plat ou boisson n\'est mis en avant pour l\'instant.')}</p></div>`;
+        el.innerHTML = `<div class="empty-state"><h3>Aucune nouveauté</h3><p>Aucun plat ou boisson n'est mis en avant pour l'instant.</p></div>`;
         return;
       }
-      
+      // group by Section
       const groups = new Map();
       for (const it of nowItems){
         const key = it.Section || 'Autres';
@@ -487,25 +258,24 @@
         groups.get(key).push(it);
       }
       for (const [section, items] of groups){
-        html += `<h2 class="section-title">${getTranslation(section)}</h2>`;
-        items.sort(byNameFR).forEach(it => { 
-          html += createItemHTML(it, {translations}); 
-        });
+        html += `<h2 class="section-title">${section}</h2>`;
+        items.sort(byNameFR).forEach(it => { html += createItemHTML(it); });
       }
       el.innerHTML = html;
+
+      // Update search hints with "En ce moment"
+      updateDynamicHints(nowItems.map(i => i.Nom).filter(Boolean));
     };
 
-    const renderTab = (tabName, translations = {}) => {
-      if (tabName === 'now') return renderNow(translations);
+    const renderTab = (tabName) => {
+      if (tabName === 'now') return renderNow();
       const el = panels[tabName]; if (!el) return;
-      const getTranslation = (text) => translations[text] || text;
-      
       const tabItems = allMenuData.filter(i => tabIdFromOnglet(i.Onglet) === tabName);
       if (!tabItems.length){
-        el.innerHTML = `<div class="empty-state"><h3>${getTranslation('Section vide')}</h3><p>${getTranslation('Aucun élément dans cette catégorie pour le moment.')}</p></div>`;
+        el.innerHTML = `<div class="empty-state"><h3>Section vide</h3><p>Aucun élément dans cette catégorie pour le moment.</p></div>`;
         return;
       }
-      
+      // group by Section
       const groups = new Map();
       for (const it of tabItems){
         const key = it.Section || 'Autres';
@@ -514,55 +284,18 @@
       }
       let html = '';
       for (const [section, items] of groups){
-        html += `<h2 class="section-title">${getTranslation(section)}</h2>`;
-        items.sort(byNameFR).forEach(it => { 
-          html += createItemHTML(it, {translations}); 
-        });
+        html += `<h2 class="section-title">${section}</h2>`;
+        items.sort(byNameFR).forEach(it => { html += createItemHTML(it); });
       }
       el.innerHTML = html;
     };
 
-    const renderAll = (translations = {}) => {
+    const renderAll = () => {
       Object.values(panels).forEach(p => p && (p.innerHTML = ''));
-      for (const key of Object.keys(panels)) renderTab(key, translations);
+      for (const key of Object.keys(panels)) renderTab(key);
     };
 
-    const displaySearchResults = (results, query, translations = {}) => {
-      const container = qs(`#panel-${currentTab}`);
-      const getTranslation = (text) => translations[text] || text;
-      
-      if (!results.length){
-        const noResultText = currentLanguage === 'fr' ?
-          `<div class="empty-state"><h3>Aucun résultat</h3><p>Aucun plat ou boisson ne correspond à "${query}".</p></div>` :
-          `<div class="empty-state"><h3>No results</h3><p>No food or drink matches "${query}".</p></div>`;
-        container.innerHTML = noResultText;
-        return;
-      }
-      
-      const byTab = new Map();
-      for (const it of results){
-        const tab = tabIdFromOnglet(it.Onglet) || 'autres';
-        if (!byTab.has(tab)) byTab.set(tab, new Map());
-        const bySec = byTab.get(tab);
-        const sec = it.Section || 'Autres';
-        if (!bySec.has(sec)) bySec.set(sec, []);
-        bySec.get(sec).push(it);
-      }
-      let html = '';
-      for (const [tab, secMap] of byTab){
-        const tabTitle = tab === 'now' ? getTranslation('En ce moment') : getTranslation(tab.charAt(0).toUpperCase()+tab.slice(1));
-        html += `<h2 class="section-title">${tabTitle}</h2>`;
-        for (const [sec, items] of secMap){
-          html += `<div class="now-title">${getTranslation(sec)}</div>`;
-          items.sort(byNameFR).forEach(it => { 
-            html += createItemHTML(it, {showSection:false, translations}); 
-          });
-        }
-      }
-      container.innerHTML = html;
-    };
-
-    // ====== Tabs interaction ======
+    // ====== Tabs interaction (A11y) ======
     const setActiveTab = (tabName) => {
       currentTab = tabName;
       qsa('.tab-btn').forEach(btn => {
@@ -572,14 +305,10 @@
       });
       qsa('.tab-content').forEach(p => p.classList.remove('active'));
       qs(`#panel-${tabName}`)?.classList.add('active');
-      
-      if (isSearching) { 
-        displaySearchResults(lastSearchResults, lastQuery); 
-      } else { 
-        renderTab(tabName); 
-      }
+      if (isSearching) { displaySearchResults(lastSearchResults, lastQuery); } else { renderTab(tabName); }
     };
 
+    // keyboard nav
     const focusNextTab = (dir) => {
       const tabs = qsa('.tab-btn');
       const idx = tabs.findIndex(t => t.getAttribute('aria-selected') === 'true');
@@ -588,7 +317,7 @@
       setActiveTab(tabs[next].dataset.tab);
     };
 
-    // ====== Data loading ======
+    // Utility: ensure PapaParse is loaded even if CDN with SRI/CSP fails
     function ensurePapa(){
       return new Promise((resolve, reject) => {
         if (window.Papa && typeof window.Papa.parse === 'function') return resolve();
@@ -597,10 +326,12 @@
         s.onload = () => (window.Papa ? resolve() : reject(new Error('PapaParse loaded but missing')));
         s.onerror = () => reject(new Error('PapaParse failed to load'));
         document.head.appendChild(s);
+        // safety timeout
         setTimeout(() => { if (!(window.Papa && window.Papa.parse)) reject(new Error('PapaParse timeout')); }, 5000);
       });
     }
 
+    // ====== Data ======
     const parseAndSet = (rows=[]) => {
       const sanitize = (r) => { const o={}; for (const k in r){ const nk=(k||'').trim(); let v=r[k]; if (typeof v==='string') v=v.trim(); o[nk]=v; } return o; };
       const cleaned = rows.map(sanitize);
@@ -630,6 +361,7 @@
     const hideError = () => { qs('#errorContainer').style.display = 'none'; };
 
     const fetchCSVAndRender = async () => {
+      // skeletons while loading
       Object.values(panels).forEach(p => p && showSkeleton(p));
 
       if (loadFromCacheIfFresh()) return;
@@ -653,7 +385,7 @@
               error: (err) => reject(err)
             });
           });
-          return;
+          return; // success
         }catch(e){
           attempt++;
           if (attempt >= maxAttempts){ showError(); break; }
@@ -663,6 +395,9 @@
     };
 
     // ====== Search ======
+    let lastQuery = '';
+    let lastSearchResults = [];
+
     const performSearch = (query) => {
       isSearching = true; lastQuery = query;
       const q = normalize(query);
@@ -673,10 +408,35 @@
       displaySearchResults(results, query);
       const info = qs('#searchInfo');
       info.style.display = 'block';
-      const resultText = currentLanguage === 'fr' ?
-        `${results.length} résultat(s) pour "${query}"` :
-        `${results.length} result(s) for "${query}"`;
-      info.textContent = resultText;
+      info.textContent = `${results.length} résultat(s) pour "${query}"`;
+    };
+
+    const displaySearchResults = (results, query) => {
+      const container = qs(`#panel-${currentTab}`);
+      if (!results.length){
+        container.innerHTML = `<div class="empty-state"><h3>Aucun résultat</h3><p>Aucun plat ou boisson ne correspond à "${query}".</p></div>`;
+        return;
+      }
+      // Group by Onglet -> Section so users see where the item lives
+      const byTab = new Map();
+      for (const it of results){
+        const tab = tabIdFromOnglet(it.Onglet) || 'autres';
+        if (!byTab.has(tab)) byTab.set(tab, new Map());
+        const bySec = byTab.get(tab);
+        const sec = it.Section || 'Autres';
+        if (!bySec.has(sec)) bySec.set(sec, []);
+        bySec.get(sec).push(it);
+      }
+      let html = '';
+      for (const [tab, secMap] of byTab){
+        const tabTitle = tab === 'now' ? 'En ce moment' : tab.charAt(0).toUpperCase()+tab.slice(1);
+        html += `<h2 class="section-title">${tabTitle}</h2>`;
+        for (const [sec, items] of secMap){
+          html += `<div class="now-title">${sec}</div>`;
+          items.sort(byNameFR).forEach(it => { html += createItemHTML(it, {showSection:false}); });
+        }
+      }
+      container.innerHTML = html;
     };
 
     const clearSearch = () => {
@@ -687,28 +447,40 @@
       qs('#searchBox').focus();
     };
 
+    // ====== Placeholder rotation ======
+    const BASE_HINTS = ['Vin', 'Karaage poulet', 'Bière'];
+    let HINTS = [...BASE_HINTS];
+    let hintIndex = 0;
+
+    const updateDynamicHints = (nowTitles=[]) => {
+      const cleaned = nowTitles.map(t => String(t).trim()).filter(Boolean);
+      const set = new Set([ ...BASE_HINTS.filter(h=>h!=='Bière'), ...cleaned ]);
+      const withoutBeer = Array.from(set);
+      HINTS = [...withoutBeer, 'Bière'];
+    };
+
+    const startPlaceholderRotation = () => {
+      const input = qs('#searchBox'); if (!input) return;
+      const tick = () => {
+        if (document.activeElement !== input && !input.value){
+          const currentHint = HINTS[hintIndex % HINTS.length];
+          input.placeholder = `Rechercher… (ex: ${currentHint})`;
+        }
+        hintIndex = (hintIndex + 1) % HINTS.length;
+      };
+      tick();
+      setInterval(tick, 3000);
+    };
+
     // ====== Init ======
     const init = () => {
-      // Charger le cache de traductions
-      loadTranslationCache();
-      
-      // Language toggle
-      const langToggle = qs('#langToggle');
-      if (langToggle) {
-        langToggle.addEventListener('click', async () => {
-          currentLanguage = currentLanguage === 'fr' ? 'en' : 'fr';
-          langToggle.innerHTML = currentLanguage === 'fr' ? '🇬🇧' : '🇫🇷';
-          langToggle.title = currentLanguage === 'fr' ? 'Switch to English' : 'Switch to French';
-          await updateLanguage();
-        });
-      }
-
-      // Tabs
+      // tabs click
       qsa('.tab-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
           e.preventDefault();
           setActiveTab(btn.dataset.tab);
         });
+        // keyboard
         btn.addEventListener('keydown', (e) => {
           if (e.key === 'ArrowRight') { e.preventDefault(); focusNextTab(+1); }
           if (e.key === 'ArrowLeft')  { e.preventDefault(); focusNextTab(-1); }
@@ -717,7 +489,7 @@
         });
       });
 
-      // Search
+      // search
       const searchBox = qs('#searchBox');
       const clearBtn = qs('#clearSearch');
       searchBox.addEventListener('input', (e) => {
@@ -728,10 +500,10 @@
       });
       clearBtn.addEventListener('click', clearSearch);
 
-      // Retry
+      // retry
       qs('#retryBtn').addEventListener('click', () => ensurePapa().then(fetchCSVAndRender).catch(()=>showError()));
 
-      // Share
+      // share icon
       const share = document.getElementById('btnShare');
       if (share){
         share.addEventListener('click', async () => {
@@ -741,9 +513,28 @@
         });
       }
 
-      // Initial load
+      startPlaceholderRotation();
+
+      // initial load
       ensurePapa().then(fetchCSVAndRender).catch((e)=>{ console.error(e); showError(); });
+
+      // ====== Self-tests ======
+      runSelfTests();
     };
+
+    function runSelfTests(){
+      const tests = [];
+      const assert = (name, cond) => tests.push({name, pass: !!cond});
+      assert('normalize accents', normalize('Bière') === 'biere');
+      assert('tabIdFromOnglet', tabIdFromOnglet('  Déguster ') === 'deguster');
+      assert('formatPrice number', formatPrice('12') === '12€');
+      assert('formatPrice slash passthrough', formatPrice('12€/18€') === '12€/18€');
+      assert('formatPrice euro passthrough', formatPrice('12€') === '12€');
+      assert('invoke shim', typeof window.invoke === 'function');
+      console.groupCollapsed('%cMaison Fleurie – self-tests','color:#2A4A32;font-weight:bold');
+      tests.forEach(t => console[t.pass?'log':'error']((t.pass?'✅':'❌')+' '+t.name));
+      console.groupEnd();
+    }
 
     document.addEventListener('DOMContentLoaded', init);
   </script>
