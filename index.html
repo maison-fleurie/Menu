@@ -1193,7 +1193,16 @@
       return tag === value;
     };
 
-    const isWineByGlass = (wine) => normalize(getWineTag(wine, 'tag_format')).includes('verre');
+    const isWineByGlass = (wine = {}) => {
+      const sectionNorm = normalize(wine?.Section);
+      if (sectionNorm.includes('verre')) return true;
+      if (sectionNorm.includes('bouteille')) return false;
+
+      const formatNorm = normalize(getWineTag(wine, 'tag_format'));
+      if (formatNorm.includes('verre')) return true;
+      if (formatNorm.includes('bouteille')) return false;
+      return false;
+    };
     const isWineRecommended = (wine = {}) => {
       const keys = ['Recommendations', 'Recommendation', 'recommendation', 'Recommandation', 'recommandation', 'Reco', 'reco'];
       return keys.some(key => normalize(wine[key]) === 'oui');
@@ -1600,7 +1609,7 @@
         }
         const formatRaw = getWineTag(wine, 'tag_format');
         const formatNorm = normalize(formatRaw);
-        if (formatNorm && !isWineByGlass(wine)) {
+        if (formatNorm && !isWineByGlass(wine) && !formatNorm.includes('bouteille')) {
           profileParts.push(toTitle(formatRaw));
         }
         const profileText = profileParts.filter(Boolean).join(' • ');
@@ -1644,6 +1653,12 @@
           ${recommendationCards}
 
           <div class="wine-nav-btns">
+            <button class="wine-btn wine-btn-back" id="wineBackFromRecommendationsBtn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"/>
+              </svg>
+              Retour
+            </button>
             <button class="wine-btn wine-btn-back" id="wineResetBtn">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
@@ -1660,12 +1675,38 @@
 
       panel.innerHTML = html;
 
-      qs('#wineResetBtn').addEventListener('click', () => {
-        wineTreeStep = 0;
-        wineTreeSelections = {};
-        showingWineList = false;
-        renderWineTree();
-      });
+      const backBtn = qs('#wineBackFromRecommendationsBtn');
+      if (backBtn) {
+        backBtn.addEventListener('click', () => {
+          const questions = getWineQuestions();
+          if (Array.isArray(questions) && questions.length) {
+            const prevIndex = Math.max(questions.length - 1, 0);
+            const prevQuestion = questions[prevIndex];
+            if (prevQuestion) {
+              delete wineTreeSelections[prevQuestion.id];
+              wineTreeStep = prevIndex;
+            } else {
+              wineTreeSelections = {};
+              wineTreeStep = 0;
+            }
+          } else {
+            wineTreeSelections = {};
+            wineTreeStep = 0;
+          }
+          showingWineList = false;
+          renderWineTree();
+        });
+      }
+
+      const resetBtn = qs('#wineResetBtn');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          wineTreeStep = 0;
+          wineTreeSelections = {};
+          showingWineList = false;
+          renderWineTree();
+        });
+      }
 
       qs('#showAllWinesBtn').addEventListener('click', () => {
         showingWineList = true;
