@@ -326,7 +326,7 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: var(--space-lg);
-      padding: var(--space-lg) var(--space-md);
+      padding: var(--space-sm) var(--space-md);
       border-bottom: 1px solid rgba(26, 46, 37, 0.06);
       background: linear-gradient(180deg, rgba(250, 248, 244, 0.3) 0%, rgba(255, 255, 255, 0.5) 100%);
       border-radius: var(--radius-md);
@@ -411,6 +411,68 @@
       height: 2px;
       background: linear-gradient(90deg, transparent, var(--soft-gold), transparent);
       border-radius: 2px;
+    }
+
+    /* Sticky Section Header */
+    .sticky-section-header{
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: linear-gradient(135deg, var(--deep-sage) 0%, var(--sage-medium) 100%);
+      color: var(--cream);
+      padding: var(--space-sm) var(--space-lg);
+      text-align: center;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.125rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      box-shadow: var(--shadow-md);
+      border-bottom: 1px solid rgba(197, 183, 143, 0.3);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .sticky-section-header.visible{
+      opacity: 1;
+    }
+
+    /* Back to Top Button */
+    .back-to-top{
+      position: fixed;
+      bottom: var(--space-xl);
+      right: var(--space-xl);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--deep-sage) 0%, var(--sage-medium) 100%);
+      color: var(--cream);
+      border: 2px solid rgba(197, 183, 143, 0.4);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-lg);
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    .back-to-top.visible{
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .back-to-top:hover{
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-xl);
+      background: linear-gradient(135deg, var(--sage-medium) 0%, var(--deep-sage) 100%);
+    }
+
+    .back-to-top svg{
+      width: 24px;
+      height: 24px;
     }
 
     .now-title{
@@ -1042,6 +1104,16 @@
     Prix net TTC & service compris
   </footer>
 
+  <!-- Sticky Section Header -->
+  <div id="stickySectionHeader" class="sticky-section-header"></div>
+
+  <!-- Back to Top Button -->
+  <button id="backToTop" class="back-to-top" aria-label="Retour en haut" title="Retour en haut">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 19V5M5 12l7-7 7 7"/>
+    </svg>
+  </button>
+
   <script>
     if (typeof window !== 'undefined' && typeof window.invoke === 'undefined') {
       window.invoke = function(){ console.warn('[shim] window.invoke() non défini'); };
@@ -1072,7 +1144,7 @@
       return Math.min(...numbers);
     };
     const byNameFR = (a,b) => (a?.Nom||'').localeCompare(b?.Nom||'','fr',{sensitivity:'base'});
-    const compareWineByPrice = (a, b) => {
+    const compareByPrice = (a, b) => {
       const priceA = getPriceValue(a?.Prix);
       const priceB = getPriceValue(b?.Prix);
       const bothFinite = Number.isFinite(priceA) && Number.isFinite(priceB);
@@ -1081,8 +1153,17 @@
       if (!Number.isFinite(priceA) && Number.isFinite(priceB)) return 1;
       return byNameFR(a, b);
     };
+    const compareWineByPrice = compareByPrice; // Alias pour les vins
     const qs = sel => document.querySelector(sel);
     const qsa = sel => Array.from(document.querySelectorAll(sel));
+
+    // Ordre des sections pour "Déguster" uniquement
+    const DEGUSTER_SECTION_ORDER = ['Veggie', 'Terre', 'Mer', 'Fromages & Charcuterie', 'Desserts'];
+    const getSectionOrderIndex = (sectionName, tabName) => {
+      if (normalize(tabName) !== 'deguster') return -1;
+      const idx = DEGUSTER_SECTION_ORDER.findIndex(s => normalize(s) === normalize(sectionName));
+      return idx === -1 ? 999 : idx;
+    };
 
     // --- Guide de sélection des vins ---
     const getWineTag = (wine, key) => {
@@ -1773,13 +1854,12 @@
     };
 
     const createItemHTML = (item) => {
-      const section = item.Section ? `<div class="item-section">${item.Section}</div>` : '';
       const desc = item.Description ? `<div class="item-description">${item.Description}</div>` : '';
       return `
         <div class="menu-item">
           <div class="item-info">
             <div class="item-name">${item.Nom || ''}</div>
-            ${section}${desc}
+            ${desc}
           </div>
           <div class="item-price">${formatPrice(item.Prix || '')}</div>
         </div>`;
@@ -1800,8 +1880,8 @@
         groups.get(key).push(it);
       }
       for (const [section, items] of groups){
-        html += `<h2 class="section-title">${section}</h2>`;
-        items.sort(byNameFR).forEach(it => { html += createItemHTML(it); });
+        html += `<h2 class="section-title" data-section="${section}">${section}</h2>`;
+        items.sort(compareByPrice).forEach(it => { html += createItemHTML(it); });
       }
       el.innerHTML = html;
     };
@@ -1809,7 +1889,7 @@
     const renderTab = (tabName) => {
       if (tabName === 'now') return renderNow();
       if (tabName === 'vins') return renderWineTree();
-      
+
       const el = panels[tabName]; if (!el) return;
       const tabItems = allMenuData.filter(i => tabIdFromOnglet(i.Onglet) === tabName);
       if (!tabItems.length){
@@ -1822,10 +1902,21 @@
         if (!groups.has(key)) groups.set(key, []);
         groups.get(key).push(it);
       }
+
+      // Trier les sections selon l'ordre défini pour "Déguster"
+      const sortedSections = Array.from(groups.entries()).sort((a, b) => {
+        const indexA = getSectionOrderIndex(a[0], tabName);
+        const indexB = getSectionOrderIndex(b[0], tabName);
+        if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+        if (indexA !== -1) return -1;
+        if (indexB !== -1) return 1;
+        return a[0].localeCompare(b[0], 'fr');
+      });
+
       let html = '';
-      for (const [section, items] of groups){
-        html += `<h2 class="section-title">${section}</h2>`;
-        items.sort(byNameFR).forEach(it => { html += createItemHTML(it); });
+      for (const [section, items] of sortedSections){
+        html += `<h2 class="section-title" data-section="${section}">${section}</h2>`;
+        items.sort(compareByPrice).forEach(it => { html += createItemHTML(it); });
       }
       el.innerHTML = html;
     };
@@ -1962,8 +2053,8 @@
 
       let html = '';
       for (const [section, items] of groups) {
-        html += `<h2 class="section-title">${section}</h2>`;
-        items.sort(byNameFR).forEach(item => { html += createItemHTML(item); });
+        html += `<h2 class="section-title" data-section="${section}">${section}</h2>`;
+        items.sort(compareByPrice).forEach(item => { html += createItemHTML(item); });
       }
       activePanel.innerHTML = html;
     };
@@ -1973,6 +2064,60 @@
       qs('#searchBox').value = '';
       qs('#searchInfo').style.display = 'none';
       renderTab(currentTab);
+    };
+
+    // Gestion du sticky header et back-to-top
+    const setupScrollHandlers = () => {
+      const stickyHeader = qs('#stickySectionHeader');
+      const backToTopBtn = qs('#backToTop');
+
+      if (!stickyHeader || !backToTopBtn) return;
+
+      // Back to top button click
+      backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // Scroll handler
+      const handleScroll = () => {
+        // Back to top visibility
+        if (window.scrollY > 300) {
+          backToTopBtn.classList.add('visible');
+        } else {
+          backToTopBtn.classList.remove('visible');
+        }
+
+        // Sticky header avec nom de section
+        const activePanel = qs('.tab-content.active');
+        if (!activePanel) {
+          stickyHeader.classList.remove('visible');
+          return;
+        }
+
+        const sectionTitles = activePanel.querySelectorAll('.section-title');
+        if (!sectionTitles.length) {
+          stickyHeader.classList.remove('visible');
+          return;
+        }
+
+        let currentSection = null;
+        sectionTitles.forEach(title => {
+          const rect = title.getBoundingClientRect();
+          if (rect.top <= 100) {
+            currentSection = title.dataset.section || title.textContent;
+          }
+        });
+
+        if (currentSection) {
+          stickyHeader.textContent = currentSection;
+          stickyHeader.classList.add('visible');
+        } else {
+          stickyHeader.classList.remove('visible');
+        }
+      };
+
+      window.addEventListener('scroll', handleScroll);
+      handleScroll(); // Initial check
     };
 
     const init = () => {
@@ -2036,6 +2181,7 @@
       }
 
       ensurePapa().then(fetchCSVAndRender).catch(showError);
+      setupScrollHandlers();
     };
 
     // Placeholder dynamique - UN SEUL produit, rotation 5s
