@@ -4,2236 +4,851 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Menu — Maison Fleurie</title>
-  <meta name="description" content="Découvrez le menu de Maison Fleurie — Table des Mets, Cocktails & Vins à Montpellier." />
-  <meta name="theme-color" content="#0D1F13" />
-
-  <!-- Open Graph / Twitter -->
+  <meta name="description" content="Découvrez la carte de Maison Fleurie — Déguster, Cocktails & Vins à Montpellier." />
+  <meta name="theme-color" content="#0a0a0a" />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="fr_FR" />
-  <meta property="og:title" content="Menu — Maison Fleurie" />
-  <meta property="og:description" content="Table des Mets • Cocktails • Vins à Montpellier" />
-  <meta property="og:image" content="https://raw.githubusercontent.com/maison-fleurie/Menu/main/logo.png" />
-  <meta property="og:url" content="" />
+  <meta property="og:title" content="La Carte — Maison Fleurie" />
+  <meta property="og:description" content="Déguster • Cocktails • Vins à Montpellier" />
+  <meta property="og:image" content="https://raw.githubusercontent.com/NachoB17/menu-test/main/logo.png" />
   <meta name="twitter:card" content="summary_large_image" />
 
-  <!-- Fonts & perf -->
+  <!-- Préchargement Polyamine pour éviter le flash FOUC -->
+  <link rel="preload" href="./Polyamine.otf" as="font" type="font/otf" crossorigin />
+
+  <!-- Inter pour le corps -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
-  <!-- PapaParse (SRI + defer) -->
-  <script defer src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
   <style>
-    :root{
-      /* Palette Premium - Tons Naturels et Raffinés */
-      --deep-sage: #1A2E25;
-      --sage-medium: #3D5A4C;
-      --cream: #FAF8F4;
-      --warm-white: #FFFFFF;
-      --soft-gold: #C5B78F;
-      --bronze: #9B8B6C;
-      --charcoal: #2C2C2C;
-      --text-primary: #1A2E25;
-      --text-secondary: #5A6B62;
-      --text-muted: #8A9B92;
-
-      /* Shadows Premium */
-      --shadow-sm: 0 1px 3px rgba(26, 46, 37, 0.04), 0 1px 2px rgba(26, 46, 37, 0.02);
-      --shadow-md: 0 4px 12px rgba(26, 46, 37, 0.06), 0 2px 4px rgba(26, 46, 37, 0.03);
-      --shadow-lg: 0 12px 24px rgba(26, 46, 37, 0.08), 0 4px 8px rgba(26, 46, 37, 0.04);
-      --shadow-xl: 0 20px 40px rgba(26, 46, 37, 0.1), 0 8px 16px rgba(26, 46, 37, 0.06);
-
-      /* Border Radius */
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --radius-xl: 20px;
-
-      /* Spacing */
-      --space-xs: 0.5rem;
-      --space-sm: 0.75rem;
-      --space-md: 1rem;
-      --space-lg: 1.5rem;
-      --space-xl: 2rem;
-      --space-2xl: 3rem;
+    /* ─── POLYAMINE — fichier local dans le repo ─── */
+    @font-face {
+      font-family: 'Polyamine';
+      src: url('./Polyamine.otf') format('opentype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: block;
     }
 
-    *{
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    /* ─── DESIGN TOKENS ─── */
+    :root {
+      --bg:           #0a0a0a;
+      --bg-card:      #111111;
+      --bg-elevated:  #161616;
+      --bg-nav:       rgba(10,10,10,0.92);
+      --green-deep:   #0d1e13;
+      --green-mid:    #163621;
+      --creme:        #f5f0e8;
+      --creme-dim:    rgba(245,240,232,0.55);
+      --creme-muted:  rgba(245,240,232,0.32);
+      --dore:         #acaf7d;
+      --dore-dim:     rgba(172,175,125,0.35);
+      --dore-subtle:  rgba(172,175,125,0.12);
+      --orange:       #ec5a04;
+      --orange-dim:   rgba(236,90,4,0.18);
+      --border:       rgba(245,240,232,0.08);
+      --border-dore:  rgba(172,175,125,0.22);
+
+      /* Polyamine pour tous les titres, Inter pour le corps */
+      --font-title: 'Polyamine', Georgia, serif;
+      --font-body:  'Inter', -apple-system, sans-serif;
+
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    html{
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
       font-size: 16px;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    html:focus-within{
       scroll-behavior: smooth;
     }
 
-    body{
-      margin: 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: linear-gradient(180deg, var(--cream) 0%, #F5F3EE 100%);
-      color: var(--text-primary);
+    body {
+      background: var(--bg);
+      color: var(--creme);
+      font-family: var(--font-body);
       min-height: 100vh;
-      line-height: 1.65;
-      letter-spacing: -0.011em;
+      line-height: 1.6;
+      overflow-x: hidden;
     }
 
-    a, button{
-      outline-offset: 3px;
-    }
-
-    /* Header Premium */
-    header.header{
-      position: relative;
-      text-align: center;
-      background: linear-gradient(135deg, var(--deep-sage) 0%, var(--sage-medium) 100%);
-      color: var(--cream);
-      padding: var(--space-2xl) var(--space-lg) var(--space-xl);
-      box-shadow: var(--shadow-lg);
-      border-bottom: 1px solid rgba(197, 183, 143, 0.15);
-    }
-
-    .header-title{
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--space-lg);
-      margin: 0;
-      font-size: 2.75rem;
-      font-weight: 400;
-      letter-spacing: 0.15em;
-      line-height: 1.2;
-      text-transform: uppercase;
-    }
-
-    .header-logo{
-      height: 2.6rem;
-      width: 2.6rem;
-      object-fit: contain;
-      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.15));
-      transition: transform 0.3s ease;
-    }
-
-    .header-logo:hover{
-      transform: scale(1.05);
-    }
-
-    .header-subtitle{
-      margin: var(--space-md) 0 0;
-      font-size: 1.125rem;
-      font-weight: 300;
-      letter-spacing: 0.08em;
-      color: var(--soft-gold);
-      font-family: 'Inter', sans-serif;
-    }
-
-    /* Share Button */
-    .share-btn{
-      position: absolute;
-      right: var(--space-lg);
-      top: var(--space-lg);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      border: 1px solid rgba(197, 183, 143, 0.3);
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--soft-gold);
-      cursor: pointer;
-      backdrop-filter: blur(8px);
-      transition: all 0.2s ease;
-    }
-
-    .share-btn:hover{
-      background: rgba(255, 255, 255, 0.18);
-      border-color: rgba(197, 183, 143, 0.5);
-      transform: translateY(-1px);
-    }
-
-    /* Search Container */
-    .search-container{
-      margin: var(--space-xl) auto var(--space-lg);
-      max-width: 680px;
-      padding: 0 var(--space-lg);
-    }
-
-    .search-row{
-      display: flex;
-      gap: var(--space-sm);
-    }
-
-    .search-box{
-      flex: 1;
-      padding: var(--space-md) var(--space-lg);
-      font-size: 1rem;
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(26, 46, 37, 0.12);
-      background: var(--warm-white);
-      box-shadow: var(--shadow-sm);
-      color: var(--text-primary);
-      font-family: 'Inter', sans-serif;
-      transition: all 0.2s ease;
-    }
-
-    .search-box::placeholder{
-      color: var(--text-muted);
-    }
-
-    .search-box:focus{
-      border-color: var(--sage-medium);
-      box-shadow: var(--shadow-md), 0 0 0 3px rgba(61, 90, 76, 0.08);
-      background: var(--warm-white);
-      outline: none;
-    }
-
-    .clear-btn{
-      border: 1px solid rgba(26, 46, 37, 0.12);
-      background: var(--warm-white);
-      border-radius: var(--radius-lg);
-      padding: var(--space-md) var(--space-lg);
-      cursor: pointer;
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-      transition: all 0.2s ease;
-      font-family: 'Inter', sans-serif;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .clear-btn.visible{
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .clear-btn:hover{
-      background: var(--cream);
-      border-color: var(--sage-medium);
-    }
-
-    .search-results-info{
-      font-size: 0.9375rem;
-      color: var(--text-secondary);
-      margin: var(--space-md) 0;
-      font-weight: 500;
-      text-align: center;
-      padding: var(--space-sm) var(--space-lg);
-      background: var(--warm-white);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-      border: 1px solid rgba(26, 46, 37, 0.08);
-    }
-
-    /* Main Container */
-    main.container{
-      max-width: 880px;
-      margin: var(--space-lg) auto var(--space-2xl);
-      background: var(--warm-white);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-lg);
-      overflow: hidden;
-      border: 1px solid rgba(26, 46, 37, 0.08);
-    }
-
-    /* Tab Navigation */
-    .tab-btn{
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-xs);
-    }
-
-    .tab-btn .ico{
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 18px;
-      height: 18px;
-    }
-
-    .tab-btn .ico svg{
-      width: 18px;
-      height: 18px;
-      display: block;
-    }
-
-    nav.tab-nav{
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      background: linear-gradient(180deg, var(--cream) 0%, var(--warm-white) 100%);
-      border-bottom: 1px solid rgba(26, 46, 37, 0.1);
-      gap: var(--space-xs);
-      padding: var(--space-lg);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      backdrop-filter: blur(12px);
-    }
-
-    .tab-btn{
-      background: var(--warm-white);
-      border: 1px solid rgba(26, 46, 37, 0.15);
-      padding: var(--space-sm) var(--space-md);
-      font-size: 0.9375rem;
-      cursor: pointer;
-      font-weight: 500;
-      color: var(--text-primary);
-      border-radius: var(--radius-md);
-      position: relative;
-      box-shadow: var(--shadow-sm);
-      transition: all 0.2s ease;
-      font-family: 'Inter', sans-serif;
-    }
-
-    .tab-btn:hover{
-      background: var(--cream);
-      border-color: var(--sage-medium);
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-md);
-    }
-
-    .tab-btn[aria-selected="true"]{
-      background: linear-gradient(135deg, var(--deep-sage) 0%, var(--sage-medium) 100%);
-      color: var(--cream);
-      border-color: var(--bronze);
-      box-shadow: var(--shadow-md);
-    }
-
-    /* Tab Content */
-    .tab-content{
-      display: none;
-      padding: var(--space-xl) var(--space-lg);
-      background: var(--warm-white);
-      min-height: 420px;
-    }
-
-    .tab-content.active{
-      display: block;
-    }
-
-    /* Menu Items - Premium Design */
-    .menu-item{
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: var(--space-lg);
-      padding: var(--space-sm) var(--space-md);
-      border-bottom: 1px solid rgba(26, 46, 37, 0.06);
-      background: linear-gradient(180deg, rgba(250, 248, 244, 0.3) 0%, rgba(255, 255, 255, 0.5) 100%);
-      border-radius: var(--radius-md);
-      transition: all 0.2s ease;
-    }
-
-    .menu-item:hover{
-      background: rgba(250, 248, 244, 0.6);
-      box-shadow: var(--shadow-sm);
-      transform: translateX(2px);
-    }
-
-    .menu-item + .menu-item{
-      margin-top: var(--space-sm);
-    }
-
-    .item-info{
-      flex: 1;
-      min-width: 0;
-    }
-
-    .item-name{
-      font-size: 1.375rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      letter-spacing: -0.01em;
-      line-height: 1.4;
-      font-family: 'Cormorant Garamond', Georgia, serif;
-    }
-
-    .item-section{
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin: var(--space-xs) 0 var(--space-sm);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      opacity: 0.9;
-    }
-
-    .item-description{
-      font-size: 0.9375rem;
-      color: var(--text-secondary);
-      font-style: italic;
-      margin-top: var(--space-xs);
-      line-height: 1.5;
-      font-weight: 400;
-    }
-
-    .item-price{
-      font-size: 1.0625rem;
-      color: var(--text-primary);
-      font-weight: 600;
-      background: linear-gradient(135deg, rgba(197, 183, 143, 0.15) 0%, rgba(197, 183, 143, 0.08) 100%);
-      border-radius: var(--radius-md);
-      padding: var(--space-sm) var(--space-md);
-      min-width: 80px;
-      text-align: center;
-      border: 1px solid rgba(197, 183, 143, 0.2);
-      white-space: nowrap;
-    }
-
-    /* Section Titles */
-    .section-title{
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 1.875rem;
-      font-weight: 500;
-      color: var(--text-primary);
-      margin: var(--space-xl) 0 var(--space-lg);
-      text-align: center;
-      letter-spacing: 0.02em;
-      position: relative;
-    }
-
-    .section-title::after{
-      content: '';
-      position: absolute;
-      bottom: -12px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 60px;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--soft-gold), transparent);
-      border-radius: 2px;
-    }
-
-    /* Sticky Section Header */
-    .sticky-section-header{
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      background: linear-gradient(135deg, var(--deep-sage) 0%, var(--sage-medium) 100%);
-      color: var(--cream);
-      padding: var(--space-sm) var(--space-lg);
-      text-align: center;
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 1.125rem;
-      font-weight: 500;
-      letter-spacing: 0.05em;
-      box-shadow: var(--shadow-md);
-      border-bottom: 1px solid rgba(197, 183, 143, 0.3);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-
-    .sticky-section-header.visible{
-      opacity: 1;
-    }
-
-    /* Back to Top Button */
-    .back-to-top{
-      position: fixed;
-      bottom: var(--space-xl);
-      right: var(--space-xl);
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--deep-sage) 0%, var(--sage-medium) 100%);
-      color: var(--cream);
-      border: 2px solid rgba(197, 183, 143, 0.4);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: var(--shadow-lg);
-      z-index: 100;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.3s ease;
-    }
-
-    .back-to-top.visible{
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .back-to-top:hover{
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-xl);
-      background: linear-gradient(135deg, var(--sage-medium) 0%, var(--deep-sage) 100%);
-    }
-
-    .back-to-top svg{
-      width: 24px;
-      height: 24px;
-    }
-
-    .now-title{
-      font-size: 1.5rem;
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-weight: 500;
-      color: var(--sage-medium);
-      margin: var(--space-lg) 0;
-      text-align: center;
-      letter-spacing: 0.02em;
-    }
-
-    /* Empty State */
-    .empty-state{
-      text-align: center;
-      color: var(--text-secondary);
-      margin: var(--space-xl) 0;
-      padding: var(--space-xl) var(--space-lg);
-      background: linear-gradient(180deg, rgba(250, 248, 244, 0.4) 0%, rgba(255, 255, 255, 0.6) 100%);
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(26, 46, 37, 0.08);
-    }
-
-    .empty-state h3{
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 1.25rem;
-      font-weight: 500;
-      color: var(--text-primary);
-      margin-bottom: var(--space-sm);
-    }
-
-    /* Skeleton Loader */
-    .skeleton{
-      display: block;
-      height: 16px;
-      background: linear-gradient(90deg, #f0f0f0, #f8f8f8, #f0f0f0);
-      background-size: 200px 100%;
-      border-radius: var(--radius-sm);
-      animation: sheen 1.8s ease-in-out infinite;
-    }
-
-    .skeleton.big{
-      height: 22px;
-    }
-
-    @keyframes sheen{
-      0%{
-        background-position: -200px 0;
-      }
-      100%{
-        background-position: calc(200px + 100%) 0;
-      }
-    }
-
-    /* Wine Decision Tree */
-    .wine-tree{
-      padding: var(--space-xl) var(--space-lg);
-    }
-
-    .wine-tree-header{
-      display: flex;
-      align-items: center;
-      gap: var(--space-md);
-      margin-bottom: var(--space-xl);
-      justify-content: center;
-    }
-
-    .wine-tree-title{
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 1.875rem;
-      font-weight: 500;
-      color: var(--text-primary);
-      margin: 0;
-      letter-spacing: 0.01em;
-    }
-
-    .wine-icon{
-      width: 28px;
-      height: 28px;
-      color: var(--soft-gold);
-    }
-
-    .progress-bar{
-      display: flex;
-      gap: var(--space-xs);
-      margin-bottom: var(--space-md);
-    }
-
-    .progress-step{
-      flex: 1;
-      height: 6px;
-      background: rgba(197, 183, 143, 0.2);
-      border-radius: var(--radius-sm);
-      transition: all 0.3s ease;
-    }
-
-    .progress-step.active{
-      background: linear-gradient(90deg, var(--soft-gold), var(--bronze));
-    }
-
-    .progress-info{
-      text-align: center;
-      color: var(--text-secondary);
-      font-size: 0.875rem;
-      margin-bottom: var(--space-md);
-      font-weight: 500;
-    }
-
-    .question-title{
-      font-size: 1.5rem;
-      font-weight: 500;
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      color: var(--text-primary);
-      margin-bottom: var(--space-lg);
-      text-align: center;
-      letter-spacing: 0.01em;
-    }
-    
-    .wine-options{
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-sm);
-    }
-
-    .wine-option{
-      width: 100%;
-      padding: var(--space-md) var(--space-lg);
-      text-align: left;
-      border: 1px solid rgba(26, 46, 37, 0.15);
-      border-radius: var(--radius-lg);
-      background: var(--warm-white);
-      cursor: pointer;
-      transition: all 0.25s ease;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-family: 'Inter', sans-serif;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .wine-option:hover{
-      border-color: var(--sage-medium);
-      background: var(--cream);
-      transform: translateX(3px);
-      box-shadow: var(--shadow-md);
-    }
-
-    .wine-option-content{
-      flex: 1;
-    }
-
-    .wine-option-label{
-      font-size: 1rem;
-      font-weight: 500;
-      color: var(--text-primary);
-      display: flex;
-      align-items: center;
-      gap: var(--space-xs);
-    }
-
-    .wine-option-desc{
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-      margin-top: var(--space-xs);
-      font-style: italic;
-      font-weight: 400;
-      line-height: 1.5;
-    }
-
-    .wine-option-icon{
-      font-size: 1.375rem;
-    }
-
-    .wine-color-dot{
-      display: inline-block;
-      width: 0.75rem;
-      height: 0.75rem;
-      border-radius: 50%;
-      background: var(--dot-color, rgba(197, 183, 143, 0.55));
-      border: 1px solid rgba(26, 46, 37, 0.2);
-      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.7);
-    }
-
-    .chevron-icon{
-      width: 18px;
-      height: 18px;
-      color: var(--soft-gold);
-      transition: transform 0.2s ease;
-    }
-
-    .wine-option:hover .chevron-icon{
-      transform: translateX(4px);
-    }
-
-    .wine-nav-btns{
-      display: flex;
-      gap: var(--space-sm);
-      margin-top: var(--space-xl);
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .wine-btn{
-      padding: var(--space-sm) var(--space-lg);
-      border-radius: var(--radius-lg);
-      font-size: 0.9375rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      border: 1px solid rgba(26, 46, 37, 0.15);
-      display: flex;
-      align-items: center;
-      gap: var(--space-xs);
-      font-family: 'Inter', sans-serif;
-    }
-
-    .wine-btn-back{
-      background: var(--warm-white);
-      border: 1px solid rgba(26, 46, 37, 0.15);
-      color: var(--text-primary);
-    }
-
-    .wine-btn-back:hover{
-      background: var(--cream);
-      border-color: var(--sage-medium);
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .wine-btn-primary{
-      background: linear-gradient(135deg, var(--deep-sage) 0%, var(--sage-medium) 100%);
-      color: var(--cream);
-      border: 1px solid var(--bronze);
-    }
-
-    .wine-btn-primary:hover{
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-md);
-    }
-
-    .wine-btn-secondary{
-      background: var(--warm-white);
-      border: 1px solid rgba(26, 46, 37, 0.2);
-      color: var(--text-primary);
-    }
-
-    .wine-btn-secondary:hover{
-      background: var(--cream);
-      border-color: var(--sage-medium);
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-sm);
-    }
-    
-    /* Wine Recommendations */
-    .wine-recommendations{
-      padding: var(--space-xl) var(--space-lg);
-    }
-
-    .reco-header{
-      display: flex;
-      align-items: center;
-      gap: var(--space-md);
-      margin-bottom: var(--space-xl);
-      justify-content: center;
-    }
-
-    .reco-title{
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 1.875rem;
-      font-weight: 500;
-      color: var(--text-primary);
-      margin: 0;
-      letter-spacing: 0.01em;
-    }
-
-    .wine-card{
-      border: 1px solid rgba(26, 46, 37, 0.12);
-      border-radius: var(--radius-lg);
-      padding: var(--space-lg);
-      margin-bottom: var(--space-sm);
-      background: linear-gradient(180deg, rgba(250, 248, 244, 0.4) 0%, rgba(255, 255, 255, 0.8) 100%);
-      transition: all 0.25s ease;
-      box-shadow: var(--shadow-sm);
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .wine-card-badges{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 0.25rem;
-    }
-
-    .wine-badge{
-      display: inline-flex;
-      align-items: center;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.03em;
-      border-radius: 999px;
-      padding: 0.35rem 0.75rem;
-      background: rgba(26, 46, 37, 0.08);
-      color: var(--text-primary);
-      border: 1px solid transparent;
-    }
-
-    .wine-badge-reco{
-      background: rgba(255, 255, 255, 0.92);
-      border: 1px solid rgba(155, 139, 108, 0.55);
-      color: var(--deep-sage);
-      box-shadow: 0 4px 12px rgba(155, 139, 108, 0.18);
-    }
-
-    .wine-badge-glass{
-      background: rgba(61, 90, 76, 0.1);
-      color: var(--sage-medium);
-      border-color: rgba(61, 90, 76, 0.25);
-    }
-
-    .wine-badge-local{
-      background: rgba(250, 248, 244, 0.92);
-      border: 1px solid rgba(197, 183, 143, 0.45);
-      color: var(--bronze);
-    }
-
-    .wine-card:hover{
-      border-color: var(--sage-medium);
-      box-shadow: var(--shadow-md);
-      transform: translateY(-2px);
-      background: rgba(250, 248, 244, 0.6);
-    }
-
-    .wine-card-header{
-      display: flex;
-      justify-content: space-between;
-      align-items: start;
-      margin-bottom: var(--space-sm);
-      gap: var(--space-lg);
-    }
-
-    .wine-card-name{
-      font-size: 1.125rem;
-      font-weight: 500;
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      color: var(--text-primary);
-      flex: 1;
-      line-height: 1.4;
-      letter-spacing: -0.01em;
-    }
-
-    .wine-card-price{
-      font-size: 1.0625rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      background: var(--warm-white);
-      border: 1px solid rgba(197, 183, 143, 0.3);
-      padding: var(--space-xs) var(--space-md);
-      border-radius: var(--radius-md);
-      white-space: nowrap;
-    }
-
-    .wine-card-region{
-      color: var(--text-secondary);
-      font-size: 0.875rem;
-      font-weight: 500;
-      margin-bottom: var(--space-xs);
-    }
-
-    .wine-card-grapes{
-      color: var(--text-muted);
-      font-size: 0.8125rem;
-      margin-bottom: var(--space-sm);
-      font-weight: 400;
-      font-style: italic;
-      line-height: 1.5;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px){
-      .header-title{
-        font-size: 2rem;
-        gap: var(--space-md);
-        letter-spacing: 0.1em;
-      }
-
-      .header-logo{
-        height: 2.2rem;
-        width: 2.2rem;
-      }
-
-      .header-subtitle{
-        font-size: 1rem;
-      }
-
-      .share-btn{
-        right: var(--space-md);
-        top: var(--space-md);
-        width: 40px;
-        height: 40px;
-      }
-
-      .search-container{
-        padding: 0 var(--space-md);
-      }
-
-      .menu-item{
-        flex-direction: row;
-        align-items: flex-start;
-        gap: var(--space-md);
-      }
-
-      .item-price{
-        flex-shrink: 0;
-        margin-top: 0;
-      }
-
-      .wine-card-header{
-        flex-direction: column;
-        gap: var(--space-sm);
-      }
-
-      .wine-card-price{
-        align-self: flex-start;
-      }
-
-      .wine-nav-btns{
-        flex-direction: column;
-      }
-
-      .wine-btn{
-        width: 100%;
-        justify-content: center;
-      }
-
-      .tab-nav{
-        padding: var(--space-md);
-        gap: var(--space-xs);
-      }
-
-      .tab-btn{
-        font-size: 0.875rem;
-        padding: var(--space-xs) var(--space-sm);
-      }
-
-      .section-title{
-        font-size: 1.625rem;
-      }
-
-      .wine-tree-title, .reco-title{
-        font-size: 1.5rem;
-      }
-
-      .question-title{
-        font-size: 1.25rem;
-      }
-    }
-
-    @media (max-width: 480px){
-      .header-title{
-        font-size: 1.75rem;
-        flex-direction: column;
-        gap: var(--space-sm);
-      }
-
-      .header-logo{
-        height: 2rem;
-        width: 2rem;
-      }
-
-      main.container{
-        border-radius: var(--radius-md);
-        margin: var(--space-md) var(--space-xs) var(--space-xl);
-      }
-
-      .search-row{
-        flex-direction: row;
-      }
-
-      .clear-btn{
-        padding: var(--space-md) var(--space-md);
-        min-width: 44px;
-        flex-shrink: 0;
-      }
-    }
-
-    /* Splash Screen Premium */
+    /* ─── SPLASH ─── */
     #splashScreen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: linear-gradient(135deg, var(--deep-sage) 0%, var(--sage-medium) 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      position: fixed; inset: 0;
+      background: var(--green-deep);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
       z-index: 9999;
-      opacity: 1;
-      transition: opacity 0.5s ease;
+      transition: opacity 0.5s var(--ease);
     }
-
-    #splashScreen.fade-out {
-      opacity: 0;
-      pointer-events: none;
-    }
-
+    #splashScreen.fade-out { opacity: 0; pointer-events: none; }
     .splash-logo {
-      width: 320px;
-      max-width: 85vw;
-      height: auto;
-      object-fit: contain;
-      filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.3));
-      animation: splashPulse 2s ease-in-out infinite;
+      width: 300px; max-width: 80vw;
+      filter: drop-shadow(0 8px 40px rgba(172,175,125,0.2));
+      animation: splashFloat 3s ease-in-out infinite;
     }
-
     .splash-loader {
-      width: 40px;
-      height: 40px;
-      margin-top: var(--space-2xl);
-      border: 3px solid rgba(197, 183, 143, 0.3);
-      border-top-color: var(--soft-gold);
+      width: 32px; height: 32px;
+      margin-top: 2.5rem;
+      border: 2px solid var(--dore-dim);
+      border-top-color: var(--dore);
       border-radius: 50%;
-      animation: spin 1s linear infinite;
+      animation: spin 0.9s linear infinite;
     }
+    @keyframes splashFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    @keyframes splashPulse {
-      0%, 100% {
-        transform: scale(1);
-        opacity: 0.95;
-      }
-      50% {
-        transform: scale(1.02);
-        opacity: 1;
-      }
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    @media (max-width: 768px) {
-      .splash-logo {
-        width: 280px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .splash-logo {
-        width: 240px;
-      }
-    }
-
-    /* Footer */
-    footer.footer{
+    /* ─── HEADER ─── */
+    header.header {
+      position: relative;
       text-align: center;
-      padding: var(--space-lg);
-      color: var(--text-secondary);
-      font-size: 0.875rem;
-      font-weight: 500;
-      background: var(--warm-white);
-      border-top: 1px solid rgba(26, 46, 37, 0.08);
-      margin-top: var(--space-xl);
+      background: var(--green-deep);
+      padding: 3rem 1.5rem 2rem;
+      border-bottom: 1px solid var(--border-dore);
+    }
+    .header-eyebrow {
+      font-family: var(--font-body);
+      font-size: 0.6875rem; font-weight: 500;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--dore); margin-bottom: 1rem;
+    }
+    .header-title {
+      font-family: var(--font-title);
+      font-size: clamp(3rem, 9vw, 5.5rem);
+      font-weight: 400;
+      letter-spacing: 0.06em; line-height: 1;
+      color: var(--creme); margin: 0;
+    }
+    .header-divider {
+      width: 40px; height: 1px;
+      background: var(--dore);
+      margin: 1.25rem auto 1rem; opacity: 0.6;
+    }
+    .header-subtitle {
+      font-size: 0.75rem; font-weight: 400;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--creme-muted);
+    }
+    .share-btn {
+      position: absolute; right: 1.25rem; top: 1.25rem;
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 1px solid var(--border-dore); background: transparent;
+      color: var(--dore); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .share-btn:hover { background: var(--dore-subtle); border-color: var(--dore); }
+
+    /* ─── SEARCH ─── */
+    .search-container { max-width: 640px; margin: 1.5rem auto 1rem; padding: 0 1.25rem; }
+    .search-row { display: flex; gap: 0.5rem; }
+    .search-box {
+      flex: 1; padding: 0.75rem 1rem; font-size: 0.9375rem;
+      font-family: var(--font-body); border-radius: var(--radius-md);
+      border: 1px solid var(--border); background: var(--bg-card);
+      color: var(--creme); transition: border-color 0.2s; outline: none;
+    }
+    .search-box::placeholder { color: var(--creme-muted); }
+    .search-box:focus { border-color: var(--dore-dim); }
+    .clear-btn {
+      border: 1px solid var(--border); background: var(--bg-card);
+      border-radius: var(--radius-md); padding: 0.75rem 1rem;
+      cursor: pointer; font-size: 0.875rem; color: var(--creme-muted);
+      transition: all 0.2s; font-family: var(--font-body);
+      opacity: 0; pointer-events: none;
+    }
+    .clear-btn.visible { opacity: 1; pointer-events: auto; }
+    .clear-btn:hover { color: var(--creme); border-color: var(--dore-dim); }
+    .search-results-info {
+      font-size: 0.8125rem; color: var(--creme-muted);
+      margin: 0.75rem 0; text-align: center; letter-spacing: 0.05em;
+    }
+
+    /* ─── CONTAINER ─── */
+    main.container {
+      max-width: 820px; margin: 0 auto 4rem;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-xl); overflow: hidden;
+    }
+
+    /* ─── TAB NAV ─── */
+    nav.tab-nav {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 0.25rem; padding: 1rem 1.25rem;
+      background: var(--bg-nav); border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 10; backdrop-filter: blur(16px);
+    }
+    .tab-btn {
+      display: inline-flex; align-items: center; gap: 0.375rem;
+      font-family: var(--font-body); font-size: 0.6875rem; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      padding: 0.5rem 0.875rem; border-radius: var(--radius-sm);
+      border: 1px solid transparent; background: transparent;
+      color: var(--creme-muted); cursor: pointer; transition: all 0.2s var(--ease);
+    }
+    .tab-btn:hover { color: var(--creme-dim); border-color: var(--border); }
+    .tab-btn[aria-selected="true"] { background: var(--orange); color: #fff; border-color: var(--orange); }
+    .tab-btn .ico { display: inline-flex; width: 14px; height: 14px; }
+    .tab-btn .ico svg { width: 14px; height: 14px; }
+
+    /* ─── TAB CONTENT ─── */
+    .tab-content { display: none; padding: 2rem 1.5rem; min-height: 400px; animation: fadeIn 0.3s var(--ease); }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+    /* ─── SECTION TITLE ─── */
+    .section-title {
+      font-family: var(--font-body); font-size: 0.6875rem; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase; color: var(--dore);
+      margin: 2rem 0 1rem; padding-bottom: 0.625rem;
+      border-bottom: 1px solid var(--border); position: relative;
+    }
+    .section-title:first-child { margin-top: 0; }
+    .section-title::after {
+      content: ''; position: absolute; bottom: -1px; left: 0;
+      width: 24px; height: 1px; background: var(--dore);
+    }
+
+    /* ─── MENU ITEM ─── */
+    .menu-item {
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 1rem; padding: 0.875rem 0; border-bottom: 1px solid var(--border); position: relative;
+    }
+    .menu-item:last-child { border-bottom: none; }
+    .menu-item::before {
+      content: ''; position: absolute; left: -0.5rem; top: 0; bottom: 0; width: 2px;
+      background: var(--dore); opacity: 0; transition: opacity 0.2s; border-radius: 1px;
+    }
+    .menu-item:hover::before { opacity: 1; }
+    .item-info { flex: 1; min-width: 0; }
+    .item-name {
+      font-family: var(--font-title); font-size: 1.125rem; font-weight: 400;
+      color: var(--creme); line-height: 1.3; letter-spacing: 0.02em;
+    }
+    .item-description {
+      font-size: 0.8125rem; color: var(--creme-muted);
+      margin-top: 0.2rem; line-height: 1.5; font-style: italic;
+    }
+    .item-price {
+      font-family: var(--font-body); font-size: 0.875rem; font-weight: 500;
+      color: var(--dore); white-space: nowrap; flex-shrink: 0; letter-spacing: 0.03em;
+    }
+
+    /* ─── EN CE MOMENT ─── */
+    .now-header { text-align: center; margin-bottom: 2rem; }
+    .now-eyebrow { font-size: 0.6875rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--orange); font-weight: 500; }
+    .now-title {
+      font-family: var(--font-title); font-size: 2.5rem; font-weight: 400;
+      color: var(--creme); margin-top: 0.5rem; letter-spacing: 0.04em;
+    }
+
+    /* ─── SKELETON ─── */
+    .skeleton {
+      display: block; height: 14px;
+      background: linear-gradient(90deg, var(--bg-elevated) 25%, var(--bg-nav) 50%, var(--bg-elevated) 75%);
+      background-size: 400px 100%; border-radius: var(--radius-sm); animation: shimmer 1.6s infinite;
+    }
+    .skeleton.big { height: 20px; }
+    @keyframes shimmer { from{background-position:-400px 0} to{background-position:400px 0} }
+
+    /* ─── WINE TREE ─── */
+    .wine-tree { padding: 0; }
+    .wine-tree-header { text-align: center; margin-bottom: 2rem; }
+    .wine-tree-eyebrow { font-size: 0.6875rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--dore); font-weight: 500; }
+    .wine-tree-title { font-family: var(--font-title); font-size: 2.25rem; font-weight: 400; color: var(--creme); margin-top: 0.5rem; letter-spacing: 0.04em; }
+    .progress-bar { display: flex; gap: 4px; margin-bottom: 0.5rem; }
+    .progress-step { flex: 1; height: 2px; background: var(--border); border-radius: 2px; transition: background 0.3s; }
+    .progress-step.active { background: var(--dore); }
+    .progress-info { font-size: 0.6875rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--creme-muted); text-align: center; margin-bottom: 2rem; }
+    .question-title { font-family: var(--font-title); font-size: 1.5rem; font-weight: 400; color: var(--creme); text-align: center; margin-bottom: 1.25rem; letter-spacing: 0.03em; }
+    .wine-options { display: flex; flex-direction: column; gap: 0.625rem; }
+    .wine-option {
+      width: 100%; padding: 1rem 1.25rem; text-align: left;
+      border: 1px solid var(--border); border-radius: var(--radius-md);
+      background: var(--bg-elevated); color: var(--creme); cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between;
+      font-family: var(--font-body); transition: all 0.2s var(--ease);
+    }
+    .wine-option:hover { border-color: var(--dore-dim); background: var(--bg-nav); transform: translateX(3px); }
+    .wine-option-content { flex: 1; }
+    .wine-option-label { font-size: 0.9375rem; font-weight: 500; color: var(--creme); display: flex; align-items: center; gap: 0.5rem; }
+    .wine-option-desc { font-size: 0.8125rem; color: var(--creme-muted); margin-top: 0.25rem; font-style: italic; }
+    .wine-color-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--dot-color, var(--dore)); border: 1px solid rgba(255,255,255,0.15); }
+    .chevron-icon { width: 16px; height: 16px; color: var(--dore); transition: transform 0.2s; flex-shrink: 0; }
+    .wine-option:hover .chevron-icon { transform: translateX(4px); }
+    .wine-nav-btns { display: flex; flex-wrap: wrap; gap: 0.625rem; margin-top: 2rem; justify-content: center; }
+    .wine-btn {
+      padding: 0.625rem 1.25rem; border-radius: var(--radius-md);
+      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+      cursor: pointer; display: flex; align-items: center; gap: 0.375rem;
+      font-family: var(--font-body); transition: all 0.2s; border: 1px solid var(--border);
+    }
+    .wine-btn-back { background: transparent; color: var(--creme-dim); }
+    .wine-btn-back:hover { border-color: var(--border-dore); color: var(--creme); }
+    .wine-btn-primary { background: var(--orange); border-color: var(--orange); color: #fff; }
+    .wine-btn-primary:hover { opacity: 0.9; }
+    .wine-btn-secondary { background: transparent; border-color: var(--border-dore); color: var(--dore); }
+    .wine-btn-secondary:hover { background: var(--dore-subtle); }
+
+    /* ─── WINE CARDS ─── */
+    .reco-header { text-align: center; margin-bottom: 1.5rem; }
+    .reco-eyebrow { font-size: 0.6875rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--orange); font-weight: 500; }
+    .reco-title { font-family: var(--font-title); font-size: 2.25rem; font-weight: 400; color: var(--creme); margin-top: 0.5rem; letter-spacing: 0.04em; }
+    .wine-card { border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.125rem 1.25rem; margin-bottom: 0.625rem; background: var(--bg-elevated); transition: all 0.2s var(--ease); }
+    .wine-card:hover { border-color: var(--border-dore); transform: translateY(-2px); }
+    .wine-card-badges { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-bottom: 0.625rem; }
+    .wine-badge { font-size: 0.625rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 2px; padding: 0.25rem 0.625rem; border: 1px solid transparent; }
+    .wine-badge-glass { background: var(--dore-subtle); color: var(--dore); border-color: var(--border-dore); }
+    .wine-badge-reco { background: var(--orange-dim); color: var(--orange); border-color: rgba(236,90,4,0.3); }
+    .wine-badge-local { background: rgba(22,54,33,0.6); color: #6db87a; border-color: rgba(109,184,122,0.25); }
+    .wine-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.375rem; }
+    .wine-card-name { font-family: var(--font-title); font-size: 1.0625rem; font-weight: 400; color: var(--creme); flex: 1; line-height: 1.3; letter-spacing: 0.02em; }
+    .wine-card-price { font-size: 0.875rem; font-weight: 500; color: var(--dore); white-space: nowrap; flex-shrink: 0; }
+    .wine-card-region { font-size: 0.8125rem; color: var(--creme-muted); font-weight: 400; margin-bottom: 0.125rem; }
+    .wine-card-grapes { font-size: 0.75rem; color: var(--creme-muted); font-style: italic; line-height: 1.5; }
+
+    /* ─── EMPTY STATE ─── */
+    .empty-state { text-align: center; padding: 3rem 1.5rem; color: var(--creme-muted); }
+    .empty-state h3 { font-family: var(--font-title); font-size: 1.25rem; font-weight: 400; color: var(--creme-dim); margin-bottom: 0.5rem; letter-spacing: 0.03em; }
+
+    /* ─── STICKY HEADER ─── */
+    .sticky-section-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      background: rgba(13,30,19,0.96); backdrop-filter: blur(12px); color: var(--dore);
+      padding: 0.5rem 1.5rem; text-align: center; font-size: 0.6875rem; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase; border-bottom: 1px solid var(--border-dore);
+      opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .sticky-section-header.visible { opacity: 1; }
+
+    /* ─── BACK TO TOP ─── */
+    .back-to-top {
+      position: fixed; bottom: 1.5rem; right: 1.5rem;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--green-mid); border: 1px solid var(--border-dore); color: var(--dore);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      z-index: 100; opacity: 0; pointer-events: none; transition: all 0.3s;
+    }
+    .back-to-top.visible { opacity: 1; pointer-events: auto; }
+    .back-to-top:hover { background: var(--green-deep); transform: translateY(-2px); }
+    .back-to-top svg { width: 20px; height: 20px; }
+
+    /* ─── FOOTER ─── */
+    footer.footer {
+      text-align: center; padding: 2rem 1.5rem; color: var(--creme-muted);
+      font-size: 0.8125rem; border-top: 1px solid var(--border); line-height: 1.8;
+    }
+    .footer-contact {
+      display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1rem;
+      padding: 0.625rem 1.25rem; background: transparent; border: 1px solid var(--border-dore);
+      color: var(--dore); text-decoration: none; border-radius: var(--radius-md);
+      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; transition: all 0.2s;
+    }
+    .footer-contact:hover { background: var(--dore-subtle); }
+    .footer-contact svg { width: 14px; height: 14px; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      header.header { padding: 2.5rem 1rem 1.5rem; }
+      main.container { margin: 0 0.75rem 3rem; border-radius: var(--radius-lg); }
+      .tab-content { padding: 1.5rem 1rem; }
+      .tab-btn { font-size: 0.625rem; padding: 0.4rem 0.625rem; }
+      .wine-nav-btns { flex-direction: column; }
+      .wine-btn { width: 100%; justify-content: center; }
+      .wine-card-header { flex-direction: column; gap: 0.375rem; }
+    }
+    @media (max-width: 480px) {
+      .header-title { font-size: 2.75rem; }
     }
   </style>
 </head>
 <body>
-  <!-- Splash Screen Premium -->
+
   <div id="splashScreen">
     <img src="./logo_chargement.png" alt="Maison Fleurie" class="splash-logo" />
     <div class="splash-loader"></div>
   </div>
 
   <header class="header" role="banner">
-    <h1 class="header-title"><span>MAISON</span>
-      <img src="https://raw.githubusercontent.com/maison-fleurie/Menu/main/logo.png" alt="Logo Maison Fleurie" class="header-logo" />
-      <span>FLEURIE</span></h1>
-    
-    <button id="btnShare" class="share-btn" aria-label="Partager" title="Partager" tabindex="0">
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.02-4.11A2.99 2.99 0 0 0 18 7.91c1.66 0 3-1.34 3-3S19.66 2 18 2s-3 1.34-3 3c0 .24.04.47.09.7l-7.02 4.11A2.99 2.99 0 0 0 6 9.91c-1.66 0-3 1.34-3 3s1.34 3 3 3c.82 0 1.56-.33 2.09-.87l7.02 4.11c-.05.21-.08.43-.08.66 0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-3-3-3Z"/></svg>
+    <p class="header-eyebrow">Maison Fleurie · Montpellier</p>
+    <h1 class="header-title">La Carte</h1>
+    <div class="header-divider"></div>
+    <p class="header-subtitle">Table des Mets &nbsp;·&nbsp; Cocktails &nbsp;·&nbsp; Vins</p>
+    <button id="btnShare" class="share-btn" aria-label="Partager">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.02-4.11A3 3 0 1 0 15 4.91c0 .24.04.47.09.7L8.07 9.72A3 3 0 1 0 6 12.91c.82 0 1.56-.33 2.09-.87l7.02 4.11c-.05.21-.08.43-.08.66a3 3 0 1 0 3-3Z"/>
+      </svg>
     </button>
-    <p class="header-subtitle">Table des Mets • Cocktails • Vins</p>
   </header>
 
-  <!-- Sticky Section Header -->
   <div id="stickySectionHeader" class="sticky-section-header"></div>
 
-  <noscript>
-    <style>.nojs{max-width:900px;margin:1rem auto;background:#fff;border:1px solid #c00;color:#111;padding:1rem;border-radius:12px}</style>
-    <div class="nojs">⚠️ JavaScript est désactivé. Activez‑le pour voir le menu interactif.</div>
-  </noscript>
+  <noscript><p style="text-align:center;padding:2rem;color:#f5f0e8">JavaScript requis.</p></noscript>
 
   <div class="search-container">
     <div class="search-row">
-      <input id="searchBox" class="search-box" type="search" placeholder="Rechercher… (ex: Vin, Bière, Karaage poulet)" autocomplete="off" />
-      <button id="clearSearch" class="clear-btn" aria-label="Effacer">✖</button>
+      <input id="searchBox" class="search-box" type="search" placeholder="Rechercher un plat, cocktail, vin…" autocomplete="off" />
+      <button id="clearSearch" class="clear-btn" aria-label="Effacer">✕</button>
     </div>
     <div id="searchInfo" class="search-results-info" style="display:none"></div>
   </div>
 
   <main id="main" class="container" role="main">
     <nav class="tab-nav" role="tablist">
-      <button id="tab-now" class="tab-btn" role="tab" aria-selected="true" data-tab="now"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></svg></span><span>En ce moment</span></button>
-      <button id="tab-deguster" class="tab-btn" role="tab" aria-selected="false" data-tab="deguster"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 3v10M11 3v10M5 7h8M16 4h3v9a3 3 0 0 1-3 3h-3"/></svg></span><span>Déguster</span></button>
-      <button id="tab-cocktails" class="tab-btn" role="tab" aria-selected="false" data-tab="cocktails"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 4h18l-7 7v7h-4v-7z"/></svg></span><span>Cocktails</span></button>
-      <button id="tab-chaudes" class="tab-btn" role="tab" aria-selected="false" data-tab="chaudes"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 8h12a4 4 0 0 1 0 8H4z"/><path d="M7 4c0 2 2 2 2 4s-2 2-2 4"/></svg></span><span>Chaudes</span></button>
-      <button id="tab-bieres" class="tab-btn" role="tab" aria-selected="false" data-tab="bieres"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 8h8v12H7z"/><path d="M15 10h2a3 3 0 0 1 0 6h-2"/></svg></span><span>Bières</span></button>
-      <button id="tab-softs" class="tab-btn" role="tab" aria-selected="false" data-tab="softs"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 7h10l-2 13H9z"/><path d="M9 11h8"/></svg></span><span>Softs</span></button>
-      <button id="tab-vins" class="tab-btn" role="tab" aria-selected="false" data-tab="vins"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 3h10l-1 6a6 6 0 1 1-8 0z"/><path d="M12 15v6"/></svg></span><span>Vins</span></button>
+      <button class="tab-btn" role="tab" aria-selected="true"  data-tab="now">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></svg></span><span>En ce moment</span>
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="deguster">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3v10M11 3v10M5 7h8M16 4h3v9a3 3 0 0 1-3 3h-3"/></svg></span><span>Déguster</span>
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="cocktails">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 4h18l-7 7v7h-4v-7z"/></svg></span><span>Cocktails</span>
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="chaudes">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 8h12a4 4 0 0 1 0 8H4z"/><path d="M7 4c0 2 2 2 2 4s-2 2-2 4"/></svg></span><span>Chaudes</span>
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="bieres">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 8h8v12H7z"/><path d="M15 10h2a3 3 0 0 1 0 6h-2"/></svg></span><span>Bières</span>
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="softs">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 7h10l-2 13H9z"/><path d="M9 11h8"/></svg></span><span>Softs</span>
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="vins">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3h10l-1 6a6 6 0 1 1-8 0z"/><path d="M12 15v6"/></svg></span><span>Vins</span>
+      </button>
     </nav>
 
-    <section id="panel-now" class="tab-content active"></section>
+    <section id="panel-now"      class="tab-content active"></section>
     <section id="panel-deguster" class="tab-content"></section>
-    <section id="panel-cocktails" class="tab-content"></section>
-    <section id="panel-chaudes" class="tab-content"></section>
-    <section id="panel-bieres" class="tab-content"></section>
-    <section id="panel-softs" class="tab-content"></section>
-    <section id="panel-vins" class="tab-content"></section>
+    <section id="panel-cocktails"class="tab-content"></section>
+    <section id="panel-chaudes"  class="tab-content"></section>
+    <section id="panel-bieres"   class="tab-content"></section>
+    <section id="panel-softs"    class="tab-content"></section>
+    <section id="panel-vins"     class="tab-content"></section>
 
     <div id="errorContainer" class="empty-state" style="display:none">
-      <h3>Oups ! Impossible de charger le menu</h3>
+      <h3>Impossible de charger la carte</h3>
       <p>Vérifiez votre connexion et réessayez.</p>
-      <button id="retryBtn">🔄 Réessayer</button>
+      <button id="retryBtn" class="wine-btn wine-btn-secondary" style="margin:1rem auto 0">Réessayer</button>
     </div>
   </main>
 
   <footer class="footer">
-    Prix net TTC & service compris<br>
-    Pour toute information concernant les allergènes, veuillez vous renseigner auprès de notre équipe
+    Prix nets TTC, service compris<br>
+    Pour les allergènes, renseignez-vous auprès de notre équipe
+    <br>
+    <a href="mailto:contact@maison-fleurie.com" class="footer-contact">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+      </svg>
+      Nous contacter
+    </a>
   </footer>
 
-  <!-- Back to Top Button -->
-  <button id="backToTop" class="back-to-top" aria-label="Retour en haut" title="Retour en haut">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M12 19V5M5 12l7-7 7 7"/>
-    </svg>
+  <button id="backToTop" class="back-to-top" aria-label="Retour en haut">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
   </button>
 
-  <script>
-    if (typeof window !== 'undefined' && typeof window.invoke === 'undefined') {
-      window.invoke = function(){ console.warn('[shim] window.invoke() non défini'); };
-    }
+<script>
+const SUPABASE_URL  = 'https://yctaoyxlfzmlzkwwjeti.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljdGFveXhsZnptbHprd3dqZXRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MDQyNzAsImV4cCI6MjA4NzE4MDI3MH0.VeufqlzIrDobaOZRmz-xt2Zda-6QVz0T2CFy_GvIdPw';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-    const CSV_URL = 'https://docs.google.com/spreadsheets/d/1lgd-rGS2kLCn0yPtGMc7RyMDue-YERmKOjNT3QKgJ3Y/export?format=csv&gid=0';
-    const CACHE_KEY = 'mf-menu-v1'; const CACHE_AT = 'mf-menu-at'; const CACHE_TTL = 15*60*1000;
+const CACHE_KEY = 'mf-menu-sb-v5';
+const CACHE_AT  = 'mf-menu-sb-at5';
+const CACHE_TTL = 15 * 60 * 1000;
 
-    let allMenuData = [], wineData = [], currentTab = 'now', isSearching = false, searchTimeout;
-    let wineTreeStep = 0, wineTreeSelections = {}, showingWineList = false;
-    let lastQuery = '', lastSearchResults = [], placeholderInterval;
+let allMenuData = [], wineData = [];
+let currentTab = 'now', isSearching = false, searchTimeout;
+let wineTreeStep = 0, wineTreeSelections = {}, showingWineList = false;
+let placeholderInterval;
 
-    const normalize = (s='') => s.toString().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
-    const tabIdFromOnglet = (s='') => normalize(s).replace(/\s/g,'');
-    const formatPrice = (raw='') => {
-      const str = String(raw).trim();
-      if (!str || /€|\//.test(str)) return str;
-      const num = Number(str.replace(',','.'));
-      return (!isNaN(num) && Number.isInteger(num)) ? `${num}€` : str;
-    };
-    const getPriceValue = (raw='') => {
-      const matches = String(raw).match(/(\d+(?:[.,]\d+)?)/g);
-      if (!matches) return Number.POSITIVE_INFINITY;
-      const numbers = matches
-        .map(n => parseFloat(n.replace(',', '.')))
-        .filter(n => Number.isFinite(n));
-      if (!numbers.length) return Number.POSITIVE_INFINITY;
-      return Math.min(...numbers);
-    };
-    const byNameFR = (a,b) => (a?.Nom||'').localeCompare(b?.Nom||'','fr',{sensitivity:'base'});
-    const compareByPrice = (a, b) => {
-      const priceA = getPriceValue(a?.Prix);
-      const priceB = getPriceValue(b?.Prix);
-      const bothFinite = Number.isFinite(priceA) && Number.isFinite(priceB);
-      if (bothFinite && priceA !== priceB) return priceA - priceB;
-      if (Number.isFinite(priceA) && !Number.isFinite(priceB)) return -1;
-      if (!Number.isFinite(priceA) && Number.isFinite(priceB)) return 1;
-      return byNameFR(a, b);
-    };
-    const compareWineByPrice = compareByPrice; // Alias pour les vins
-    const qs = sel => document.querySelector(sel);
-    const qsa = sel => Array.from(document.querySelectorAll(sel));
+const qs  = s => document.querySelector(s);
+const qsa = s => Array.from(document.querySelectorAll(s));
+const norm = (s='') => String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
 
-    // Ordre des sections pour "Déguster" uniquement
-    const DEGUSTER_SECTION_ORDER = ['Veggie', 'Terre', 'Mer', 'Fromages & Charcuterie', 'Desserts'];
-    const getSectionOrderIndex = (sectionName, tabName) => {
-      if (normalize(tabName) !== 'deguster') return -1;
-      const idx = DEGUSTER_SECTION_ORDER.findIndex(s => normalize(s) === normalize(sectionName));
-      return idx === -1 ? 999 : idx;
-    };
+const getPriceVal = (raw='') => {
+  const m = String(raw).match(/(\d+(?:[.,]\d+)?)/g);
+  if (!m) return Infinity;
+  return Math.min(...m.map(n=>parseFloat(n.replace(',','.'))).filter(isFinite));
+};
+const byPrice = (a,b) => {
+  const pa=getPriceVal(a.prix), pb=getPriceVal(b.prix);
+  if (isFinite(pa)&&isFinite(pb)&&pa!==pb) return pa-pb;
+  if (isFinite(pa)&&!isFinite(pb)) return -1;
+  if (!isFinite(pa)&&isFinite(pb)) return 1;
+  return (a.nom||'').localeCompare(b.nom||'','fr',{sensitivity:'base'});
+};
 
-    // --- Guide de sélection des vins ---
-    const getWineTag = (wine, key) => {
-      if (!wine || !key) return '';
-      if (Object.prototype.hasOwnProperty.call(wine, key)) return wine[key];
-      if (key.includes('-')) {
-        const alt = key.replace(/-/g, '_');
-        if (Object.prototype.hasOwnProperty.call(wine, alt)) return wine[alt];
-      }
-      if (key.includes('_')) {
-        const alt = key.replace(/_/g, '-');
-        if (Object.prototype.hasOwnProperty.call(wine, alt)) return wine[alt];
-      }
-      return wine[key] || '';
-    };
+/* ── WINE TREE ── */
+const PROVENANCE_LOCAL = ['languedoc','occitanie','herault','pic','montpellier','gard','provence'];
+const PROVENANCE_META = {
+  local:      {label:'Sélection locale',    desc:'Vignerons du Languedoc & Occitanie.'},
+  decouverte: {label:'Escapade & découverte',desc:'Autres régions & voyages gustatifs.'}
+};
+const SUBSTYLE_META = {
+  fruite: {label:'Fruité',  desc:'Gourmand, notes de fruits blancs et jaunes.'},
+  mineral:{label:'Minéral', desc:'Salinité, pierre à fusil, tension élégante.'},
+  rond:   {label:'Rond',    desc:'Ampleur, notes beurrées et texture veloutée.'},
+  orange: {label:'Orange',  desc:'Macération sur peaux, texture originale.'}
+};
+const SUBSTYLE_ORDER = ['fruite','mineral','rond','orange'];
 
-    const toTitle = (value = '') => value.split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase() + part.slice(1)).join(' ');
-    const canonicalSubstyle = (raw = '') => {
-      let norm = normalize(raw);
-      if (!norm) return '';
-      if (norm.startsWith('sec ')) norm = norm.replace(/^sec\s+/, '');
-      return norm;
-    };
+const classifyProvenance = w => {
+  const p = norm(w.tag_provenance||'');
+  if (!p) return null;
+  return PROVENANCE_LOCAL.some(k=>p.includes(k)) ? 'local' : 'decouverte';
+};
+const styleMatches = (w,v) => {
+  const t=norm(w.tag_style||''); if(!t) return false;
+  if(v==='nature')   return t.includes('nature')||t.includes('biodynam');
+  if(v==='souple')   return t.includes('souple')||t.includes('fruit');
+  if(v==='puissant') return t.includes('puissant')||t.includes('struct');
+  if(v==='sec')      return t.includes('sec');
+  if(v==='moelleux') return t.includes('moelleux')||t.includes('doux');
+  return t===v;
+};
+const substyleMatches = (w,v) => norm(w.tag_sous_style||'').includes(v);
+const isWineByGlass   = w => norm(w.section||'').includes('verre');
 
-    const SUBSTYLE_META = {
-      fruite: { label: 'Sec fruité', desc: 'Gourmand, notes de fruits blancs et jaunes.' },
-      sec: { label: 'Sec', desc: 'Profil très droit, vif et désaltérant.' },
-      mineral: { label: 'Sec minéral', desc: 'Salinité, pierre à fusil, tension élégante.' },
-      rond: { label: 'Sec rond', desc: 'Ampleur, notes beurrées et texture veloutée.' }
-    };
-    const SUBSTYLE_ORDER = ['fruite', 'sec', 'mineral', 'rond'];
-    const getSubstyleMeta = (norm, raw = '') => {
-      const meta = SUBSTYLE_META[norm];
-      if (meta) return meta;
-      return { label: toTitle(raw || norm), desc: '' };
-    };
+const buildProvenanceOptions = wines => {
+  const seen=new Set(); wines.forEach(w=>{const g=classifyProvenance(w);if(g)seen.add(g);});
+  return ['local','decouverte'].filter(g=>seen.has(g)).map(g=>({value:g,...PROVENANCE_META[g]}));
+};
+const buildSubstyleOptions = wines => {
+  const seen=new Map();
+  wines.forEach(w=>{const r=norm(w.tag_sous_style||'');if(!r||seen.has(r))return;seen.set(r,{value:r,...(SUBSTYLE_META[r]||{label:r,desc:''})});});
+  return SUBSTYLE_ORDER.filter(k=>seen.has(k)).map(k=>seen.get(k));
+};
 
-    const PROVENANCE_META = {
-      local: { label: 'Sélection locale', desc: 'Vignerons du Languedoc & Occitanie.' },
-      decouverte: { label: 'Escapade & découverte', desc: 'Autres régions & voyages gustatifs.' }
-    };
-    const PROVENANCE_ORDER = ['local', 'decouverte'];
-    const PROVENANCE_LOCAL_KEYWORDS = ['local', 'languedoc', 'occitanie', 'herault', 'hérault', 'pic', 'montpellier', 'gard'];
-    const PROVENANCE_DISCOVERY_KEYWORDS = ['decouverte', 'découverte', 'voyage', 'ailleurs', 'autre'];
-    const getProvenanceMeta = (group) => PROVENANCE_META[group] || { label: toTitle(group), desc: '', icon: '' };
-    const classifyProvenanceGroup = (wine) => {
-      const raw = getWineTag(wine, 'tag_provenance');
-      const norm = normalize(raw);
-      if (!norm) return null;
-      if (PROVENANCE_LOCAL_KEYWORDS.some(key => norm.includes(key))) return 'local';
-      if (PROVENANCE_DISCOVERY_KEYWORDS.some(key => norm.includes(key))) return 'decouverte';
-      if (norm.includes('local')) return 'local';
-      return 'decouverte';
-    };
+const BASE_Q = {id:'color',tag:'tag_couleur',question:'Quelle couleur ?',options:[
+  {value:'blanc',label:'Blanc',dotColor:'#E8D9B5',desc:'Secs, moelleux ou nature.'},
+  {value:'rouge',label:'Rouge',dotColor:'#7B1F29',desc:'Souple, structuré ou nature.'}
+]};
+const WHITE_FLOW = [
+  {id:'style',question:'Quel style de blanc ?',match:styleMatches,options:[
+    {value:'sec',label:'Blanc sec',desc:'Vif, tendu ou minéral.'},
+    {value:'moelleux',label:'Moelleux',desc:'Doux, gourmand & velouté.'},
+    {value:'nature',label:'Biodynamie & nature',desc:'Sans artifice, vivant.'}
+  ]},
+  {id:'origin',question:"Envie d'une cuvée locale ?",options:(_,w)=>buildProvenanceOptions(w),show:s=>!!s.style,match:(w,v)=>classifyProvenance(w)===v},
+  {id:'substyle',question:'Quel profil en blanc sec ?',options:(_,w)=>buildSubstyleOptions(w),show:s=>norm(s.style)==='sec',match:(w,v)=>substyleMatches(w,v)}
+];
+const RED_FLOW = [
+  {id:'style',question:'Quel style de rouge ?',match:styleMatches,options:[
+    {value:'souple',label:'Souple & fruité',desc:'Gamay, pinot, fraîcheur.'},
+    {value:'puissant',label:'Puissant & structuré',desc:'Tanins fondus, épices.'},
+    {value:'nature',label:'Biodynamie & nature',desc:'Jus libre, vibrants.'}
+  ]},
+  {id:'origin',question:'Plutôt local ou escapade ?',options:(_,w)=>buildProvenanceOptions(w),show:s=>!!s.style,match:(w,v)=>classifyProvenance(w)===v}
+];
 
-    const buildProvenanceOptions = (wines = []) => {
-      const groups = new Set();
-      wines.forEach(wine => {
-        const group = classifyProvenanceGroup(wine);
-        if (group) groups.add(group);
-      });
-      return Array.from(groups).sort((a, b) => {
-        const ia = PROVENANCE_ORDER.indexOf(a);
-        const ib = PROVENANCE_ORDER.indexOf(b);
-        return (ia === -1 ? Number.MAX_SAFE_INTEGER : ia) - (ib === -1 ? Number.MAX_SAFE_INTEGER : ib);
-      }).map(group => {
-        const meta = getProvenanceMeta(group);
-        return { value: group, label: meta.label, desc: meta.desc };
-      });
-    };
+const getWineQuestions = () => {
+  const c=norm(wineTreeSelections.color||'');
+  const f=[BASE_Q];
+  if(c==='blanc') f.push(...WHITE_FLOW);
+  else if(c==='rouge') f.push(...RED_FLOW);
+  return f.filter(q=>!q.show||q.show(wineTreeSelections));
+};
+const getEligible = (questions,idx) => {
+  const prev=questions.slice(0,idx);
+  return wineData.filter(w=>prev.every(q=>{
+    const v=norm(wineTreeSelections[q.id]||''); if(!v)return true;
+    if(typeof q.match==='function')return q.match(w,v);
+    return norm(w[q.tag]||'')===v;
+  }));
+};
+const getWinesByPath = sel => {
+  const c=norm(sel.color||''),st=norm(sel.style||''),or=norm(sel.origin||''),ss=norm(sel.substyle||'');
+  const flt=keys=>wineData.filter(w=>keys.every(k=>{
+    if(k==='color')    return norm(w.tag_couleur||'')===c;
+    if(k==='style')    return styleMatches(w,st);
+    if(k==='origin')   return classifyProvenance(w)===or;
+    if(k==='substyle') return substyleMatches(w,ss);
+    return true;
+  }));
+  const req=['color','style','origin','substyle'].filter(k=>sel[k]);
+  let fil=flt(req);
+  for(const k of ['substyle','origin','style']){if(fil.length)break;const i=req.indexOf(k);if(i!==-1){req.splice(i,1);fil=flt(req);}}
+  if(!fil.length&&c)fil=wineData.filter(w=>norm(w.tag_couleur||'')===c);
+  if(!fil.length)fil=wineData.slice();
+  return fil.map(w=>{
+    let s=0;
+    if(c&&norm(w.tag_couleur||'')===c)s+=12;
+    if(st&&styleMatches(w,st))s+=8;
+    if(or&&classifyProvenance(w)===or)s+=5;
+    if(ss&&substyleMatches(w,ss))s+=4;
+    if(isWineByGlass(w))s+=2;
+    if(w.recommandation)s+=3;
+    return {w,s};
+  }).sort((a,b)=>b.s-a.s||byPrice(a.w,b.w)).slice(0,6).map(i=>i.w);
+};
 
-    const buildSubstyleOptions = (wines = []) => {
-      const map = new Map();
-      wines.forEach(wine => {
-        const raw = getWineTag(wine, 'tag_sous-style');
-        const norm = canonicalSubstyle(raw);
-        if (!norm) return;
-        if (!map.has(norm)) {
-          const meta = getSubstyleMeta(norm, raw);
-          map.set(norm, { value: norm, label: meta.label, desc: meta.desc });
-        }
-      });
-      return Array.from(map.values()).sort((a, b) => {
-        const ia = SUBSTYLE_ORDER.indexOf(a.value);
-        const ib = SUBSTYLE_ORDER.indexOf(b.value);
-        if (ia !== ib) {
-          return (ia === -1 ? Number.MAX_SAFE_INTEGER : ia) - (ib === -1 ? Number.MAX_SAFE_INTEGER : ib);
-        }
-        return a.label.localeCompare(b.label, 'fr', { sensitivity: 'base' });
-      });
-    };
+/* ── RENDER ── */
+const DEGUSTER_ORDER=['veggie','terre','mer','fromages','charcuterie','dessert','desserts'];
 
-    const styleMatches = (wine, value) => {
-      const tag = normalize(getWineTag(wine, 'tag_style'));
-      if (!tag) return false;
-      if (value === 'nature') return tag.includes('nature') || tag.includes('biodynam') || tag.includes('bio');
-      if (value === 'souple') return tag.includes('souple') || tag.includes('fruit');
-      if (value === 'puissant') return tag.includes('puissant') || tag.includes('struct');
-      if (value === 'sec') return tag.includes('sec') || tag.includes('frais') || tag.includes('miner');
-      if (value === 'moelleux') return tag.includes('moelleux') || tag.includes('doux');
-      return tag === value;
-    };
+const itemHTML = item=>`
+  <div class="menu-item">
+    <div class="item-info">
+      <div class="item-name">${item.nom||''}</div>
+      ${item.description?`<div class="item-description">${item.description}</div>`:''}
+    </div>
+    <div class="item-price">${item.prix||''}</div>
+  </div>`;
 
-    const substyleMatches = (wine, value) => {
-      const tag = canonicalSubstyle(getWineTag(wine, 'tag_sous-style'));
-      if (!tag) return false;
-      if (value === 'fruite') return tag.includes('fruite') || tag.includes('fruit');
-      return tag === value;
-    };
+const renderSections = (items,tab) => {
+  const g=new Map();
+  items.forEach(it=>{const k=it.section||'Autres';if(!g.has(k))g.set(k,[]);g.get(k).push(it);});
+  return [...g.entries()].sort((a,b)=>{
+    if(norm(tab)!=='deguster')return a[0].localeCompare(b[0],'fr');
+    const ia=DEGUSTER_ORDER.findIndex(s=>norm(a[0]).includes(s));
+    const ib=DEGUSTER_ORDER.findIndex(s=>norm(b[0]).includes(s));
+    return (ia===-1?999:ia)-(ib===-1?999:ib);
+  }).map(([sec,its])=>`<h2 class="section-title" data-section="${sec}">${sec}</h2>`+its.sort(byPrice).map(itemHTML).join('')).join('');
+};
 
-    const isWineByGlass = (wine = {}) => {
-      const sectionNorm = normalize(wine?.Section);
-      if (sectionNorm.includes('verre')) return true;
-      if (sectionNorm.includes('bouteille')) return false;
+const showSkeleton = el => {
+  el.innerHTML=`
+    <div class="menu-item"><span class="skeleton big" style="width:55%"></span><span class="skeleton" style="width:60px"></span></div>
+    <div class="menu-item"><span class="skeleton big" style="width:40%"></span><span class="skeleton" style="width:60px"></span></div>
+    <div class="menu-item"><span class="skeleton big" style="width:65%"></span><span class="skeleton" style="width:60px"></span></div>`;
+};
 
-      const formatNorm = normalize(getWineTag(wine, 'tag_format'));
-      if (formatNorm.includes('verre')) return true;
-      if (formatNorm.includes('bouteille')) return false;
-      return false;
-    };
-    const isWineRecommended = (wine = {}) => {
-      const keys = ['Recommendations', 'Recommendation', 'recommendation', 'Recommandation', 'recommandation', 'Reco', 'reco'];
-      return keys.some(key => normalize(wine[key]) === 'oui');
-    };
+const renderNow = () => {
+  const el=qs('#panel-now'); if(!el)return;
+  if(!allMenuData.length){showSkeleton(el);return;}
+  const now=allMenuData.filter(i=>i.en_ce_moment);
+  if(!now.length){el.innerHTML=`<div class="empty-state"><h3>Aucune nouveauté</h3></div>`;return;}
+  el.innerHTML=`<div class="now-header"><p class="now-eyebrow">Actuellement</p><h2 class="now-title">À l'affiche</h2></div>`+renderSections(now,'now');
+};
 
-    const matchesSelection = (wine, question, selectionValue) => {
-      if (!selectionValue) return true;
-      const value = normalize(selectionValue);
-      if (typeof question.match === 'function') return question.match(wine, value);
-      if (question.tag) {
-        const tagValue = getWineTag(wine, question.tag);
-        return normalize(tagValue) === value;
-      }
-      return true;
-    };
+const renderTab = tab => {
+  if(tab==='now') {renderNow();return;}
+  if(tab==='vins'){renderWineTree();return;}
+  const el=qs(`#panel-${tab}`); if(!el)return;
+  if(!allMenuData.length){showSkeleton(el);return;}
+  const items=allMenuData.filter(i=>i.onglet===tab);
+  if(!items.length){el.innerHTML=`<div class="empty-state"><h3>Section vide</h3></div>`;return;}
+  el.innerHTML=renderSections(items,tab);
+};
 
-    const getEligibleWinesForStep = (questions, stepIndex) => {
-      if (!Array.isArray(questions) || !questions.length) return wineData;
-      const previous = questions.slice(0, stepIndex);
-      return wineData.filter(wine => previous.every(q => matchesSelection(wine, q, wineTreeSelections[q.id])));
-    };
-
-    const WHITE_STYLE_OPTIONS = [
-      { value: 'sec', label: 'Blanc sec', desc: 'Vif, tendu ou minéral.' },
-      { value: 'moelleux', label: 'Moelleux', desc: 'Doux, gourmand & velouté.' },
-      { value: 'nature', label: 'Biodynamie & nature', desc: 'Sans artifice, vivant.' }
-    ];
-
-    const RED_STYLE_OPTIONS = [
-      { value: 'souple', label: 'Souple & fruité', desc: 'Gamay, pinot, fraîcheur.' },
-      { value: 'puissant', label: 'Puissant & structuré', desc: 'Tanins fondus, épices.' },
-      { value: 'nature', label: 'Biodynamie & nature', desc: 'Jus libre, vibrants.' }
-    ];
-
-    const baseWineQuestion = {
-      id: 'color',
-      tag: 'tag_couleur',
-      question: 'Quelle couleur ?',
-      options: [
-        { value: 'blanc', label: 'Blanc', dotColor: '#E8D9B5', desc: 'Secs, moelleux ou nature.' },
-        { value: 'rouge', label: 'Rouge', dotColor: '#7B1F29', desc: 'Souple, structuré ou nature.' }
-      ]
-    };
-
-    const whiteFlow = [
-      {
-        id: 'style',
-        question: 'Quel style de blanc ?',
-        options: WHITE_STYLE_OPTIONS,
-        match: styleMatches
-      },
-      {
-        id: 'origin',
-        question: 'Envie d\'une cuvée locale ?',
-        options: (sel, wines) => buildProvenanceOptions(wines),
-        show: (sel) => !!sel.style,
-        match: (wine, value) => classifyProvenanceGroup(wine) === value
-      },
-      {
-        id: 'substyle',
-        question: 'Quel profil en blanc sec ?',
-        options: (sel, wines) => buildSubstyleOptions(wines),
-        show: (sel) => normalize(sel.style) === 'sec',
-        match: (wine, value) => substyleMatches(wine, value)
-      }
-    ];
-
-    const redFlow = [
-      {
-        id: 'style',
-        question: 'Quel style de rouge ?',
-        options: RED_STYLE_OPTIONS,
-        match: styleMatches
-      },
-      {
-        id: 'origin',
-        question: 'Plutôt local ou escapade ?',
-        options: (sel, wines) => buildProvenanceOptions(wines),
-        show: (sel) => !!sel.style,
-        match: (wine, value) => classifyProvenanceGroup(wine) === value
-      }
-    ];
-
-    const getWineQuestions = () => {
-      const color = normalize(wineTreeSelections.color || '');
-      const flow = [baseWineQuestion];
-      if (color === 'blanc') {
-        flow.push(...whiteFlow);
-      } else if (color === 'rouge') {
-        flow.push(...redFlow);
-      }
-      return flow.filter(q => !q.show || q.show(wineTreeSelections));
-    };
-
-    const getOptionIconHTML = (opt = {}) => {
-      if (opt.dotColor) {
-        const safeColor = opt.dotColor;
-        return `<span class="wine-color-dot" style="--dot-color:${safeColor}"></span>`;
-      }
-      if (opt.icon) {
-        return `<span class="wine-option-icon">${opt.icon}</span>`;
-      }
-      return '';
-    };
-
-    // SYSTÈME DYNAMIQUE - Scoring & priorités commerciales
-    const getWinesByPath = (selections) => {
-      const normalizedSelections = {
-        color: normalize(selections.color || ''),
-        style: normalize(selections.style || ''),
-        origin: normalize(selections.origin || ''),
-        substyle: normalize(selections.substyle || '')
-      };
-
-      const filterWithKeys = (keys) => {
-        if (!keys.length) return wineData.slice();
-        return wineData.filter(wine => keys.every(key => {
-          const value = normalizedSelections[key];
-          if (!value) return true;
-          if (key === 'color') return normalize(getWineTag(wine, 'tag_couleur')) === value;
-          if (key === 'style') return styleMatches(wine, value);
-          if (key === 'origin') return classifyProvenanceGroup(wine) === value;
-          if (key === 'substyle') return substyleMatches(wine, value);
-          return true;
-        }));
-      };
-
-      const requiredKeys = ['color', 'style', 'origin', 'substyle'].filter(key => normalizedSelections[key]);
-      let filtered = filterWithKeys(requiredKeys);
-
-      const relaxOrder = ['substyle', 'origin', 'style'];
-      for (const key of relaxOrder) {
-        if (filtered.length) break;
-        const idx = requiredKeys.indexOf(key);
-        if (idx !== -1) {
-          requiredKeys.splice(idx, 1);
-          filtered = filterWithKeys(requiredKeys);
-        }
-      }
-
-      if (!filtered.length && normalizedSelections.color) {
-        filtered = filterWithKeys(['color']);
-      }
-
-      if (!filtered.length) {
-        filtered = wineData.slice();
-      }
-
-      const scored = filtered.map(wine => {
-        const matches = {
-          color: normalizedSelections.color ? normalize(getWineTag(wine, 'tag_couleur')) === normalizedSelections.color : false,
-          style: normalizedSelections.style ? styleMatches(wine, normalizedSelections.style) : false,
-          origin: normalizedSelections.origin ? classifyProvenanceGroup(wine) === normalizedSelections.origin : false,
-          substyle: normalizedSelections.substyle ? substyleMatches(wine, normalizedSelections.substyle) : false
-        };
-
-        let score = 0;
-        if (matches.color) score += 12;
-        if (matches.style) score += 8;
-        if (matches.origin) score += 5;
-        if (matches.substyle) score += 4;
-        if (!matches.style && normalizedSelections.style) score -= 1;
-        if (!matches.origin && normalizedSelections.origin) score -= 1;
-        if (!matches.substyle && normalizedSelections.substyle) score -= 1;
-
-        const byGlass = isWineByGlass(wine);
-        const recommended = isWineRecommended(wine);
-        if (byGlass) score += 2;
-        if (recommended) score += 3;
-
-        if (score < 0) score = 0;
-
-        return { wine, score, byGlass, recommended };
-      });
-
-      if (!scored.length) {
-        if (normalizedSelections.color) {
-          return wineData.filter(wine => normalize(getWineTag(wine, 'tag_couleur')) === normalizedSelections.color).slice(0, 6);
-        }
-        return wineData.slice(0, 6);
-      }
-
-      scored.sort((a, b) => {
-        if (a.score !== b.score) return b.score - a.score;
-        if (a.byGlass !== b.byGlass) return Number(b.byGlass) - Number(a.byGlass);
-        return byNameFR(a.wine, b.wine);
-      });
-
-      const sortByPriceThenScore = (items) => items.sort((a, b) => {
-        const priceA = getPriceValue(a.wine?.Prix);
-        const priceB = getPriceValue(b.wine?.Prix);
-        const bothFinite = Number.isFinite(priceA) && Number.isFinite(priceB);
-        if (bothFinite && priceA !== priceB) return priceA - priceB;
-        if (Number.isFinite(priceA) && !Number.isFinite(priceB)) return -1;
-        if (!Number.isFinite(priceA) && Number.isFinite(priceB)) return 1;
-        if (b.score !== a.score) return b.score - a.score;
-        return byNameFR(a.wine, b.wine);
-      });
-
-      const byGlassItems = [];
-      const recommendedItems = [];
-      const otherItems = [];
-      for (const item of scored) {
-        if (item.byGlass) {
-          byGlassItems.push(item);
-        } else if (item.recommended) {
-          recommendedItems.push(item);
-        } else {
-          otherItems.push(item);
-        }
-      }
-
-      const ordered = [
-        ...sortByPriceThenScore(byGlassItems),
-        ...sortByPriceThenScore(recommendedItems),
-        ...sortByPriceThenScore(otherItems)
-      ];
-
-      return ordered.slice(0, 6).map(item => item.wine);
-    };
-
-    const renderWineTree = () => {
-      const panel = qs('#panel-vins');
-      if (!panel) return;
-
-      if (showingWineList) {
-        renderWineList();
-        return;
-      }
-
-      const questions = getWineQuestions();
-
-      if (wineTreeStep >= questions.length) {
-        renderWineRecommendations();
-        return;
-      }
-
-      const currentQ = questions[wineTreeStep];
-      const eligibleWines = getEligibleWinesForStep(questions, wineTreeStep);
-      let options = typeof currentQ.options === 'function'
-        ? currentQ.options(wineTreeSelections, eligibleWines)
-        : currentQ.options;
-      options = Array.isArray(options) ? options.filter(Boolean) : [];
-
-      if (!options.length) {
-        delete wineTreeSelections[currentQ.id];
-        wineTreeStep++;
-        renderWineTree();
-        return;
-      }
-
-      if (currentQ.autoAdvance !== false && options.length === 1) {
-        wineTreeSelections[currentQ.id] = options[0].value;
-        wineTreeStep++;
-        renderWineTree();
-        return;
-      }
-
-      const questionText = typeof currentQ.question === 'function'
-        ? currentQ.question(wineTreeSelections, eligibleWines)
-        : currentQ.question;
-      const totalSteps = questions.length;
-      const currentStepIndex = Math.min(wineTreeStep + 1, totalSteps);
-
-      let html = `
-        <div class="wine-tree">
-          <div class="wine-tree-header">
-            <svg class="wine-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M7 3h10l-1 6a6 6 0 1 1-8 0z"/><path d="M12 15v6"/>
-            </svg>
-            <h2 class="wine-tree-title">Guide de sélection des vins</h2>
+const renderWineTree = () => {
+  const p=qs('#panel-vins'); if(!p)return;
+  if(!wineData.length){showSkeleton(p);return;}
+  if(showingWineList){renderWineList();return;}
+  const qs2=getWineQuestions();
+  if(wineTreeStep>=qs2.length){renderWineRecommendations();return;}
+  const cq=qs2[wineTreeStep], el2=getEligible(qs2,wineTreeStep);
+  let opts=typeof cq.options==='function'?cq.options(wineTreeSelections,el2):cq.options;
+  opts=(opts||[]).filter(Boolean);
+  if(!opts.length){delete wineTreeSelections[cq.id];wineTreeStep++;renderWineTree();return;}
+  if(cq.autoAdvance!==false&&opts.length===1){wineTreeSelections[cq.id]=opts[0].value;wineTreeStep++;renderWineTree();return;}
+  const qt=typeof cq.question==='function'?cq.question(wineTreeSelections,el2):cq.question;
+  const tot=qs2.length, st=Math.min(wineTreeStep+1,tot);
+  const oi=o=>o.dotColor?`<span class="wine-color-dot" style="--dot-color:${o.dotColor}"></span>`:'';
+  p.innerHTML=`
+    <div class="wine-tree">
+      <div class="wine-tree-header"><p class="wine-tree-eyebrow">Guide Vins</p><h2 class="wine-tree-title">Quel vin ce soir ?</h2></div>
+      <div class="progress-bar">${qs2.map((_,i)=>`<div class="progress-step ${i<=wineTreeStep?'active':''}"></div>`).join('')}</div>
+      <p class="progress-info">Étape ${st} sur ${tot}</p>
+      <h3 class="question-title">${qt}</h3>
+      <div class="wine-options">${opts.map(o=>`
+        <button class="wine-option" data-value="${o.value}">
+          <div class="wine-option-content">
+            <div class="wine-option-label">${oi(o)}${o.label}</div>
+            ${o.desc?`<div class="wine-option-desc">${o.desc}</div>`:''}
           </div>
-
-          <div class="progress-bar">
-            ${questions.map((_, idx) => `<div class="progress-step ${idx <= wineTreeStep ? 'active' : ''}"></div>`).join('')}
-          </div>
-
-          <div class="progress-info">Étape ${currentStepIndex} sur ${totalSteps}</div>
-
-          <h3 class="question-title">${questionText}</h3>
-
-          <div class="wine-options">
-            ${options.map(opt => `
-              <button class="wine-option" data-value="${opt.value}">
-                <div class="wine-option-content">
-                  <div class="wine-option-label">
-                    ${getOptionIconHTML(opt)}
-                    ${opt.label}
-                  </div>
-                  ${opt.desc ? `<div class="wine-option-desc">${opt.desc}</div>` : ''}
-                </div>
-                <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M9 18l6-6-6-6"/>
-                </svg>
-              </button>
-            `).join('')}
-          </div>
-          
-          <div class="wine-nav-btns">
-            ${wineTreeStep > 0 ? `
-              <button class="wine-btn wine-btn-back" id="wineBackBtn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M15 18l-6-6 6-6"/>
-                </svg>
-                Retour
-              </button>
-            ` : ''}
-            <button class="wine-btn wine-btn-secondary" id="showAllWinesFromTreeBtn">
-              📋 Voir tous les vins
-            </button>
-          </div>
-        </div>
-      `;
-
-      panel.innerHTML = html;
-
-      qsa('.wine-option').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const value = btn.dataset.value;
-          const prevValue = wineTreeSelections[currentQ.id];
-          wineTreeSelections[currentQ.id] = value;
-
-          if (currentQ.id === 'color' && value !== prevValue) {
-            delete wineTreeSelections.style;
-            delete wineTreeSelections.origin;
-            delete wineTreeSelections.substyle;
-          }
-
-          if (currentQ.id === 'style' && value !== prevValue) {
-            delete wineTreeSelections.origin;
-            delete wineTreeSelections.substyle;
-          }
-
-          wineTreeStep++;
-          renderWineTree();
-        });
-      });
-
-      const backBtn = qs('#wineBackBtn');
-      if (backBtn) {
-        backBtn.addEventListener('click', () => {
-          const prevQ = questions[wineTreeStep - 1];
-          delete wineTreeSelections[prevQ.id];
-          wineTreeStep--;
-          renderWineTree();
-        });
-      }
-      
-      const showAllBtn = qs('#showAllWinesFromTreeBtn');
-      if (showAllBtn) {
-        showAllBtn.addEventListener('click', () => {
-          showingWineList = true;
-          renderWineList();
-        });
-      }
-    };
-
-    const renderWineRecommendations = () => {
-      const panel = qs('#panel-vins');
-      if (!panel) return;
-
-      const recommendations = getWinesByPath(wineTreeSelections);
-
-      const recommendationCards = recommendations.length ? recommendations.map(wine => {
-        const badges = [];
-        if (isWineByGlass(wine)) {
-          badges.push('<span class="wine-badge wine-badge-glass">Vin au verre</span>');
-        }
-        if (isWineRecommended(wine)) {
-          badges.push('<span class="wine-badge wine-badge-reco">Recommandé</span>');
-        }
-        if (classifyProvenanceGroup(wine) === 'local') {
-          const originMeta = getProvenanceMeta('local');
-          badges.push(`<span class="wine-badge wine-badge-local">${originMeta.label}</span>`);
-        }
-
-        const colorNorm = normalize(getWineTag(wine, 'tag_couleur'));
-        const styleRaw = getWineTag(wine, 'tag_style');
-        const styleNorm = normalize(styleRaw);
-        let styleLabel = '';
-        if (styleNorm) {
-          if (styleNorm === 'sec') {
-            styleLabel = colorNorm === 'blanc' ? 'Blanc sec' : 'Sec';
-          } else if (styleNorm === 'moelleux') {
-            styleLabel = 'Moelleux';
-          } else if (styleNorm === 'souple') {
-            styleLabel = 'Souple & fruité';
-          } else if (styleNorm === 'puissant') {
-            styleLabel = 'Puissant & structuré';
-          } else if (styleNorm.includes('nature') || styleNorm.includes('biodynam')) {
-            styleLabel = 'Biodynamie & nature';
-          } else {
-            styleLabel = toTitle(styleRaw || styleNorm);
-          }
-        }
-
-        const profileParts = [];
-        if (styleLabel) profileParts.push(styleLabel);
-        const substyleRaw = getWineTag(wine, 'tag_sous-style');
-        const substyleNorm = canonicalSubstyle(substyleRaw);
-        if (substyleNorm) {
-          const meta = getSubstyleMeta(substyleNorm, substyleRaw);
-          if (meta.label && !profileParts.includes(meta.label)) profileParts.push(meta.label);
-        }
-        const formatRaw = getWineTag(wine, 'tag_format');
-        const formatNorm = normalize(formatRaw);
-        if (formatNorm && !isWineByGlass(wine) && !formatNorm.includes('bouteille')) {
-          profileParts.push(toTitle(formatRaw));
-        }
-        const profileText = profileParts.filter(Boolean).join(' • ');
-
-        const badgesHTML = badges.length ? `<div class="wine-card-badges">${badges.join('')}</div>` : '';
-        let regionHTML = '';
-        let grapesHTML = '';
-        const description = wine.Description || '';
-        if (description) {
-          const parts = description.split(',');
-          regionHTML = `<div class="wine-card-region">${parts[0]}</div>`;
-          if (parts.length > 1) {
-            const rest = parts.slice(1).join(',').trim();
-            if (rest) {
-              grapesHTML = `<div class="wine-card-grapes">${rest}</div>`;
-            }
-          }
-        }
-        const profileHTML = profileText ? `<div class="wine-card-grapes">${profileText}</div>` : '';
-
-        const cardParts = [];
-        cardParts.push('<div class="wine-card">');
-        if (badgesHTML) cardParts.push(badgesHTML);
-        cardParts.push(`<div class="wine-card-header"><div class="wine-card-name">${wine.Nom}</div><div class="wine-card-price">${formatPrice(wine.Prix)}</div></div>`);
-        if (regionHTML) cardParts.push(regionHTML);
-        if (grapesHTML) cardParts.push(grapesHTML);
-        if (profileHTML) cardParts.push(profileHTML);
-        cardParts.push('</div>');
-        return cardParts.join('');
-      }).join('') : '<div class="empty-state"><h3>Aucun vin trouvé</h3><p>Essayez une autre combinaison ou consultez la carte complète.</p></div>';
-
-      let html = `
-        <div class="wine-recommendations">
-          <div class="reco-header">
-            <svg class="wine-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/>
-            </svg>
-            <h2 class="reco-title">Nos recommandations</h2>
-          </div>
-
-          ${recommendationCards}
-
-          <div class="wine-nav-btns">
-            <button class="wine-btn wine-btn-back" id="wineBackFromRecommendationsBtn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M15 18l-6-6 6-6"/>
-              </svg>
-              Retour
-            </button>
-            <button class="wine-btn wine-btn-back" id="wineResetBtn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
-                <path d="M21 3v5h-5"/>
-              </svg>
-              Nouvelle recherche
-            </button>
-            <button class="wine-btn wine-btn-secondary" id="showAllWinesBtn">
-              📋 Voir tous les vins
-            </button>
-          </div>
-        </div>
-      `;
-
-      panel.innerHTML = html;
-
-      const backBtn = qs('#wineBackFromRecommendationsBtn');
-      if (backBtn) {
-        backBtn.addEventListener('click', () => {
-          const questions = getWineQuestions();
-          if (Array.isArray(questions) && questions.length) {
-            const prevIndex = Math.max(questions.length - 1, 0);
-            const prevQuestion = questions[prevIndex];
-            if (prevQuestion) {
-              delete wineTreeSelections[prevQuestion.id];
-              wineTreeStep = prevIndex;
-            } else {
-              wineTreeSelections = {};
-              wineTreeStep = 0;
-            }
-          } else {
-            wineTreeSelections = {};
-            wineTreeStep = 0;
-          }
-          showingWineList = false;
-          renderWineTree();
-        });
-      }
-
-      const resetBtn = qs('#wineResetBtn');
-      if (resetBtn) {
-        resetBtn.addEventListener('click', () => {
-          wineTreeStep = 0;
-          wineTreeSelections = {};
-          showingWineList = false;
-          renderWineTree();
-        });
-      }
-
-      qs('#showAllWinesBtn').addEventListener('click', () => {
-        showingWineList = true;
-        renderWineList();
-      });
-    };
-
-    const renderWineList = () => {
-      const panel = qs('#panel-vins');
-      if (!panel) return;
-
-      const groups = new Map();
-      for (const wine of wineData) {
-        const section = wine.Section || 'Autres';
-        if (!groups.has(section)) groups.set(section, []);
-        groups.get(section).push(wine);
-      }
-
-      let html = '<div style="padding: 1rem;">';
-      
-      for (const [section, wines] of groups) {
-        html += `<h2 class="section-title">${section}</h2>`;
-        wines.sort(compareWineByPrice).forEach(wine => {
-          html += `
-            <div class="menu-item">
-              <div class="item-info">
-                <div class="item-name">${wine.Nom}</div>
-                ${wine.Description ? `<div class="item-description">${wine.Description}</div>` : ''}
-              </div>
-              <div class="item-price">${formatPrice(wine.Prix)}</div>
-            </div>
-          `;
-        });
-      }
-
-      html += `
-        <div class="wine-nav-btns" style="margin-top: 2rem;">
-          <button class="wine-btn wine-btn-primary" id="backToTreeBtn">
-            🍷 Retour au guide de sélection
-          </button>
-        </div>
-      </div>`;
-
-      panel.innerHTML = html;
-
-      qs('#backToTreeBtn').addEventListener('click', () => {
-        showingWineList = false;
-        wineTreeStep = 0;
-        wineTreeSelections = {};
-        renderWineTree();
-      });
-    };
-
-    const panels = {
-      now: qs('#panel-now'), deguster: qs('#panel-deguster'), cocktails: qs('#panel-cocktails'),
-      chaudes: qs('#panel-chaudes'), bieres: qs('#panel-bieres'), softs: qs('#panel-softs'), vins: qs('#panel-vins')
-    };
-
-    const showSkeleton = (el) => {
-      el.innerHTML = `
-        <div class="now-title">Chargement…</div>
-        <div class="menu-item"><span class="skeleton big" style="width:60%"></span><span class="skeleton" style="width:90px"></span></div>
-        <div class="menu-item"><span class="skeleton big" style="width:40%"></span><span class="skeleton" style="width:90px"></span></div>`;
-    };
-
-    const createItemHTML = (item) => {
-      const desc = item.Description ? `<div class="item-description">${item.Description}</div>` : '';
-      return `
-        <div class="menu-item">
-          <div class="item-info">
-            <div class="item-name">${item.Nom || ''}</div>
-            ${desc}
-          </div>
-          <div class="item-price">${formatPrice(item.Prix || '')}</div>
-        </div>`;
-    };
-
-    const renderNow = () => {
-      const el = panels.now; if (!el) return;
-      let html = `<div class="now-title">À l'affiche en ce moment</div>`;
-      const nowItems = allMenuData.filter(i => normalize(i['En ce moment']) === 'oui');
-      if (!nowItems.length){
-        el.innerHTML = `<div class="empty-state"><h3>Aucune nouveauté</h3></div>`;
-        return;
-      }
-      const groups = new Map();
-      for (const it of nowItems){
-        const key = it.Section || 'Autres';
-        if (!groups.has(key)) groups.set(key, []);
-        groups.get(key).push(it);
-      }
-      for (const [section, items] of groups){
-        html += `<h2 class="section-title" data-section="${section}">${section}</h2>`;
-        items.sort(compareByPrice).forEach(it => { html += createItemHTML(it); });
-      }
-      el.innerHTML = html;
-    };
-
-    const renderTab = (tabName) => {
-      if (tabName === 'now') return renderNow();
-      if (tabName === 'vins') return renderWineTree();
-
-      const el = panels[tabName]; if (!el) return;
-      const tabItems = allMenuData.filter(i => tabIdFromOnglet(i.Onglet) === tabName);
-      if (!tabItems.length){
-        el.innerHTML = `<div class="empty-state"><h3>Section vide</h3></div>`;
-        return;
-      }
-      const groups = new Map();
-      for (const it of tabItems){
-        const key = it.Section || 'Autres';
-        if (!groups.has(key)) groups.set(key, []);
-        groups.get(key).push(it);
-      }
-
-      // Trier les sections selon l'ordre défini pour "Déguster"
-      const sortedSections = Array.from(groups.entries()).sort((a, b) => {
-        const indexA = getSectionOrderIndex(a[0], tabName);
-        const indexB = getSectionOrderIndex(b[0], tabName);
-        if (indexA !== -1 && indexB !== -1) return indexA - indexB;
-        if (indexA !== -1) return -1;
-        if (indexB !== -1) return 1;
-        return a[0].localeCompare(b[0], 'fr');
-      });
-
-      let html = '';
-      for (const [section, items] of sortedSections){
-        html += `<h2 class="section-title" data-section="${section}">${section}</h2>`;
-        items.sort(compareByPrice).forEach(it => { html += createItemHTML(it); });
-      }
-      el.innerHTML = html;
-    };
-
-    const renderAll = () => {
-      for (const key of Object.keys(panels)) renderTab(key);
-    };
-
-    const setActiveTab = (tabName) => {
-      currentTab = tabName;
-      qsa('.tab-btn').forEach(btn => {
-        const active = btn.dataset.tab === tabName;
-        btn.setAttribute('aria-selected', active ? 'true' : 'false');
-        btn.tabIndex = active ? 0 : -1;
-      });
-      qsa('.tab-content').forEach(p => p.classList.remove('active'));
-      qs(`#panel-${tabName}`)?.classList.add('active');
-      if (!isSearching) renderTab(tabName);
-    };
-
-    const focusNextTab = (dir) => {
-      const tabs = qsa('.tab-btn');
-      const idx = tabs.findIndex(t => t.getAttribute('aria-selected') === 'true');
-      const next = (idx + dir + tabs.length) % tabs.length;
-      tabs[next].focus();
-      setActiveTab(tabs[next].dataset.tab);
-    };
-
-    function ensurePapa(){
-      return new Promise((resolve, reject) => {
-        if (window.Papa?.parse) return resolve();
-        const s = document.createElement('script');
-        s.src = 'https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js';
-        s.onload = () => window.Papa?.parse ? resolve() : reject();
-        s.onerror = reject;
-        document.head.appendChild(s);
-        setTimeout(() => { if (!window.Papa?.parse) reject(); }, 5000);
-      });
-    }
-
-    const parseAndSet = (rows=[]) => {
-      const sanitize = (r) => { const o={}; for (const k in r){ const nk=(k||'').trim(); let v=r[k]; if (typeof v==='string') v=v.trim(); o[nk]=v; } return o; };
-      const cleaned = rows.map(sanitize);
-      allMenuData = cleaned.filter(i => normalize(i.Actif) === 'oui' || normalize(i['Actif '])==='oui');
-      wineData = allMenuData.filter(i => normalize(i.Onglet).includes('vin'));
-      renderAll();
-      startPlaceholderRotation();
-      hideSplashScreen();
-    };
-
-    const loadFromCacheIfFresh = () => {
-      try{
-        const at = Number(localStorage.getItem(CACHE_AT)||0);
-        if (Date.now() - at < CACHE_TTL){
-          const cached = JSON.parse(localStorage.getItem(CACHE_KEY)||'[]');
-          if (Array.isArray(cached) && cached.length){ parseAndSet(cached); return true; }
-        }
-      }catch{}
-      return false;
-    };
-
-    const saveCache = (rows) => {
-      try{
-        localStorage.setItem(CACHE_KEY, JSON.stringify(rows));
-        localStorage.setItem(CACHE_AT, String(Date.now()));
-      }catch{}
-    };
-
-    const showError = () => { qs('#errorContainer').style.display = 'block'; };
-    const hideError = () => { qs('#errorContainer').style.display = 'none'; };
-
-    const fetchCSVAndRender = async () => {
-      Object.values(panels).forEach(p => p && showSkeleton(p));
-      if (loadFromCacheIfFresh()) return;
-
-      let attempt = 0;
-      while (attempt < 3){
-        try{
-          await new Promise((resolve, reject) => {
-            Papa.parse(CSV_URL, {
-              download: true,
-              header: true,
-              complete: (res) => {
-                if (res.errors?.length){ reject(res.errors); return; }
-                hideError();
-                saveCache(res.data);
-                parseAndSet(res.data);
-                resolve();
-              },
-              error: reject
-            });
-          });
-          return;
-        }catch(e){
-          attempt++;
-          if (attempt >= 3){ showError(); break; }
-          await new Promise(r => setTimeout(r, 400 * Math.pow(2, attempt)));
-        }
-      }
-    };
-
-    const performSearch = (query) => {
-      isSearching = true;
-      lastQuery = query;
-      const q = normalize(query);
-      const results = allMenuData.filter(i =>
-        normalize(i.Nom).includes(q) || normalize(i.Description).includes(q) || normalize(i.Section).includes(q)
-      );
-      lastSearchResults = results;
-      const info = qs('#searchInfo');
-      info.style.display = 'block';
-      info.textContent = `${results.length} résultat(s) pour "${query}"`;
-
-      // Afficher les résultats dans le panneau actif
-      renderSearchResults(results);
-    };
-
-    const renderSearchResults = (results) => {
-      const activePanel = qs('.tab-content.active');
-      if (!activePanel) return;
-
-      if (!results.length) {
-        activePanel.innerHTML = `<div class="empty-state"><h3>Aucun résultat</h3><p>Essayez avec un autre terme de recherche</p></div>`;
-        return;
-      }
-
-      // Grouper les résultats par section
-      const groups = new Map();
-      for (const item of results) {
-        const key = item.Section || 'Autres';
-        if (!groups.has(key)) groups.set(key, []);
-        groups.get(key).push(item);
-      }
-
-      let html = '';
-      for (const [section, items] of groups) {
-        html += `<h2 class="section-title" data-section="${section}">${section}</h2>`;
-        items.sort(compareByPrice).forEach(item => { html += createItemHTML(item); });
-      }
-      activePanel.innerHTML = html;
-    };
-
-    const clearSearch = () => {
-      isSearching = false;
-      qs('#searchBox').value = '';
-      qs('#searchInfo').style.display = 'none';
-      renderTab(currentTab);
-    };
-
-    // Gestion du sticky header et back-to-top
-    const setupScrollHandlers = () => {
-      const stickyHeader = qs('#stickySectionHeader');
-      const backToTopBtn = qs('#backToTop');
-
-      if (!stickyHeader || !backToTopBtn) return;
-
-      // Back to top button click
-      backToTopBtn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-
-      // Scroll handler
-      const handleScroll = () => {
-        // Back to top visibility
-        if (window.scrollY > 300) {
-          backToTopBtn.classList.add('visible');
-        } else {
-          backToTopBtn.classList.remove('visible');
-        }
-
-        // Sticky header avec nom de section
-        const activePanel = qs('.tab-content.active');
-        if (!activePanel) {
-          stickyHeader.classList.remove('visible');
-          return;
-        }
-
-        const sectionTitles = activePanel.querySelectorAll('.section-title');
-        if (!sectionTitles.length) {
-          stickyHeader.classList.remove('visible');
-          return;
-        }
-
-        let currentSection = null;
-        sectionTitles.forEach(title => {
-          const rect = title.getBoundingClientRect();
-          if (rect.top <= 100) {
-            currentSection = title.dataset.section || title.textContent;
-          }
-        });
-
-        if (currentSection) {
-          stickyHeader.textContent = currentSection;
-          stickyHeader.classList.add('visible');
-        } else {
-          stickyHeader.classList.remove('visible');
-        }
-      };
-
-      window.addEventListener('scroll', handleScroll);
-      handleScroll(); // Initial check
-    };
-
-    const init = () => {
-      qsa('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.preventDefault();
-          setActiveTab(btn.dataset.tab);
-        });
-        btn.addEventListener('keydown', (e) => {
-          if (e.key === 'ArrowRight') { e.preventDefault(); focusNextTab(+1); }
-          if (e.key === 'ArrowLeft')  { e.preventDefault(); focusNextTab(-1); }
-        });
-      });
-
-      const searchBox = qs('#searchBox');
-      const clearBtn = qs('#clearSearch');
-
-      // Bouton croix visible uniquement au focus/contenu
-      searchBox.addEventListener('focus', () => {
-        clearBtn.classList.add('visible');
-      });
-
-      searchBox.addEventListener('blur', () => {
-        setTimeout(() => {
-          if (!searchBox.value.trim()) {
-            clearBtn.classList.remove('visible');
-          }
-        }, 200);
-      });
-
-      searchBox.addEventListener('input', (e) => {
-        clearTimeout(searchTimeout);
-        const query = e.target.value.trim();
-
-        if (query) {
-          clearBtn.classList.add('visible');
-        }
-
-        if (!query){
-          clearSearch();
-          clearBtn.classList.remove('visible');
-          return;
-        }
-        searchTimeout = setTimeout(() => performSearch(query), 250);
-      });
-
-      clearBtn.addEventListener('click', () => {
-        clearSearch();
-        clearBtn.classList.remove('visible');
-        searchBox.blur();
-      });
-      qs('#retryBtn').addEventListener('click', () => ensurePapa().then(fetchCSVAndRender).catch(showError));
-
-      const share = qs('#btnShare');
-      if (share){
-        share.addEventListener('click', async () => {
-          const url = location.href;
-          if (navigator.share){ try{ await navigator.share({title:document.title,url}); }catch(e){} }
-          else { try{ await navigator.clipboard.writeText(url); }catch(e){} }
-        });
-      }
-
-      ensurePapa().then(fetchCSVAndRender).catch(showError);
-      setupScrollHandlers();
-    };
-
-    // Placeholder dynamique - UN SEUL produit, rotation 5s
-    const updatePlaceholder = () => {
-      const searchBox = qs('#searchBox');
-      if (!searchBox || !allMenuData.length) return;
-
-      const nowItems = allMenuData.filter(i => normalize(i['En ce moment']) === 'oui');
-      if (nowItems.length > 0) {
-        // UN SEUL produit aléatoire
-        const randomIndex = Math.floor(Math.random() * nowItems.length);
-        const randomProduct = nowItems[randomIndex].Nom;
-        searchBox.placeholder = `Rechercher… (ex: ${randomProduct})`;
-      }
-    };
-
-    const startPlaceholderRotation = () => {
-      updatePlaceholder();
-      placeholderInterval = setInterval(updatePlaceholder, 5000); // 5 secondes
-    };
-
-    // Gestion du Splash Screen
-    let splashTimeout;
-    const hideSplashScreen = () => {
-      const splash = qs('#splashScreen');
-      if (!splash) return;
-
-      // Attendre au minimum 2 secondes pour l'effet premium
-      const minDisplayTime = 2000;
-      const elapsed = Date.now() - (window.splashStartTime || 0);
-      const remainingTime = Math.max(0, minDisplayTime - elapsed);
-
-      setTimeout(() => {
-        splash.classList.add('fade-out');
-        setTimeout(() => {
-          splash.style.display = 'none';
-        }, 500);
-      }, remainingTime);
-    };
-
-    // Enregistrer l'heure de début au chargement de la page
-    window.splashStartTime = Date.now();
-
-    // Fallback : cacher le splash après 5 secondes maximum
-    window.addEventListener('load', () => {
-      splashTimeout = setTimeout(hideSplashScreen, 5000);
+          <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>`).join('')}</div>
+      <div class="wine-nav-btns">
+        ${wineTreeStep>0?`<button class="wine-btn wine-btn-back" id="wineBackBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>`:''}
+        <button class="wine-btn wine-btn-secondary" id="showAllWinesBtn">Voir tous les vins</button>
+      </div>
+    </div>`;
+  qsa('.wine-option').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const v=b.dataset.value,pv=wineTreeSelections[cq.id];
+      wineTreeSelections[cq.id]=v;
+      if(cq.id==='color'&&v!==pv){delete wineTreeSelections.style;delete wineTreeSelections.origin;delete wineTreeSelections.substyle;}
+      if(cq.id==='style'&&v!==pv){delete wineTreeSelections.origin;delete wineTreeSelections.substyle;}
+      wineTreeStep++;renderWineTree();
     });
+  });
+  qs('#wineBackBtn')?.addEventListener('click',()=>{const pq=qs2[wineTreeStep-1];delete wineTreeSelections[pq.id];wineTreeStep--;renderWineTree();});
+  qs('#showAllWinesBtn')?.addEventListener('click',()=>{showingWineList=true;renderWineList();});
+};
 
-    document.addEventListener('DOMContentLoaded', init);
-  </script>
+const renderWineRecommendations = () => {
+  const p=qs('#panel-vins'); if(!p)return;
+  const recos=getWinesByPath(wineTreeSelections);
+  const cards=recos.length?recos.map(w=>{
+    const b=[];
+    if(isWineByGlass(w))b.push('<span class="wine-badge wine-badge-glass">Au verre</span>');
+    if(w.recommandation)b.push('<span class="wine-badge wine-badge-reco">Recommandé</span>');
+    if(classifyProvenance(w)==='local')b.push('<span class="wine-badge wine-badge-local">Local</span>');
+    const sn=norm(w.tag_style||'');
+    let sl=sn==='sec'?(norm(w.tag_couleur||'')==='blanc'?'Blanc sec':'Sec')
+      :sn==='moelleux'?'Moelleux':sn==='souple'?'Souple & fruité':sn==='puissant'?'Puissant & structuré':sn.includes('nature')?'Nature':'';
+    const ssn=norm(w.tag_sous_style||'');
+    const ssl=ssn?(SUBSTYLE_META[ssn]?.label||ssn):'';
+    const prof=[sl,ssl].filter(Boolean).join(' · ');
+    const d=w.description||'',pts=d.split(',');
+    const reg=pts[0]?`<div class="wine-card-region">${pts[0]}</div>`:'';
+    const gra=pts.slice(1).join(',').trim()?`<div class="wine-card-grapes">${pts.slice(1).join(',').trim()}</div>`:'';
+    const prH=prof?`<div class="wine-card-grapes">${prof}</div>`:'';
+    return `<div class="wine-card">${b.length?`<div class="wine-card-badges">${b.join('')}</div>`:''}<div class="wine-card-header"><div class="wine-card-name">${w.nom}</div><div class="wine-card-price">${w.prix||''}</div></div>${reg}${gra}${prH}</div>`;
+  }).join(''):`<div class="empty-state"><h3>Aucun vin trouvé</h3><p>Essayez une autre combinaison.</p></div>`;
+  p.innerHTML=`
+    <div class="wine-recommendations">
+      <div class="reco-header"><p class="reco-eyebrow">Notre sélection</p><h2 class="reco-title">Vos recommandations</h2></div>
+      ${cards}
+      <div class="wine-nav-btns">
+        <button class="wine-btn wine-btn-back" id="wineBackFromReco"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
+        <button class="wine-btn wine-btn-back" id="wineReset">Nouvelle recherche</button>
+        <button class="wine-btn wine-btn-secondary" id="showAllWinesBtn2">Tous les vins</button>
+      </div>
+    </div>`;
+  qs('#wineBackFromReco')?.addEventListener('click',()=>{
+    const q=getWineQuestions(),pq=q[Math.max(q.length-1,0)];
+    if(pq){delete wineTreeSelections[pq.id];wineTreeStep=Math.max(q.length-1,0);}
+    else{wineTreeSelections={};wineTreeStep=0;}
+    showingWineList=false;renderWineTree();
+  });
+  qs('#wineReset')?.addEventListener('click',()=>{wineTreeStep=0;wineTreeSelections={};showingWineList=false;renderWineTree();});
+  qs('#showAllWinesBtn2')?.addEventListener('click',()=>{showingWineList=true;renderWineList();});
+};
+
+const renderWineList = () => {
+  const p=qs('#panel-vins'); if(!p)return;
+  const g=new Map();
+  wineData.forEach(w=>{const k=w.section||'Autres';if(!g.has(k))g.set(k,[]);g.get(k).push(w);});
+  let html='';
+  for(const[sec,ws]of g){html+=`<h2 class="section-title" data-section="${sec}">${sec}</h2>`;ws.sort(byPrice).forEach(w=>{html+=itemHTML(w);});}
+  p.innerHTML=html+`<div class="wine-nav-btns" style="margin-top:2rem"><button class="wine-btn wine-btn-primary" id="backToTreeBtn">Guide de sélection</button></div>`;
+  qs('#backToTreeBtn')?.addEventListener('click',()=>{showingWineList=false;wineTreeStep=0;wineTreeSelections={};renderWineTree();});
+};
+
+/* ── DATA ── */
+const loadCache = () => {
+  try{const at=Number(localStorage.getItem(CACHE_AT)||0);if(Date.now()-at<CACHE_TTL){const c=JSON.parse(localStorage.getItem(CACHE_KEY)||'[]');if(Array.isArray(c)&&c.length)return c;}}catch{}return null;
+};
+const saveCache = rows => { try{localStorage.setItem(CACHE_KEY,JSON.stringify(rows));localStorage.setItem(CACHE_AT,String(Date.now()));}catch{} };
+
+const setData = rows => {
+  allMenuData = rows.filter(i=>i.actif);
+  wineData    = allMenuData.filter(i=>i.onglet==='vins');
+  /* Render APRÈS que les données sont en place */
+  ['now','deguster','cocktails','chaudes','bieres','softs'].forEach(t=>renderTab(t));
+  renderWineTree();
+  startPlaceholder();
+  hideSplash();
+};
+
+const fetchData = async () => {
+  /* Skeletons immédiats */
+  ['now','deguster','cocktails','chaudes','bieres','softs','vins'].forEach(t=>{const el=qs(`#panel-${t}`);if(el)showSkeleton(el);});
+  const cached=loadCache();
+  if(cached){setData(cached);return;}
+  try{
+    const{data,error}=await sb.from('menu_items').select('*').eq('actif',true).order('sort_order',{ascending:true});
+    if(error)throw error;
+    saveCache(data);setData(data);
+  }catch(e){console.error(e);qs('#errorContainer').style.display='block';}
+};
+
+/* ── TABS ── */
+const setActiveTab = tab => {
+  currentTab=tab;
+  qsa('.tab-btn').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===tab?'true':'false'));
+  qsa('.tab-content').forEach(p=>p.classList.remove('active'));
+  qs(`#panel-${tab}`)?.classList.add('active');
+  if(!isSearching)renderTab(tab);
+};
+
+/* ── SEARCH ── */
+const performSearch = query => {
+  isSearching=true;
+  const q=norm(query);
+  const res=allMenuData.filter(i=>norm(i.nom).includes(q)||norm(i.description||'').includes(q)||norm(i.section||'').includes(q));
+  const info=qs('#searchInfo');info.style.display='block';info.textContent=`${res.length} résultat(s) pour "${query}"`;
+  const ap=qs('.tab-content.active'); if(!ap)return;
+  if(!res.length){ap.innerHTML=`<div class="empty-state"><h3>Aucun résultat</h3></div>`;return;}
+  ap.innerHTML=renderSections(res,currentTab);
+};
+const clearSearch = () => {
+  isSearching=false;qs('#searchBox').value='';qs('#searchInfo').style.display='none';renderTab(currentTab);
+};
+
+/* ── SCROLL ── */
+const setupScroll = () => {
+  const sh=qs('#stickySectionHeader'),bt=qs('#backToTop');
+  bt?.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+  window.addEventListener('scroll',()=>{
+    if(window.scrollY>300)bt?.classList.add('visible');else bt?.classList.remove('visible');
+    const ap=qs('.tab-content.active'); if(!ap||!sh)return;
+    let cur=null;
+    ap.querySelectorAll('.section-title').forEach(t=>{if(t.getBoundingClientRect().top<=80)cur=t.dataset.section||t.textContent;});
+    if(cur){sh.textContent=cur;sh.classList.add('visible');}else sh.classList.remove('visible');
+  },{passive:true});
+};
+
+/* ── SPLASH — délai minimum 200ms ── */
+window._splashStart=Date.now();
+let _splashHidden=false;
+const hideSplash = () => {
+  if(_splashHidden)return; _splashHidden=true;
+  const s=qs('#splashScreen');
+  const delay=Math.max(0,200-(Date.now()-window._splashStart));
+  setTimeout(()=>{s?.classList.add('fade-out');setTimeout(()=>{if(s)s.style.display='none';},500);},delay);
+};
+window.addEventListener('load',()=>setTimeout(hideSplash,800));
+
+/* ── PLACEHOLDER ── */
+const startPlaceholder = () => {
+  const box=qs('#searchBox'); if(!box)return;
+  const up=()=>{const n=allMenuData.filter(i=>i.en_ce_moment);if(n.length){const p=n[Math.floor(Math.random()*n.length)];box.placeholder=`Rechercher… (ex: ${p.nom})`;} };
+  up(); placeholderInterval=setInterval(up,5000);
+};
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded',()=>{
+  qsa('.tab-btn').forEach(b=>{
+    b.addEventListener('click',e=>{e.preventDefault();setActiveTab(b.dataset.tab);});
+    b.addEventListener('keydown',e=>{
+      const tabs=qsa('.tab-btn'),idx=tabs.findIndex(t=>t.getAttribute('aria-selected')==='true');
+      if(e.key==='ArrowRight'){e.preventDefault();const n=tabs[(idx+1)%tabs.length];n.focus();setActiveTab(n.dataset.tab);}
+      if(e.key==='ArrowLeft') {e.preventDefault();const n=tabs[(idx-1+tabs.length)%tabs.length];n.focus();setActiveTab(n.dataset.tab);}
+    });
+  });
+  const sb2=qs('#searchBox'),cb=qs('#clearSearch');
+  sb2.addEventListener('focus',()=>cb.classList.add('visible'));
+  sb2.addEventListener('blur', ()=>{setTimeout(()=>{if(!sb2.value.trim())cb.classList.remove('visible');},200);});
+  sb2.addEventListener('input',e=>{
+    clearTimeout(searchTimeout);const q=e.target.value.trim();
+    if(q)cb.classList.add('visible');
+    if(!q){clearSearch();cb.classList.remove('visible');return;}
+    searchTimeout=setTimeout(()=>performSearch(q),250);
+  });
+  cb.addEventListener('click',()=>{clearSearch();cb.classList.remove('visible');sb2.blur();});
+  qs('#retryBtn')?.addEventListener('click',fetchData);
+  qs('#btnShare')?.addEventListener('click',async()=>{
+    const url=location.href;
+    if(navigator.share)try{await navigator.share({title:document.title,url});}catch{}
+    else try{await navigator.clipboard.writeText(url);}catch{}
+  });
+  setupScroll();
+  fetchData();
+});
+</script>
 </body>
 </html>
-
-
