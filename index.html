@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Menu — Maison Fleurie</title>
-  <meta name="description" content="Découvrez la carte de Maison Fleurie — Déguster, Cocktails & Vins à Montpellier." />
+  <meta name="description" content="Découvrez la carte de Maison Fleurie — Déguster, Cocktails &amp; Spiritueux à Montpellier." />
   <meta name="theme-color" content="#0a0a0a" />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="fr_FR" />
   <meta property="og:title" content="La Carte — Maison Fleurie" />
-  <meta property="og:description" content="Déguster • Cocktails • Vins à Montpellier" />
+  <meta property="og:description" content="Déguster • Cocktails • Spiritueux à Montpellier" />
   <meta property="og:image" content="https://raw.githubusercontent.com/NachoB17/menu-test/main/logo.png" />
   <meta name="twitter:card" content="summary_large_image" />
 
@@ -261,62 +261,6 @@
     .skeleton.big { height: 20px; }
     @keyframes shimmer { from{background-position:-400px 0} to{background-position:400px 0} }
 
-    /* ─── WINE TREE ─── */
-    .wine-tree { padding: 0; }
-    .wine-tree-header { text-align: center; margin-bottom: 2rem; }
-    .wine-tree-eyebrow { font-size: 0.6875rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--dore); font-weight: 500; }
-    .wine-tree-title { font-family: var(--font-title); font-size: 2.25rem; font-weight: 400; color: var(--creme); margin-top: 0.5rem; letter-spacing: 0.04em; }
-    .progress-bar { display: flex; gap: 4px; margin-bottom: 0.5rem; }
-    .progress-step { flex: 1; height: 2px; background: var(--border); border-radius: 2px; transition: background 0.3s; }
-    .progress-step.active { background: var(--dore); }
-    .progress-info { font-size: 0.6875rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--creme-muted); text-align: center; margin-bottom: 2rem; }
-    .question-title { font-family: var(--font-title); font-size: 1.5rem; font-weight: 400; color: var(--creme); text-align: center; margin-bottom: 1.25rem; letter-spacing: 0.03em; }
-    .wine-options { display: flex; flex-direction: column; gap: 0.625rem; }
-    .wine-option {
-      width: 100%; padding: 1rem 1.25rem; text-align: left;
-      border: 1px solid var(--border); border-radius: var(--radius-md);
-      background: var(--bg-elevated); color: var(--creme); cursor: pointer;
-      display: flex; align-items: center; justify-content: space-between;
-      font-family: var(--font-body); transition: all 0.2s var(--ease);
-    }
-    .wine-option:hover { border-color: var(--dore-dim); background: var(--bg-nav); transform: translateX(3px); }
-    .wine-option-content { flex: 1; }
-    .wine-option-label { font-size: 0.9375rem; font-weight: 500; color: var(--creme); display: flex; align-items: center; gap: 0.5rem; }
-    .wine-option-desc { font-size: 0.8125rem; color: var(--creme-muted); margin-top: 0.25rem; font-style: italic; }
-    .wine-color-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--dot-color, var(--dore)); border: 1px solid rgba(255,255,255,0.15); }
-    .chevron-icon { width: 16px; height: 16px; color: var(--dore); transition: transform 0.2s; flex-shrink: 0; }
-    .wine-option:hover .chevron-icon { transform: translateX(4px); }
-    .wine-nav-btns { display: flex; flex-wrap: wrap; gap: 0.625rem; margin-top: 2rem; justify-content: center; }
-    .wine-btn {
-      padding: 0.625rem 1.25rem; border-radius: var(--radius-md);
-      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
-      cursor: pointer; display: flex; align-items: center; gap: 0.375rem;
-      font-family: var(--font-body); transition: all 0.2s; border: 1px solid var(--border);
-    }
-    .wine-btn-back { background: transparent; color: var(--creme-dim); }
-    .wine-btn-back:hover { border-color: var(--border-dore); color: var(--creme); }
-    .wine-btn-primary { background: var(--orange); border-color: var(--orange); color: #fff; }
-    .wine-btn-primary:hover { opacity: 0.9; }
-    .wine-btn-secondary { background: transparent; border-color: var(--border-dore); color: var(--dore); }
-    .wine-btn-secondary:hover { background: var(--dore-subtle); }
-
-    /* ─── WINE CARDS ─── */
-    .reco-header { text-align: center; margin-bottom: 1.5rem; }
-    .reco-eyebrow { font-size: 0.6875rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--orange); font-weight: 500; }
-    .reco-title { font-family: var(--font-title); font-size: 2.25rem; font-weight: 400; color: var(--creme); margin-top: 0.5rem; letter-spacing: 0.04em; }
-    .wine-card { border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.125rem 1.25rem; margin-bottom: 0.625rem; background: var(--bg-elevated); transition: all 0.2s var(--ease); }
-    .wine-card:hover { border-color: var(--border-dore); transform: translateY(-2px); }
-    .wine-card-badges { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-bottom: 0.625rem; }
-    .wine-badge { font-size: 0.625rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 2px; padding: 0.25rem 0.625rem; border: 1px solid transparent; }
-    .wine-badge-glass { background: var(--dore-subtle); color: var(--dore); border-color: var(--border-dore); }
-    .wine-badge-reco { background: var(--orange-dim); color: var(--orange); border-color: rgba(236,90,4,0.3); }
-    .wine-badge-local { background: rgba(22,54,33,0.6); color: #6db87a; border-color: rgba(109,184,122,0.25); }
-    .wine-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.375rem; }
-    .wine-card-name { font-family: var(--font-title); font-size: 1.0625rem; font-weight: 400; color: var(--creme); flex: 1; line-height: 1.3; letter-spacing: 0.02em; }
-    .wine-card-price { font-size: 0.875rem; font-weight: 500; color: var(--dore); white-space: nowrap; flex-shrink: 0; }
-    .wine-card-region { font-size: 0.8125rem; color: var(--creme-muted); font-weight: 400; margin-bottom: 0.125rem; }
-    .wine-card-grapes { font-size: 0.75rem; color: var(--creme-muted); font-style: italic; line-height: 1.5; }
-
     /* ─── EMPTY STATE ─── */
     .empty-state { text-align: center; padding: 3rem 1.5rem; color: var(--creme-muted); }
     .empty-state h3 { font-family: var(--font-title); font-size: 1.25rem; font-weight: 400; color: var(--creme-dim); margin-bottom: 0.5rem; letter-spacing: 0.03em; }
@@ -363,9 +307,6 @@
       main.container { margin: 0 0.75rem 3rem; border-radius: var(--radius-lg); }
       .tab-content { padding: 1.5rem 1rem; }
       .tab-btn { font-size: 0.625rem; padding: 0.4rem 0.625rem; }
-      .wine-nav-btns { flex-direction: column; }
-      .wine-btn { width: 100%; justify-content: center; }
-      .wine-card-header { flex-direction: column; gap: 0.375rem; }
     }
     @media (max-width: 480px) {
       .header-title { font-size: 2.75rem; }
@@ -383,7 +324,7 @@
     <p class="header-eyebrow">Maison Fleurie · Montpellier</p>
     <h1 class="header-title">La Carte</h1>
     <div class="header-divider"></div>
-    <p class="header-subtitle">Table des Mets &nbsp;·&nbsp; Cocktails &nbsp;·&nbsp; Vins</p>
+    <p class="header-subtitle">Table des Mets &nbsp;·&nbsp; Cocktails &nbsp;·&nbsp; Spiritueux</p>
     <button id="btnShare" class="share-btn" aria-label="Partager">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
         <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.02-4.11A3 3 0 1 0 15 4.91c0 .24.04.47.09.7L8.07 9.72A3 3 0 1 0 6 12.91c.82 0 1.56-.33 2.09-.87l7.02 4.11c-.05.21-.08.43-.08.66a3 3 0 1 0 3-3Z"/>
@@ -397,7 +338,7 @@
 
   <div class="search-container">
     <div class="search-row">
-      <input id="searchBox" class="search-box" type="search" placeholder="Rechercher un plat, cocktail, vin…" autocomplete="off" />
+      <input id="searchBox" class="search-box" type="search" placeholder="Rechercher un plat, cocktail, digestif…" autocomplete="off" />
       <button id="clearSearch" class="clear-btn" aria-label="Effacer">✕</button>
     </div>
     <div id="searchInfo" class="search-results-info" style="display:none"></div>
@@ -423,23 +364,23 @@
       <button class="tab-btn" role="tab" aria-selected="false" data-tab="softs">
         <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 7h10l-2 13H9z"/><path d="M9 11h8"/></svg></span><span>Softs</span>
       </button>
-      <button class="tab-btn" role="tab" aria-selected="false" data-tab="vins">
-        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3h10l-1 6a6 6 0 1 1-8 0z"/><path d="M12 15v6"/></svg></span><span>Vins</span>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="digestifs">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 3h14M8 3l-1 8h10l-1-8M10 11v8M14 11v8M8 19h8"/></svg></span><span>Digestifs</span>
       </button>
     </nav>
 
-    <section id="panel-now"      class="tab-content active"></section>
-    <section id="panel-deguster" class="tab-content"></section>
-    <section id="panel-cocktails"class="tab-content"></section>
-    <section id="panel-chaudes"  class="tab-content"></section>
-    <section id="panel-bieres"   class="tab-content"></section>
-    <section id="panel-softs"    class="tab-content"></section>
-    <section id="panel-vins"     class="tab-content"></section>
+    <section id="panel-now"       class="tab-content active"></section>
+    <section id="panel-deguster"  class="tab-content"></section>
+    <section id="panel-cocktails" class="tab-content"></section>
+    <section id="panel-chaudes"   class="tab-content"></section>
+    <section id="panel-bieres"    class="tab-content"></section>
+    <section id="panel-softs"     class="tab-content"></section>
+    <section id="panel-digestifs" class="tab-content"></section>
 
     <div id="errorContainer" class="empty-state" style="display:none">
       <h3>Impossible de charger la carte</h3>
       <p>Vérifiez votre connexion et réessayez.</p>
-      <button id="retryBtn" class="wine-btn wine-btn-secondary" style="margin:1rem auto 0">Réessayer</button>
+      <button id="retryBtn" style="margin:1rem auto 0;padding:0.625rem 1.25rem;border-radius:8px;font-size:0.75rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;border:1px solid var(--border-dore);background:transparent;color:var(--dore);font-family:var(--font-body);display:block;">Réessayer</button>
     </div>
   </main>
 
@@ -464,13 +405,12 @@ const SUPABASE_URL  = 'https://yctaoyxlfzmlzkwwjeti.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljdGFveXhsZnptbHprd3dqZXRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MDQyNzAsImV4cCI6MjA4NzE4MDI3MH0.VeufqlzIrDobaOZRmz-xt2Zda-6QVz0T2CFy_GvIdPw';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-const CACHE_KEY = 'mf-menu-sb-v5';
-const CACHE_AT  = 'mf-menu-sb-at5';
+const CACHE_KEY = 'mf-menu-sb-v6';
+const CACHE_AT  = 'mf-menu-sb-at6';
 const CACHE_TTL = 15 * 60 * 1000;
 
-let allMenuData = [], wineData = [];
+let allMenuData = [];
 let currentTab = 'now', isSearching = false, searchTimeout;
-let wineTreeStep = 0, wineTreeSelections = {}, showingWineList = false;
 let placeholderInterval;
 
 const qs  = s => document.querySelector(s);
@@ -488,110 +428,6 @@ const byPrice = (a,b) => {
   if (isFinite(pa)&&!isFinite(pb)) return -1;
   if (!isFinite(pa)&&isFinite(pb)) return 1;
   return (a.nom||'').localeCompare(b.nom||'','fr',{sensitivity:'base'});
-};
-
-/* ── WINE TREE ── */
-const PROVENANCE_LOCAL = ['languedoc','occitanie','herault','pic','montpellier','gard','provence'];
-const PROVENANCE_META = {
-  local:      {label:'Sélection locale',    desc:'Vignerons du Languedoc & Occitanie.'},
-  decouverte: {label:'Escapade & découverte',desc:'Autres régions & voyages gustatifs.'}
-};
-const SUBSTYLE_META = {
-  fruite: {label:'Fruité',  desc:'Gourmand, notes de fruits blancs et jaunes.'},
-  mineral:{label:'Minéral', desc:'Salinité, pierre à fusil, tension élégante.'},
-  rond:   {label:'Rond',    desc:'Ampleur, notes beurrées et texture veloutée.'},
-  orange: {label:'Orange',  desc:'Macération sur peaux, texture originale.'}
-};
-const SUBSTYLE_ORDER = ['fruite','mineral','rond','orange'];
-
-const classifyProvenance = w => {
-  const p = norm(w.tag_provenance||'');
-  if (!p) return null;
-  return PROVENANCE_LOCAL.some(k=>p.includes(k)) ? 'local' : 'decouverte';
-};
-const styleMatches = (w,v) => {
-  const t=norm(w.tag_style||''); if(!t) return false;
-  if(v==='nature')   return t.includes('nature')||t.includes('biodynam');
-  if(v==='souple')   return t.includes('souple')||t.includes('fruit');
-  if(v==='puissant') return t.includes('puissant')||t.includes('struct');
-  if(v==='sec')      return t.includes('sec');
-  if(v==='moelleux') return t.includes('moelleux')||t.includes('doux');
-  return t===v;
-};
-const substyleMatches = (w,v) => norm(w.tag_sous_style||'').includes(v);
-const isWineByGlass   = w => norm(w.section||'').includes('verre');
-
-const buildProvenanceOptions = wines => {
-  const seen=new Set(); wines.forEach(w=>{const g=classifyProvenance(w);if(g)seen.add(g);});
-  return ['local','decouverte'].filter(g=>seen.has(g)).map(g=>({value:g,...PROVENANCE_META[g]}));
-};
-const buildSubstyleOptions = wines => {
-  const seen=new Map();
-  wines.forEach(w=>{const r=norm(w.tag_sous_style||'');if(!r||seen.has(r))return;seen.set(r,{value:r,...(SUBSTYLE_META[r]||{label:r,desc:''})});});
-  return SUBSTYLE_ORDER.filter(k=>seen.has(k)).map(k=>seen.get(k));
-};
-
-const BASE_Q = {id:'color',tag:'tag_couleur',question:'Quelle couleur ?',options:[
-  {value:'blanc',label:'Blanc',dotColor:'#E8D9B5',desc:'Secs, moelleux ou nature.'},
-  {value:'rouge',label:'Rouge',dotColor:'#7B1F29',desc:'Souple, structuré ou nature.'}
-]};
-const WHITE_FLOW = [
-  {id:'style',question:'Quel style de blanc ?',match:styleMatches,options:[
-    {value:'sec',label:'Blanc sec',desc:'Vif, tendu ou minéral.'},
-    {value:'moelleux',label:'Moelleux',desc:'Doux, gourmand & velouté.'},
-    {value:'nature',label:'Biodynamie & nature',desc:'Sans artifice, vivant.'}
-  ]},
-  {id:'origin',question:"Envie d'une cuvée locale ?",options:(_,w)=>buildProvenanceOptions(w),show:s=>!!s.style,match:(w,v)=>classifyProvenance(w)===v},
-  {id:'substyle',question:'Quel profil en blanc sec ?',options:(_,w)=>buildSubstyleOptions(w),show:s=>norm(s.style)==='sec',match:(w,v)=>substyleMatches(w,v)}
-];
-const RED_FLOW = [
-  {id:'style',question:'Quel style de rouge ?',match:styleMatches,options:[
-    {value:'souple',label:'Souple & fruité',desc:'Gamay, pinot, fraîcheur.'},
-    {value:'puissant',label:'Puissant & structuré',desc:'Tanins fondus, épices.'},
-    {value:'nature',label:'Biodynamie & nature',desc:'Jus libre, vibrants.'}
-  ]},
-  {id:'origin',question:'Plutôt local ou escapade ?',options:(_,w)=>buildProvenanceOptions(w),show:s=>!!s.style,match:(w,v)=>classifyProvenance(w)===v}
-];
-
-const getWineQuestions = () => {
-  const c=norm(wineTreeSelections.color||'');
-  const f=[BASE_Q];
-  if(c==='blanc') f.push(...WHITE_FLOW);
-  else if(c==='rouge') f.push(...RED_FLOW);
-  return f.filter(q=>!q.show||q.show(wineTreeSelections));
-};
-const getEligible = (questions,idx) => {
-  const prev=questions.slice(0,idx);
-  return wineData.filter(w=>prev.every(q=>{
-    const v=norm(wineTreeSelections[q.id]||''); if(!v)return true;
-    if(typeof q.match==='function')return q.match(w,v);
-    return norm(w[q.tag]||'')===v;
-  }));
-};
-const getWinesByPath = sel => {
-  const c=norm(sel.color||''),st=norm(sel.style||''),or=norm(sel.origin||''),ss=norm(sel.substyle||'');
-  const flt=keys=>wineData.filter(w=>keys.every(k=>{
-    if(k==='color')    return norm(w.tag_couleur||'')===c;
-    if(k==='style')    return styleMatches(w,st);
-    if(k==='origin')   return classifyProvenance(w)===or;
-    if(k==='substyle') return substyleMatches(w,ss);
-    return true;
-  }));
-  const req=['color','style','origin','substyle'].filter(k=>sel[k]);
-  let fil=flt(req);
-  for(const k of ['substyle','origin','style']){if(fil.length)break;const i=req.indexOf(k);if(i!==-1){req.splice(i,1);fil=flt(req);}}
-  if(!fil.length&&c)fil=wineData.filter(w=>norm(w.tag_couleur||'')===c);
-  if(!fil.length)fil=wineData.slice();
-  return fil.map(w=>{
-    let s=0;
-    if(c&&norm(w.tag_couleur||'')===c)s+=12;
-    if(st&&styleMatches(w,st))s+=8;
-    if(or&&classifyProvenance(w)===or)s+=5;
-    if(ss&&substyleMatches(w,ss))s+=4;
-    if(isWineByGlass(w))s+=2;
-    if(w.recommandation)s+=3;
-    return {w,s};
-  }).sort((a,b)=>b.s-a.s||byPrice(a.w,b.w)).slice(0,6).map(i=>i.w);
 };
 
 /* ── RENDER ── */
@@ -634,108 +470,11 @@ const renderNow = () => {
 
 const renderTab = tab => {
   if(tab==='now') {renderNow();return;}
-  if(tab==='vins'){renderWineTree();return;}
   const el=qs(`#panel-${tab}`); if(!el)return;
   if(!allMenuData.length){showSkeleton(el);return;}
   const items=allMenuData.filter(i=>i.onglet===tab);
   if(!items.length){el.innerHTML=`<div class="empty-state"><h3>Section vide</h3></div>`;return;}
   el.innerHTML=renderSections(items,tab);
-};
-
-const renderWineTree = () => {
-  const p=qs('#panel-vins'); if(!p)return;
-  if(!wineData.length){showSkeleton(p);return;}
-  if(showingWineList){renderWineList();return;}
-  const qs2=getWineQuestions();
-  if(wineTreeStep>=qs2.length){renderWineRecommendations();return;}
-  const cq=qs2[wineTreeStep], el2=getEligible(qs2,wineTreeStep);
-  let opts=typeof cq.options==='function'?cq.options(wineTreeSelections,el2):cq.options;
-  opts=(opts||[]).filter(Boolean);
-  if(!opts.length){delete wineTreeSelections[cq.id];wineTreeStep++;renderWineTree();return;}
-  if(cq.autoAdvance!==false&&opts.length===1){wineTreeSelections[cq.id]=opts[0].value;wineTreeStep++;renderWineTree();return;}
-  const qt=typeof cq.question==='function'?cq.question(wineTreeSelections,el2):cq.question;
-  const tot=qs2.length, st=Math.min(wineTreeStep+1,tot);
-  const oi=o=>o.dotColor?`<span class="wine-color-dot" style="--dot-color:${o.dotColor}"></span>`:'';
-  p.innerHTML=`
-    <div class="wine-tree">
-      <div class="wine-tree-header"><p class="wine-tree-eyebrow">Guide Vins</p><h2 class="wine-tree-title">Quel vin ce soir ?</h2></div>
-      <div class="progress-bar">${qs2.map((_,i)=>`<div class="progress-step ${i<=wineTreeStep?'active':''}"></div>`).join('')}</div>
-      <p class="progress-info">Étape ${st} sur ${tot}</p>
-      <h3 class="question-title">${qt}</h3>
-      <div class="wine-options">${opts.map(o=>`
-        <button class="wine-option" data-value="${o.value}">
-          <div class="wine-option-content">
-            <div class="wine-option-label">${oi(o)}${o.label}</div>
-            ${o.desc?`<div class="wine-option-desc">${o.desc}</div>`:''}
-          </div>
-          <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-        </button>`).join('')}</div>
-      <div class="wine-nav-btns">
-        ${wineTreeStep>0?`<button class="wine-btn wine-btn-back" id="wineBackBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>`:''}
-        <button class="wine-btn wine-btn-secondary" id="showAllWinesBtn">Voir tous les vins</button>
-      </div>
-    </div>`;
-  qsa('.wine-option').forEach(b=>{
-    b.addEventListener('click',()=>{
-      const v=b.dataset.value,pv=wineTreeSelections[cq.id];
-      wineTreeSelections[cq.id]=v;
-      if(cq.id==='color'&&v!==pv){delete wineTreeSelections.style;delete wineTreeSelections.origin;delete wineTreeSelections.substyle;}
-      if(cq.id==='style'&&v!==pv){delete wineTreeSelections.origin;delete wineTreeSelections.substyle;}
-      wineTreeStep++;renderWineTree();
-    });
-  });
-  qs('#wineBackBtn')?.addEventListener('click',()=>{const pq=qs2[wineTreeStep-1];delete wineTreeSelections[pq.id];wineTreeStep--;renderWineTree();});
-  qs('#showAllWinesBtn')?.addEventListener('click',()=>{showingWineList=true;renderWineList();});
-};
-
-const renderWineRecommendations = () => {
-  const p=qs('#panel-vins'); if(!p)return;
-  const recos=getWinesByPath(wineTreeSelections);
-  const cards=recos.length?recos.map(w=>{
-    const b=[];
-    if(isWineByGlass(w))b.push('<span class="wine-badge wine-badge-glass">Au verre</span>');
-    if(w.recommandation)b.push('<span class="wine-badge wine-badge-reco">Recommandé</span>');
-    if(classifyProvenance(w)==='local')b.push('<span class="wine-badge wine-badge-local">Local</span>');
-    const sn=norm(w.tag_style||'');
-    let sl=sn==='sec'?(norm(w.tag_couleur||'')==='blanc'?'Blanc sec':'Sec')
-      :sn==='moelleux'?'Moelleux':sn==='souple'?'Souple & fruité':sn==='puissant'?'Puissant & structuré':sn.includes('nature')?'Nature':'';
-    const ssn=norm(w.tag_sous_style||'');
-    const ssl=ssn?(SUBSTYLE_META[ssn]?.label||ssn):'';
-    const prof=[sl,ssl].filter(Boolean).join(' · ');
-    const d=w.description||'',pts=d.split(',');
-    const reg=pts[0]?`<div class="wine-card-region">${pts[0]}</div>`:'';
-    const gra=pts.slice(1).join(',').trim()?`<div class="wine-card-grapes">${pts.slice(1).join(',').trim()}</div>`:'';
-    const prH=prof?`<div class="wine-card-grapes">${prof}</div>`:'';
-    return `<div class="wine-card">${b.length?`<div class="wine-card-badges">${b.join('')}</div>`:''}<div class="wine-card-header"><div class="wine-card-name">${w.nom}</div><div class="wine-card-price">${w.prix||''}</div></div>${reg}${gra}${prH}</div>`;
-  }).join(''):`<div class="empty-state"><h3>Aucun vin trouvé</h3><p>Essayez une autre combinaison.</p></div>`;
-  p.innerHTML=`
-    <div class="wine-recommendations">
-      <div class="reco-header"><p class="reco-eyebrow">Notre sélection</p><h2 class="reco-title">Vos recommandations</h2></div>
-      ${cards}
-      <div class="wine-nav-btns">
-        <button class="wine-btn wine-btn-back" id="wineBackFromReco"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
-        <button class="wine-btn wine-btn-back" id="wineReset">Nouvelle recherche</button>
-        <button class="wine-btn wine-btn-secondary" id="showAllWinesBtn2">Tous les vins</button>
-      </div>
-    </div>`;
-  qs('#wineBackFromReco')?.addEventListener('click',()=>{
-    const q=getWineQuestions(),pq=q[Math.max(q.length-1,0)];
-    if(pq){delete wineTreeSelections[pq.id];wineTreeStep=Math.max(q.length-1,0);}
-    else{wineTreeSelections={};wineTreeStep=0;}
-    showingWineList=false;renderWineTree();
-  });
-  qs('#wineReset')?.addEventListener('click',()=>{wineTreeStep=0;wineTreeSelections={};showingWineList=false;renderWineTree();});
-  qs('#showAllWinesBtn2')?.addEventListener('click',()=>{showingWineList=true;renderWineList();});
-};
-
-const renderWineList = () => {
-  const p=qs('#panel-vins'); if(!p)return;
-  const g=new Map();
-  wineData.forEach(w=>{const k=w.section||'Autres';if(!g.has(k))g.set(k,[]);g.get(k).push(w);});
-  let html='';
-  for(const[sec,ws]of g){html+=`<h2 class="section-title" data-section="${sec}">${sec}</h2>`;ws.sort(byPrice).forEach(w=>{html+=itemHTML(w);});}
-  p.innerHTML=html+`<div class="wine-nav-btns" style="margin-top:2rem"><button class="wine-btn wine-btn-primary" id="backToTreeBtn">Guide de sélection</button></div>`;
-  qs('#backToTreeBtn')?.addEventListener('click',()=>{showingWineList=false;wineTreeStep=0;wineTreeSelections={};renderWineTree();});
 };
 
 /* ── DATA ── */
@@ -746,17 +485,13 @@ const saveCache = rows => { try{localStorage.setItem(CACHE_KEY,JSON.stringify(ro
 
 const setData = rows => {
   allMenuData = rows.filter(i=>i.actif);
-  wineData    = allMenuData.filter(i=>i.onglet==='vins');
-  /* Render APRÈS que les données sont en place */
-  ['now','deguster','cocktails','chaudes','bieres','softs'].forEach(t=>renderTab(t));
-  renderWineTree();
+  ['now','deguster','cocktails','chaudes','bieres','softs','digestifs'].forEach(t=>renderTab(t));
   startPlaceholder();
   hideSplash();
 };
 
 const fetchData = async () => {
-  /* Skeletons immédiats */
-  ['now','deguster','cocktails','chaudes','bieres','softs','vins'].forEach(t=>{const el=qs(`#panel-${t}`);if(el)showSkeleton(el);});
+  ['now','deguster','cocktails','chaudes','bieres','softs','digestifs'].forEach(t=>{const el=qs(`#panel-${t}`);if(el)showSkeleton(el);});
   const cached=loadCache();
   if(cached){setData(cached);return;}
   try{
